@@ -1,64 +1,59 @@
-import axios, {AxiosError, AxiosInstance} from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios'
 import { SObject } from './sObject'
 
-export class RestBaseConfig{
-    public accessToken : string;
-    public host : string;
+export class RestBaseConfig {
+  public accessToken: string
+  public host: string
 }
 
-export class Rest
-{
-    public static config : RestBaseConfig;
+export class Rest {
+  public static config: RestBaseConfig
 
-    private static _instance: Rest;
+  private static _instance: Rest
 
-    public request: AxiosInstance;
-    public version: string;
-    private constructor()
-    {
-        this.version = 'v40.0'
-        this.request = axios.create({
-            baseURL: `${Rest.config.host}/services/data/${this.version}/`,
-            headers: {
-                'Authorization': 'Bearer ' + Rest.config.accessToken,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        });
-    }
+  public request: AxiosInstance
+  public version: string
+  private constructor () {
+    this.version = 'v40.0'
+    this.request = axios.create({
+      baseURL: `${Rest.config.host}/services/data/${this.version}/`,
+      headers: {
+        'Authorization': 'Bearer ' + Rest.config.accessToken,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+  }
 
-    //get records of type T.  Do magic to cast plain json to T
-    public static query<T extends SObject>(type: { new(): T ;}, query: string): Promise<QueryResponse<T>> {
-        let qryString = encodeURIComponent(query);
-        return new Promise<QueryResponse<T>>((resolve, reject) => {
-            if(!this._instance){
-                this._instance = new this();
-            }
-            this._instance.request.get(`/query?q=${qryString}`)
+    // get records of type T.  Do magic to cast plain json to T
+  public static async query<T extends SObject> (type: { new(): T ;}, query: string): Promise<QueryResponse<T>> {
+    let qryString = encodeURIComponent(query)
+    return new Promise<QueryResponse<T>>((resolve, reject) => {
+      if (!this._instance) {
+        this._instance = new this()
+      }
+      this._instance.request.get(`/query?q=${qryString}`)
             .then((response) => {
-                let sobs: Array<T> = [];
-                for(let i = 0; i < response.data.records.length; i++){
-                    let sob = Object.assign(new type(), response.data.records[i]);
-                    sobs.push(sob);
-                }
-                response.data.records = sobs;
-                resolve(response.data);
+              let sobs: Array<T> = []
+              for (let i = 0; i < response.data.records.length; i++) {
+                let sob = Object.assign(new type(), response.data.records[i])
+                sobs.push(sob)
+              }
+              response.data.records = sobs
+              resolve(response.data)
             }).catch((error: AxiosError) => {
-                reject(error);
-            });;
-        });
-    }
+              reject(error)
+            })
+    })
+  }
 
-    public static get Instance()
-    {
-        return this._instance || (this._instance = new this());
-    }
+  public static get Instance () {
+    return this._instance || (this._instance = new this())
+  }
 
 }
 
 export interface QueryResponse<T> {
-    totalSize: number;
-    records: T[];
+  totalSize: number
+  records: T[]
 }
-
-
