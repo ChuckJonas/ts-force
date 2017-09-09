@@ -1,8 +1,8 @@
-# type-force
+# ts-force
 
 a typescript client for connecting with salesforce APIs.  Currently meant to run on Visualforce and have "Access Token" passed in via global scope.
 
-`npm install type-force`
+`npm install ts-force`
 
 ## Usage
 
@@ -37,15 +37,18 @@ This will need to be injected in the visualforce page:
 Then we need to pass it to `RestClient`.
 
 ```typescript
-import {RestClient} from 'type-force';
+import {Rest, RestBaseConfig} from 'type-force';
 
 //let typescript know we expect these on global scope
 declare var __RESTHOST__ : string;
 declare var __ACCESSTOKEN__ : string;
 
 //set configurations
-RestClient.host = __RESTHOST__;
-RestClient.accessToken = __ACCESSTOKEN__;
+let config = new RestBaseConfig();
+config.host = __RESTHOST__;
+config.accessToken = __ACCESSTOKEN__;
+//set static config on Rest
+Rest.config = config;
 ```
 
 `RestClient.accessToken`: used to authinicate to the API
@@ -59,11 +62,11 @@ Query record via a static method on the `RestClient`:
 Rest.query<Account>(Account, 'SELECT Id FROM Account');
 ```
 
-** Note: we have to specify the account as a generic and pass the type into the first aguement because we use Object.Assign to make the returned json instances implement `SObjectClient`.
+** Note: we have to specify the account as a generic and pass the type into the first aguement because we use Object.Assign to make the returned json instances implement `RestObject`.
 
 ### updating records
 
-Each DML opporation is provided through the `SObjectClient` base class your concrete SObject classes extend.
+Each DML opporation is provided through the `RestObject` base class your concrete SObject classes extend.
 
 ```typescript
 let acc = new Account();
