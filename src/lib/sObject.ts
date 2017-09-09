@@ -28,10 +28,7 @@ export class RestObject extends SObject {
   constructor (type: string) {
     super(type)
   }
-  public static async query<T extends RestObject> (type: { new(): T; }, query: string): Promise<T[]> {
-    const data = await Rest.query<T>(type, query)
-    return data.records
-  }
+
   public async insert (): Promise<DMLResponse> {
     try {
       const response = await this.generateCall(`/sobjects/${this.attributes.type}/`, this)

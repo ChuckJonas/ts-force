@@ -59,7 +59,7 @@ Rest.config = config;
 Query record via a static method on the `RestClient`:
 
 ```typescript
-Rest.query<Account>(Account, 'SELECT Id FROM Account');
+let accs: Account[] = Rest.query(Account, 'SELECT Id FROM Account');
 ```
 
 ** Note: we have to specify the account as a generic and pass the type into the first aguement because we use Object.Assign to make the returned json instances implement `RestObject`.
