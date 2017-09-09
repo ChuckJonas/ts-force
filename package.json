@@ -1,0 +1,39 @@
+{
+  "name": "ts-force",
+  "version": "1.0.0",
+  "description": "a typescript client for connecting with salesforce APIs",
+  "main": "build/main/index.js",
+  "typings": "build/main/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChuckJonas/type-force.git"
+  },
+  "keywords": [
+    "salesforce"
+  ],
+  "contributors": [
+    "Charlie Jonas",
+    "David Staley"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "scripts-info": {
+    "info": "Display information about the scripts",
+    "build": ""
+  },
+  "engines": {
+    "node": ">=4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.4",
+    "tslint": "^5.4.3",
+    "tslint-config-standard": "^6.0.1",
+    "typescript": "^2.4.1"
+  },
+  "dependencies": {
+    "tslib": "^1.6.0",
+    "axios": "^0.16.2"
+  }
+}
