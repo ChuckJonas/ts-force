@@ -25,16 +25,16 @@ export class Rest {
     })
   }
 
-    // get records of type T.  Do magic to cast plain json to T
-  public static async query<T extends SObject> (type: { new(): T ;}, query: string): Promise<QueryResponse<T>> {
+  // get records of type T.  Do magic to cast plain json to T
+  public static async query(type: { new(): SObject ;}, query: string): Promise<QueryResponse> {
     let qryString = encodeURIComponent(query)
-    return new Promise<QueryResponse<T>>((resolve, reject) => {
+    return new Promise<QueryResponse>((resolve, reject) => {
       if (!this._instance) {
         this._instance = new this()
       }
       this._instance.request.get(`/query?q=${qryString}`)
             .then((response) => {
-              let sobs: Array<T> = []
+              let sobs: Array<SObject> = []
               for (let i = 0; i < response.data.records.length; i++) {
                 let sob = Object.assign(new type(), response.data.records[i])
                 sobs.push(sob)
@@ -53,7 +53,7 @@ export class Rest {
 
 }
 
-export interface QueryResponse<T> {
+export interface QueryResponse {
   totalSize: number
-  records: T[]
+  records: any
 }
