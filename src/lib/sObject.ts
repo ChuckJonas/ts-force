@@ -1,18 +1,18 @@
-import {Rest} from './rest';
-import {AxiosError} from 'axios';
+import { Rest } from './rest';
+import { AxiosResponse } from 'axios';
 /* Base SObject */
 
 export class SObjectAttributes {
-    public type?: string;
+    public type: string; //sf apex name
 }
 
-export abstract class SObject{
-    constructor(type?: string) {
+export abstract class SObject {
+    constructor(type: string) {
 
         this.attributes = new SObjectAttributes();
         this.attributes.type = type;
     }
-    public Id?: string;
+    public id: string | undefined;
     public attributes: SObjectAttributes;
 }
 
@@ -23,44 +23,43 @@ export interface DMLResponse {
     success: boolean;
 }
 
-export class RestObject extends SObject{
+export class SObjectClient extends SObject {
 
-    constructor(type?: string) {
+    constructor(type: string) {
         super(type);
     }
-
-    public insert(): Promise<DMLResponse> {
-        return new Promise<DMLResponse>((resolve, reject) => {
-            Rest.Instance.request.post(
-                `/sobjects/${this.attributes.type}/`,
-                this
-            ).then((response) => {
-                this.Id = response.data.id;
-                resolve(response.data);
-            }).catch((error: AxiosError) => {
-                reject(error);
-            });
-        });
+    public static async query<T extends SObjectClient>(type: { new(): T; }, query: string): Promise<T[]> {
+        const data = await Rest.query<T>(type, query);
+        return data.records;
+    }
+    public async insert(): Promise<DMLResponse> {
+        try {
+            const response = await this.generateCall(`/sobjects/${this.attributes.type}/`, this)
+            return response.data
+        } catch (error) {
+            console.log(error.response.data)
+            return error
+        }
     }
 
-    public update(): Promise<DMLResponse> {
-        if (this.Id == null) {
+
+    public async update(): Promise<DMLResponse> {
+
+        if (this.id == null) {
             throw 'Must have Id to update!';
         }
         let data = Object.assign({}, this);
-        data.Id = undefined;
-
-        return new Promise<DMLResponse>((resolve, reject) => {
-            Rest.Instance.request.post(
-                `/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=PATCH`,
-                data
-            ).then((response) => {
-                resolve(response.data);
-            }).catch((error: AxiosError) => {
-                reject(error);
-            });
-        });
+        data.id = undefined;
+        try {
+            const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.id}?_HttpMethod=PATCH`, data)
+            return response.data
+        } catch (error) {
+            console.log(error.response.data)
+            return error
+        }
+    }
+    public generateCall(path: string, data: SObject): Promise<AxiosResponse> {
+        return Rest.Instance.request.post(path, data);
     }
 
 }
-
