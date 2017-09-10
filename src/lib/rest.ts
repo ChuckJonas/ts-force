@@ -26,7 +26,7 @@ export class Rest {
   }
 
   // get records of type T.  Do magic to cast plain json to T
-  public static async query(type: { new(): SObject ;}, query: string): Promise<QueryResponse> {
+  public static async query (type: { new(): SObject ;}, query: string): Promise<QueryResponse> {
     let qryString = encodeURIComponent(query)
     return new Promise<QueryResponse>((resolve, reject) => {
       if (!this._instance) {
@@ -39,8 +39,10 @@ export class Rest {
                 let sob = Object.assign(new type(), response.data.records[i])
                 sobs.push(sob)
               }
-              response.data.records = sobs
-              resolve(response.data)
+              resolve({
+                totalSize: response.data.records.length,
+                records: sobs
+              })
             }).catch((error: AxiosError) => {
               reject(error)
             })
@@ -55,5 +57,5 @@ export class Rest {
 
 export interface QueryResponse {
   totalSize: number
-  records: any
+  records: SObject[]
 }

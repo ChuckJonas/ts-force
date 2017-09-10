@@ -7,7 +7,7 @@ export class SObjectAttributes {
 }
 
 export abstract class SObject {
-  public id: string | undefined
+  public Id: string | undefined
   public attributes: SObjectAttributes
 
   constructor (type: string) {
@@ -32,6 +32,8 @@ export class RestObject extends SObject {
   public async insert (): Promise<DMLResponse> {
     try {
       const response = await this.generateCall(`/sobjects/${this.attributes.type}/`, this)
+      // auto set the id to here
+      this.Id = response.data.id
       return response.data
     } catch (error) {
       console.log(error.response.data)
@@ -41,15 +43,27 @@ export class RestObject extends SObject {
 
   public async update (): Promise<DMLResponse> {
 
-    if (this.id == null) {
+    if (this.Id == null) {
       throw new Error('Must have Id to update!')
     }
     let data = Object.assign({}, this)
-    data.id = undefined
+    data.Id = undefined
     try {
-      const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.id}?_HttpMethod=PATCH`, data)
+      const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=PATCH`, data)
       return response.data
     } catch (error) {
+      console.log(error.response.data)
+      return error
+    }
+  }
+  public async delete (): Promise<DMLResponse> {
+    if (this.Id == null) {
+      throw new Error('Must have Id to Delete!')
+    }
+    try {
+      const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=DELETE`, this)
+      return response.data
+    }catch (error) {
       console.log(error.response.data)
       return error
     }
