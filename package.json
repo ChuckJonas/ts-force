@@ -2,14 +2,19 @@
   "name": "ts-force",
   "version": "1.0.4",
   "description": "a typescript client for connecting with salesforce APIs",
-  "main": "build/main/index.js",
-  "typings": "build/main/index.d.ts",
+  "main": "build/index.js",
+  "typings": "build/index.d.ts",
+  "bin": {
+    "ts-force-gen": "build/gen/generate.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ChuckJonas/ts-force.git"
   },
   "keywords": [
-    "salesforce"
+    "salesforce",
+    "typescript",
+    "rest"
   ],
   "contributors": [
     "Charlie Jonas",
@@ -17,23 +22,24 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
-  },
-  "scripts-info": {
-    "info": "Display information about the scripts",
-    "build": ""
+    "clean-build": "rm -r -f ./build && npm run build",
+    "build": "tsc -p tsconfig.json",
+    "build-link": "npm run build && npm link"
   },
   "engines": {
     "node": ">=4.5"
   },
   "devDependencies": {
     "@types/node": "^8.0.4",
+    "minimist": "^1.2.0",
+    "ts-simple-ast": "^0.61.1",
     "tslint": "^5.4.3",
     "tslint-config-standard": "^6.0.1",
-    "typescript": "^2.4.1"
+    "typescript": "^2.5.2"
   },
   "dependencies": {
-    "tslib": "^1.6.0",
-    "axios": "^0.16.2"
+    "axios": "^0.16.2",
+    "reflect-metadata": "^0.1.10",
+    "tslib": "^1.6.0"
   }
 }

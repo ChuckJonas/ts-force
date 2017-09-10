@@ -6,21 +6,26 @@ a typescript client for connecting with salesforce APIs.  Currently meant to run
 
 ## Usage
 
-### Create concerete RestObject types
+## Generate code
 
-Create a type for each SObject you with to use:
+This library is intended to use with code generation.  Files can be generated using the following command:
 
-```javascript
-export class Account extends RestObject {
-    constructor(){
-        //pass SObject API Name
-        super('Account');
-    }
-    Name: string;
-    Website: string;
-    Active__c?: boolean;
-}
-```
+`ts-force-gen --accessToken '123abc' --instanceUrl https://cs65.my.salesforce.com --sobs Account,Contact --outputFile ./tst/test.ts`
+
+`--accessToken|-a`: access token to connect to tooling API wit
+`--instanceUrl|-i`: host url of the org your connecting with
+`--sobs|-s`: list of comma seperated sobs to generate classes for
+`--outputFile|-o`: (Optional) where to save the output
+
+Relational properties are only included for the object you add.
+
+Decorators are used to determine how to map query responses and which fields we can send to which methods.
+
+### extending generated classes
+
+Obviously don't change the generated classes if possible unless you want to deal with "merge hell" when you need to regenerate.
+
+Will add details on how to extend once I figure it out myself (mix-ins?).
 
 ### Configure Access Token
 
@@ -37,14 +42,14 @@ This will need to be injected in the visualforce page:
 Then we need to pass it to `RestClient`.
 
 ```typescript
-import {Rest, RestBaseConfig} from 'type-force';
+import {Rest, BaseConfig} from 'type-force';
 
 //let typescript know we expect these on global scope
 declare var __RESTHOST__ : string;
 declare var __ACCESSTOKEN__ : string;
 
 //set configurations
-let config = new RestBaseConfig();
+let config = new BaseConfig();
 config.host = __RESTHOST__;
 config.accessToken = __ACCESSTOKEN__;
 //set static config on Rest
@@ -56,28 +61,42 @@ Rest.config = config;
 
 ### Quering Records
 
-Query record via a static method on the `RestClient`:
+Query record via a static method on each generated claass.
 
 ```typescript
-let accs: Account[] = Rest.query(Account, 'SELECT Id FROM Account');
+let accs: Account[] = Account.retrieve('SELECT Id FROM Account');
 ```
 
-** Note: we have to specify the account as a generic and pass the type into the first aguement because we use Object.Assign to make the returned json instances implement `RestObject`.
+#### relationships
 
-### updating records
+```typescript
+let contacts: Contact[] = Account.retrieve('SELECT Name, Account.Id, Account.Name FROM Contact LIMIT 1');
+let acc = contact[0].Account;
+acc.Name = 'New Name';
+acc.update();
+```
 
-Each DML opporation is provided through the `RestObject` base class your concrete SObject classes extend.
+### Record DML
+
+Each DML opporation is provided through the `RestObject` base class that each generated class implements.
 
 ```typescript
 let acc = new Account();
 acc.Name = 'John Doe';
-acc.insert();
+await acc.insert();
+acc.Name = 'Jane Doe';
+await acc.update();
+await acc.delete();
 ```
 
 ## todo
 
-- fix how access token is provided
+- move class `type` to decorator
+- reactor `Rest` class to be more testable (statics are bad mmmk)
+- add ability to remap properties from API names
 - add bulk API support
 - add RemoteAction support
-- add code gen tool to generate sObject types from meta-data API
+- Add ability for `ts-force-gen` to run from DX or meta-data package context
+- figure out how to configure `ts-force-gen` to exclude/include meta-data at a more granular level
+- deal with case sensitivity issue in query
 - Most robost authinication configuration (oAuth?)
