@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios'
 
 export class SObjectAttributes {
   public type: string // sf apex name
+  public url: string // sf rest API url for record
 }
 
 export abstract class SObject {

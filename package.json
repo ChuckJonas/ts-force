@@ -17,7 +17,11 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.build.json",
+    "pretest": "tsc",
+    "test": "mocha",
+    "watch": "mocha-typescript-watch",
+    "prepare": "tsc"
   },
   "scripts-info": {
     "info": "Display information about the scripts",
@@ -27,7 +31,15 @@
     "node": ">=4.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "@types/nock": "^8.2.1",
     "@types/node": "^8.0.4",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.2",
+    "mocha-typescript": "^1.1.8",
+    "nock": "^9.0.14",
+    "source-map-support": "^0.4.18",
     "tslint": "^5.4.3",
     "tslint-config-standard": "^6.0.1",
     "typescript": "^2.4.1"

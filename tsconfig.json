@@ -2,8 +2,7 @@
   "extends": "./config/tsconfig.flexible", // also available: "./config/tsconfig.strict"
   "compilerOptions": {
     "target": "es6",
-    "outDir": "build/main",
-    "rootDir": "src",
+    "outDir": "build/tmp",
     "moduleResolution": "node",
     "module": "commonjs",
     "declaration": true,
@@ -12,6 +11,7 @@
     "listFiles": false,
     "traceResolution": false,
     "pretty": true,
+    "experimentalDecorators": true,
     "lib" : [
       "es6"
     ],
@@ -24,7 +24,8 @@
     }
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "test/**/*.spec.ts"
   ],
   "exclude": [
     "node_modules/**"
