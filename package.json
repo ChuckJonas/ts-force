@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -23,6 +23,7 @@
   "license": "MIT",
   "scripts": {
     "clean-build": "rm -r -f ./build && npm run build",
+    "link": "npm run clean-build && npm link",
     "pretest": "tsc",
     "test": "mocha",
     "build": "tsc -p tsconfig.build.json",

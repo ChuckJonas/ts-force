@@ -1,7 +1,7 @@
 import { Scope, SourceFile, PropertyDeclarationStructure, DecoratorStructure, JSDocStructure } from "ts-simple-ast";
 import { Rest } from "../main/lib/rest";
 import { Field, SObjectDescribe, ChildRelationship } from "../main/lib/SObjectDescribe";
-
+import { SFieldProperties } from '../main/lib/sObjectDecorators';
 const superClass = 'RestObject';
 
 export class SObjectGenerator {
@@ -21,9 +21,7 @@ export class SObjectGenerator {
       namedImports: [
         { name: 'RestObject' },
         { name: 'SObject' },
-        { name: 'reference' },
-        { name: 'required' },
-        { name: 'readonly' },
+        { name: 'sField' }
       ]
     });
 
@@ -50,11 +48,21 @@ export class SObjectGenerator {
       if (this.apiNames.indexOf(child.childSObject) > -1 && child.childSObject != apiName) {
         let referenceClass = this.sanatizeClassName(child.childSObject);
 
+        let decoratorProps = {
+          apiName: child.relationshipName,
+          readOnly: true,
+          required: false,
+          childRelationship: true,
+          reference: referenceClass
+        }
+
         props.push({
           name: child.relationshipName,
           type: `${referenceClass}[]`,
-          scope: Scope.Public
-          //TODO add decorator for child relationship
+          scope: Scope.Public,
+          decorators: [
+            this.generateDecorator(decoratorProps)
+          ]
         });
       }
     });
@@ -77,13 +85,21 @@ export class SObjectGenerator {
         }
         let refApiName = field.referenceTo[0]; //polymorphic not support
 
+        let decoratorProps = {
+          apiName: field.relationshipName,
+          readOnly: true,
+          required: false,
+          childRelationship: false,
+          reference: referenceClass
+        }
+
         props.push({
           name: field.relationshipName,
           type: referenceClass,
           scope: Scope.Public,
-          decorators: [{
-            name: `reference(${referenceClass})`
-          }],
+          decorators: [
+            this.generateDecorator(decoratorProps)
+          ],
           docs: docs
         });
       }
@@ -92,7 +108,7 @@ export class SObjectGenerator {
         name: field.name,
         type: this.mapSObjectType(field.type),
         scope: Scope.Public,
-        decorators: this.getDecorators(field),
+        decorators: [this.getDecorator(field)],
         docs: docs
       }
 
@@ -139,41 +155,36 @@ export class SObjectGenerator {
       case 'double':
       case 'integer':
       case 'currency':
-        return 'number';
+      return 'number';
       case 'reference':
       case 'string':
       case 'picklist':
       case 'id':
       default:
-        return 'string';
+      return 'string';
     }
   }
 
-  private getDecorators(field: Field): DecoratorStructure[] {
-    let decorators: DecoratorStructure[] = [];
-    if (field.updateable == false && field.createable == false) {
-      decorators.push({
-        name: 'readonly()'
-      });
+  private generateDecorator(decoratorProps: any) {
+    var ref = decoratorProps.reference != null ? `()=>{return ${decoratorProps.reference}}`: 'undefined'
+    return {
+      name: `sField`,
+      arguments: [
+        `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}}`
+      ]
     }
-    // else if(field.updateable == false && field.createable == true){
-    //   decorators.push({
-    //     name:'CreateOnly'
-    //   })
-    // }else if(field.updateable == true && field.createable == false){
-    //   decorators.push({
-    //     name:'UpdateOnly'
-    //   })
-    // }
+  }
 
-    //this should maybe be managed by making prop required... although that makes querying inconvient
-    if ((field.createable || field.updateable) && field.nillable == false) {
-      decorators.push({
-        name: 'required()'
-      });
+  private getDecorator(field: Field): DecoratorStructure {
+    let decoratorProps = {
+      apiName: field.name,
+      readOnly: field.updateable == false && field.createable == false,
+      required: (field.createable || field.updateable) && field.nillable == false,
+      childRelationship: false,
+      reference: null
     }
 
-    return decorators;
+    return this.generateDecorator(decoratorProps)
   }
 
 

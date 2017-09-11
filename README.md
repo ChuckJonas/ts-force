@@ -12,7 +12,7 @@ a typescript client for connecting with salesforce APIs.  Currently meant to run
 
 This library is intended to use with code generation.  Files can be generated using the following command:
 
-`ts-force-gen --accessToken '123abc' --instanceUrl https://cs65.my.salesforce.com --sobs Account,Contact --outputFile ./tst/test.ts`
+`ts-force-gen --accessToken '123abc' --instanceUrl https://cs65.my.salesforce.com --sobs Account,Contact --outputFile ./src/generated/sobs.ts`
 
 `--accessToken|-a`: access token to connect to tooling API wit
 `--instanceUrl|-i`: host url of the org your connecting with
@@ -69,13 +69,21 @@ Query record via a static method on each generated claass.
 let accs: Account[] = Account.retrieve('SELECT Id FROM Account');
 ```
 
-#### relationships
+#### Relationships
+Both Parent & Child relationships are supported.  Returned objects are instances of `RestObject` and you can permform DML.
 
 ```typescript
-let contacts: Contact[] = Account.retrieve('SELECT Name, Account.Id, Account.Name FROM Contact LIMIT 1');
-let acc = contact[0].Account;
-acc.Name = 'New Name';
-acc.update();
+
+let accs: Account[] = await Account.retrieve(
+  `SELECT Id, Name, Website, Active__c, (SELECT Id, Name, Email, Parent_Object__r.Id, Parent_Object__r.Name FROM Contacts) FROM Account WHERE Id = '0010m000006vmwJ'`
+);
+
+let contact = records[0].Contacts[0];
+contact.Name = 'new name';
+await contact.update();
+let parentObj = contact.Parent_Object__r;
+parentObj.Account__c = records[0].Id;
+await parentObj.update();
 ```
 
 ### Record DML

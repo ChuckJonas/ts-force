@@ -1,33 +1,21 @@
-import "reflect-metadata";
+import { ChildRelationship } from './sObjectDescribe';
+import 'reflect-metadata';
 import { SObject } from './SObject';
 
-const requiredMetadataKey = Symbol("required");
+const sFieldMetadataKey = Symbol("sField");
 
-export function required() {
-  return Reflect.metadata(requiredMetadataKey, true);
+export class SFieldProperties{
+  public apiName: string;
+  public readOnly: boolean;
+  public reference: () => { new(): SObject; }
+  public required: boolean;
+  public childRelationship: boolean;
 }
 
-export function isRequired(target: any, propertyKey: string) {
-  return Reflect.getMetadata(requiredMetadataKey, target, propertyKey);
+export function sField(props: SFieldProperties) {
+  return Reflect.metadata(sFieldMetadataKey, props);
 }
 
-
-const readonlyMetadataKey = Symbol("readonly");
-
-export function readonly() {
-  return Reflect.metadata(readonlyMetadataKey, true);
-}
-
-export function isReadOnly(target: any, propertyKey: string) {
-  return Reflect.getMetadata(readonlyMetadataKey, target, propertyKey);
-}
-
-const referenceMetadataKey = Symbol("reference");
-
-export function reference(type: { new(): SObject; }) {
-  return Reflect.metadata(referenceMetadataKey, type);
-}
-
-export function getReferenceTypeConstructor(target: any, propertyKey: string): { new(): SObject; } {
-  return Reflect.getMetadata(referenceMetadataKey, target, propertyKey);
+export function getSFieldProps(target: any, propertyKey: string): SFieldProperties{
+  return Reflect.getMetadata(sFieldMetadataKey, target, propertyKey);
 }

@@ -1,6 +1,6 @@
 import { Rest, QueryResponse } from './rest';
 import { AxiosResponse } from 'axios';
-import { isReadOnly, getReferenceTypeConstructor } from './sObjectDecorators';
+import { getSFieldProps, SFieldProperties } from './sObjectDecorators';
 /* Base SObject */
 
 export class SObjectAttributes {
@@ -25,7 +25,7 @@ export interface DMLResponse {
   success: boolean;
 }
 
-export class RestObject extends SObject {
+export abstract class RestObject extends SObject {
 
   constructor(type: string) {
     super(type);
@@ -43,7 +43,7 @@ export class RestObject extends SObject {
       }
       return sobs;
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
       return error;
     }
   }
@@ -94,16 +94,18 @@ export class RestObject extends SObject {
   }
 
   //removes any readonly/reference properties to prepare for update/insert
-  private prepareData(): any{
+  private prepareData(): any {
     let data = Object.assign({}, this);
     //remove anything that we can't update
     for (var i in data) {
       //clean properties
       if (data.hasOwnProperty(i)) {
         //remove readonly && reference types
-        if (isReadOnly(this, i) || getReferenceTypeConstructor(this, i) != null) {
-          console.log(`removed readonly/reference field: ${i}`)
-          data[i] = undefined;
+        let sFieldProps = getSFieldProps(this, i);
+        if (sFieldProps) {
+          if (sFieldProps.readOnly || sFieldProps.reference != null) {
+            data[i] = undefined;
+          }
         }
       }
     }
@@ -111,17 +113,31 @@ export class RestObject extends SObject {
   }
 
   //copies data from a json object to restobject
-  private static mapData(sob: SObject, data: any): SObject{
+  private static mapData(sob: SObject, data: any): SObject {
     //remove anything that we can't update
     for (var i in data) {
       //clean properties
       if (data.hasOwnProperty(i)) {
-        //remove readonly && reference types
-        var type: { new(): SObject; } = getReferenceTypeConstructor(sob, i)
-        if (type != null) {
-          sob[i] = RestObject.mapData(new type(), data[i]);
-        }else{
-          sob[i] = data[i];
+        //get decorators
+
+        let sFieldProps = getSFieldProps(sob, i);
+
+        if (sFieldProps) {
+          if (sFieldProps.reference != null) {
+            var type: { new(): SObject; } = sFieldProps.reference();
+            if (sFieldProps.childRelationship == true) {
+              sob[i] = [];
+              if (data[i]) {
+                data[i].records.forEach(record => {
+                  sob[i].push(RestObject.mapData(new type(), record));
+                })
+              }
+            } else {
+              sob[i] = RestObject.mapData(new type(), data[i]);
+            }
+          } else {
+            sob[i] = data[i];
+          }
         }
       }
     }
