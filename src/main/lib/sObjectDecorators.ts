@@ -5,11 +5,11 @@ import { SObject } from './SObject';
 const sFieldMetadataKey = Symbol("sField");
 
 export class SFieldProperties{
-    public apiName: string;
-    public readOnly: boolean;
-    public reference: () => { new(): SObject; }
-    public required: boolean;
-    public childRelationship: boolean;
+  public apiName: string;
+  public readOnly: boolean;
+  public reference: () => { new(): SObject; }
+  public required: boolean;
+  public childRelationship: boolean;
 }
 
 export function sField(props: SFieldProperties) {

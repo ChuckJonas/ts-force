@@ -94,7 +94,7 @@ export abstract class RestObject extends SObject {
   }
 
   //removes any readonly/reference properties to prepare for update/insert
-  private prepareData(): any{
+  private prepareData(): any {
     let data = Object.assign({}, this);
     //remove anything that we can't update
     for (var i in data) {
@@ -102,11 +102,10 @@ export abstract class RestObject extends SObject {
       if (data.hasOwnProperty(i)) {
         //remove readonly && reference types
         let sFieldProps = getSFieldProps(this, i);
-        if(sFieldProps){
-            if (sFieldProps.readOnly || sFieldProps.reference != null) {
-            console.log(`removed readonly/reference field: ${i}`)
+        if (sFieldProps) {
+          if (sFieldProps.readOnly || sFieldProps.reference != null) {
             data[i] = undefined;
-            }
+          }
         }
       }
     }
@@ -114,8 +113,7 @@ export abstract class RestObject extends SObject {
   }
 
   //copies data from a json object to restobject
-  private static mapData(sob: SObject, data: any): SObject{
-    console.log(data);
+  private static mapData(sob: SObject, data: any): SObject {
     //remove anything that we can't update
     for (var i in data) {
       //clean properties
@@ -124,22 +122,22 @@ export abstract class RestObject extends SObject {
 
         let sFieldProps = getSFieldProps(sob, i);
 
-        if(sFieldProps){
-            if (sFieldProps.reference != null) {
-                var type: { new(): SObject; } = sFieldProps.reference();
-                if(sFieldProps.childRelationship == true){
-                    sob[i] = [];
-                    if(data[i]){
-                        data[i].records.forEach(record=>{
-                            sob[i].push(RestObject.mapData(new type(), record));
-                        })
-                    }
-                }else{
-                    sob[i] = RestObject.mapData(new type(), data[i]);
-                }
-            }else{
-                sob[i] = data[i];
+        if (sFieldProps) {
+          if (sFieldProps.reference != null) {
+            var type: { new(): SObject; } = sFieldProps.reference();
+            if (sFieldProps.childRelationship == true) {
+              sob[i] = [];
+              if (data[i]) {
+                data[i].records.forEach(record => {
+                  sob[i].push(RestObject.mapData(new type(), record));
+                })
+              }
+            } else {
+              sob[i] = RestObject.mapData(new type(), data[i]);
             }
+          } else {
+            sob[i] = data[i];
+          }
         }
       }
     }
