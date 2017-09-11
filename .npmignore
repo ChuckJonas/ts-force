@@ -6,8 +6,7 @@ tsconfig.json
 tslint.json
 .travis.yml
 .github
-build/temp
-build/docs
+build/test
 
 coverage
 .nyc_output
