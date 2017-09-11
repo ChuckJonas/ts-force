@@ -1,0 +1,10 @@
+{
+    "extends": "./config/tsconfig.flexible",
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "build/production"
+    },
+    "exclude": [
+        "tests/**"
+    ]
+}
