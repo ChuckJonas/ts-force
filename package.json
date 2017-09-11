@@ -23,6 +23,7 @@
   "license": "MIT",
   "scripts": {
     "clean-build": "rm -r -f ./build && npm run build",
+    "link": "npm run clean-build && npm link",
     "pretest": "tsc",
     "test": "mocha",
     "build": "tsc -p tsconfig.build.json",
