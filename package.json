@@ -24,6 +24,7 @@
   "scripts": {
     "clean-build": "rm -r -f ./build && npm run build",
     "pretest": "tsc",
+    "test": "mocha",
     "build": "tsc -p tsconfig.build.json",
     "watch": "mocha-typescript-watch",
     "prepare": "tsc"
