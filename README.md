@@ -4,6 +4,8 @@ a typescript client for connecting with salesforce APIs.  Currently meant to run
 
 `npm install ts-force`
 
+***NOTE: ts-force is still very experimental and will likely continue to under-go breaking refactors for sometime.  USE AT OWN RISK!***
+
 ## Usage
 
 ## Generate code
