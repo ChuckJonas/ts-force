@@ -11,7 +11,7 @@ export class Rest {
 
   public request: AxiosInstance;
   public version: string;
-  private constructor() {
+  constructor() {
     this.version = 'v40.0';
     this.request = axios.create({
       baseURL: `${Rest.config.host}/services/data/${this.version}/`,

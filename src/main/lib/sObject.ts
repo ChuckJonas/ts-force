@@ -5,6 +5,7 @@ import { isReadOnly, getReferenceTypeConstructor } from './sObjectDecorators';
 
 export class SObjectAttributes {
   public type: string; // sf apex name
+  public url: string // sf rest API url for record
 }
 
 export abstract class SObject {

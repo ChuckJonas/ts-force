@@ -1,7 +1,7 @@
 import { suite, test, slow, timeout } from 'mocha-typescript'
 import { should } from 'chai'
 import * as nock from 'nock'
-import { Rest, RestBaseConfig, SObject } from '../src/index'
+import { Rest, BaseConfig, SObject } from '../src/index'
 // set up should
 should()
 
@@ -38,7 +38,7 @@ const mockSfQueryResult = {
 const mockHost = 'http://salesforceissocoolguys.com'
 const nockObj = nock(mockHost).get(/query/).reply(200, mockSfQueryResult)
 // set up hosting
-const config = new RestBaseConfig()
+const config = new BaseConfig()
 config.accessToken = '123abc'
 config.host = mockHost
 Rest.config = config
@@ -50,7 +50,8 @@ Rest.config = config
     Rest.config.accessToken.should.eql('123abc')
   }
   @test async 'Should Allow for a query' () {
-    const response = await Rest.query(MockSObj, 'Select id from MockSObj')
+
+    const response = await Rest.Instance.query('Select id from MockSObj')
     response.totalSize.should.be.above(0)
     response.records.should.be.an('array')
   }
