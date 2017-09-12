@@ -30,12 +30,14 @@ export interface DMLResponse {
   warnings: string[];
 }
 
-export interface DMLError {
-  message: string;
-  errorCode: string;
-  fields: string[];
-}
-
+/**
+ * Abstract Base class which provides DML to Generated SObjects
+ *
+ * @export
+ * @abstract
+ * @class RestObject
+ * @extends {SObject}
+ */
 export abstract class RestObject extends SObject {
 
   constructor(type: string) {
@@ -55,6 +57,14 @@ export abstract class RestObject extends SObject {
     return apiName.charAt(0).toLowerCase() + s.slice(1);
   }
 
+  public async refresh(): Promise<void> {
+    if (this.id == null) {
+      throw new Error('Must have Id to refresh!');
+    }
+
+    const response = await Rest.Instance.request.get(`/sobjects/${this.attributes.type}/${this.id}`);
+    RestObject.mapFromQuery(this, response.data);
+  }
   /**
   * inserts the sobject to Salesfroce
   *
@@ -87,7 +97,6 @@ export abstract class RestObject extends SObject {
       let getResult = compositeResult.compositeResponse[1].body;
       RestObject.mapFromQuery(this, getResult);
     }else{
-      console.log(compositeResult);
       this.id = compositeResult.compositeResponse[0].body.id
       return;
     }
