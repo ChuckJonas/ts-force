@@ -1,6 +1,6 @@
  // Get Rest Configs through oauth
 import axios, { AxiosError, AxiosInstance } from 'axios'
-import { BaseConfig } from '../'
+import { BaseConfig } from './baseConfig'
 
 export interface OAuthRequestBody {
   client_id: string
