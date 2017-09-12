@@ -8,22 +8,42 @@ a typescript client for connecting with salesforce APIs.  Currently meant to run
 
 ## Usage
 
-## Generate code
+### Generate code
 
 This library is intended to use with code generation.  Files can be generated using the following command:
 
+#### `ts-force-gen` cmd
+
 `ts-force-gen --accessToken '123abc' --instanceUrl https://cs65.my.salesforce.com --sobs Account,Contact --outputFile ./src/generated/sobs.ts`
 
-`--accessToken|-a`: access token to connect to tooling API wit
+##### args
+
+`--userAlias|-u`: If specified `accessToken` & `instanceUrl` will be loaded using the `sfdx force:org:display` command.  Requires that [sfdx cli](https://developer.salesforce.com/tools/sfdxcli) is installed.
+`--accessToken|-a`: access token to connect to tooling API with
 `--instanceUrl|-i`: host url of the org your connecting with
 `--sobs|-s`: list of comma seperated sobs to generate classes for
-`--outputFile|-o`: (Optional) where to save the output
+`--outputFile|-o`: where to save the output
+`--config|-c`: path to config json file.  If specified, all above args will pull from file instead
+
+##### json config
+
+Example `ts-force-config.json`:
+
+```json
+{
+  "auth": {
+    "userAlias": "scratch"
+  },
+  "sObjects": ["Account", "Contact"],
+  "outPath": "./src/generated/sobs.ts"
+}
+```
 
 Decorators are used to determine how to map query responses and which fields we can send to which methods.
 
 Properties will be transformed from api names to the standard javascript convention: `My_Object__c -> myObject`.
 
-### extending generated classes
+#### extending generated classes
 
 Obviously don't change the generated classes if possible unless you want to deal with "merge hell" when you need to regenerate.
 
@@ -31,17 +51,22 @@ Will add details on how to extend once I figure it out myself (mix-ins?).
 
 ### Configure Access Token
 
+To connect with salesforce, and `accessToken` and `instanceUrl` must be passed into `Rest.config`
+
+#### hosted on salesforce (visualforce)
+
 This will need to be injected in the visualforce page:
 
 ```html
  <script type="text/javascript">
         //rest details
         const __ACCESSTOKEN__ = '{!$Api.Session_ID}';
+        //leave blank to use realitive path
         const __RESTHOST__ = '';
     </script>
 ```
 
-Then we need to pass it to `RestClient`.
+Then, in our app, we just need to setup `RestClient`.
 
 ```typescript
 import {Rest, BaseConfig} from 'type-force';
@@ -51,25 +76,28 @@ declare var __RESTHOST__ : string;
 declare var __ACCESSTOKEN__ : string;
 
 //set configurations
-let config = new BaseConfig();
-config.host = __RESTHOST__;
-config.accessToken = __ACCESSTOKEN__;
+let config = {
+  instanceUrl: __RESTHOST__,
+  accessToken: __ACCESSTOKEN__
+};
 //set static config on Rest
 Rest.config = config;
 ```
 
-`RestClient.accessToken`: used to authinicate to the API
-`RestClient.host`: used to specify the host.  primarly used for dev enviorments. Leave blank/empty if running on Visualforce page
+#### hosted elsewhere
+
+TBD
 
 ### Quering Records
 
-Query record via a static method on each generated claass.
+Query record via a static method on each generated class.
 
 ```typescript
 let accs: Account[] = Account.retrieve('SELECT Id FROM Account');
 ```
 
 #### Relationships
+
 Both Parent & Child relationships are supported.  Returned objects are instances of `RestObject` and you can permform DML.
 
 ```typescript
@@ -101,10 +129,7 @@ await acc.delete();
 
 ## todo
 
-- move class `type` to decorator
 - reactor `Rest` class to be more testable (statics are bad mmmk)
 - add bulk API support
 - add RemoteAction support
-- Add ability for `ts-force-gen` to run from DX or meta-data package context
-- figure out how to configure `ts-force-gen` to exclude/include meta-data at a more granular level
 - Most robost authinication configuration (oAuth?)

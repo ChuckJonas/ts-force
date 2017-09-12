@@ -14,7 +14,7 @@ export class Rest {
   constructor() {
     this.version = 'v40.0';
     this.request = axios.create({
-      baseURL: `${Rest.config.host}/services/data/${this.version}/`,
+      baseURL: `${Rest.config.instanceUrl}/services/data/${this.version}/`,
       headers: {
         'Authorization': 'Bearer ' + Rest.config.accessToken,
         'Content-Type': 'application/json',
