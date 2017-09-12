@@ -1,6 +1,7 @@
 import { Rest, QueryResponse } from './rest';
+import {Composite, CompositeBatch, BatchResponse, CompositeResult} from './composite';
 import { AxiosResponse } from 'axios';
-import { getSFieldProps, SFieldProperties } from './sObjectDecorators';
+import { sField, getSFieldProps, SFieldProperties } from './sObjectDecorators';
 
 
 export class SObjectAttributes {
@@ -10,7 +11,9 @@ export class SObjectAttributes {
 
 /* Base SObject */
 export abstract class SObject {
-  public Id: string | undefined;
+
+  @sField({apiName:'Id', readOnly:true, required:false, reference: null, childRelationship: false})
+  public id: string | undefined;
   public attributes: SObjectAttributes;
 
   constructor(type: string) {
@@ -39,29 +42,97 @@ export abstract class RestObject extends SObject {
     super(type);
   }
 
-  public async insert(): Promise<DMLResponse> {
-    let data = this.prepareForDML();
-    const response = await this.generateCall(`/sobjects/${this.attributes.type}/`, data);
-    // auto set the id to here
-    this.Id = response.data.id;
-    return response.data;
+  /**
+   * Converts API name to javascript property name
+   *
+   * @static
+   * @param {string} apiName Salesforce API name
+   * @returns {string} converted in cammel case
+   * @memberof RestObject
+   */
+  public static sanatizeProperty(apiName :string): string{
+    let s = apiName.replace('__c', '').replace('_', '');
+    return apiName.charAt(0).toLowerCase() + s.slice(1);
   }
 
-  public async update(): Promise<DMLResponse> {
-    if (this.Id == null) {
+  /**
+  * inserts the sobject to Salesfroce
+  *
+  * @param {boolean} [refresh] Set to true to apply GET after update
+  * @returns {Promise<void>}
+  * @memberof RestObject
+  */
+  public async insert(refresh?:boolean): Promise<void> {
+    let insertCompositeRef = 'newObject';
+
+    let composite = new Composite().addRequest(
+      'POST',
+      `sobjects/${this.attributes.type}`,
+      insertCompositeRef,
+      this.prepareForDML()
+    );
+
+    if(refresh === true){
+      composite.addRequest(
+        'GET',
+        `sobjects/${this.attributes.type}/@{${insertCompositeRef}.id}`,
+        'getObject'
+      );
+    }
+
+    const compositeResult = await composite.send();
+    this.handleCompositeErrors(compositeResult);
+
+    if(refresh === true){
+      let getResult = compositeResult.compositeResponse[1].body;
+      RestObject.mapFromQuery(this, getResult);
+    }else{
+      console.log(compositeResult);
+      this.id = compositeResult.compositeResponse[0].body.id
+      return;
+    }
+  }
+
+  /**
+  * Updates the sObject on Salesforce
+  * @param {boolean} [refresh] Set to true to apply GET after update
+  * @returns {Promise<void>}
+  * @memberof RestObject
+  */
+  public async update(refresh?:boolean): Promise<void> {
+
+    if (this.id == null) {
       throw new Error('Must have Id to update!');
     }
-    let data = this.prepareForDML();
 
-    const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=PATCH`, data);
-    return response.data;
+    let batchRequest = await new CompositeBatch()
+    .addUpdate(this);
+
+    if(refresh === true){
+      batchRequest.addGet(this)
+    }
+    const batchResponse = await batchRequest.send();
+    this.handleCompositeBatchErrors(batchResponse);
+
+    if(refresh === true){
+      let getResult = batchResponse.results[1].result;
+      RestObject.mapFromQuery(this, getResult);
+    }else{
+      return;
+    }
   }
 
+  /**
+   * Deletes the Object from Salesforce
+   *
+   * @returns {Promise<DMLResponse>}
+   * @memberof RestObject
+   */
   public async delete(): Promise<DMLResponse> {
-    if (this.Id == null) {
+    if (this.id == null) {
       throw new Error('Must have Id to Delete!');
     }
-    const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=DELETE`, this);
+    const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.id}?_HttpMethod=DELETE`, this);
     return response.data;
   }
 
@@ -77,17 +148,12 @@ export abstract class RestObject extends SObject {
     return sobs;
   }
 
-  public static sanatizeProperty(s :string): string{
-    s = s.replace('__c', '').replace('_', '');
-    return s.charAt(0).toLowerCase() + s.slice(1);
-  }
-
-  private generateCall(path: string, data: SObject): Promise<AxiosResponse> {
-    return Rest.Instance.request.post(path, data);
-  }
-
-  //prepares data for DML opporations
-  protected prepareForDML(): any {
+  /**
+   * Gets JSON Object from RestObject
+   * @returns {*} JSON represenation of SObject (mapped using decorators)
+   * @memberof RestObject
+   */
+  public prepareForDML(): any {
     let data = {};
 
     //loop each property
@@ -167,6 +233,35 @@ export abstract class RestObject extends SObject {
       }
     }
     return apiNameMap;
+  }
+
+  private handleCompositeErrors(compositeResult: CompositeResult){
+    let errors: string[] = []
+    compositeResult.compositeResponse.forEach(batchResult => {
+      if(batchResult.httpStatusCode < 200 || batchResult.httpStatusCode >= 300){
+        errors.push(batchResult.body);
+      }
+    });
+
+    if(errors.length){
+      throw new Error(JSON.stringify(errors));
+    }
+  }
+
+  private handleCompositeBatchErrors(batchResponse: BatchResponse){
+    if(batchResponse.hasErrors){
+      let errors: string[] = []
+      batchResponse.results.forEach(batchResult => {
+        if(batchResult.statusCode < 200 || batchResult.statusCode >= 300){
+          errors.push(batchResult.result);
+        }
+      });
+      throw new Error(JSON.stringify(errors));
+    }
+  }
+
+  private generateCall(path: string, data: SObject): Promise<AxiosResponse> {
+    return Rest.Instance.request.post(path, data);
   }
 
 }
