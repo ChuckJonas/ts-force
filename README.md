@@ -107,5 +107,4 @@ await acc.delete();
 - add RemoteAction support
 - Add ability for `ts-force-gen` to run from DX or meta-data package context
 - figure out how to configure `ts-force-gen` to exclude/include meta-data at a more granular level
-- deal with case sensitivity issue in query
 - Most robost authinication configuration (oAuth?)
