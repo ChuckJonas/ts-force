@@ -94,17 +94,17 @@ export abstract class RestObject extends SObject {
   }
 
   //removes any readonly/reference properties to prepare for update/insert
-  private prepareData(): any {
-    let data = Object.assign({}, this);
+  protected prepareData(): any {
+    let data = {};
     //remove anything that we can't update
-    for (var i in data) {
+    for (var i in this) {
       //clean properties
-      if (data.hasOwnProperty(i)) {
+      if (this.hasOwnProperty(i)) {
         //remove readonly && reference types
         let sFieldProps = getSFieldProps(this, i);
         if (sFieldProps) {
-          if (sFieldProps.readOnly || sFieldProps.reference != null) {
-            data[i] = undefined;
+          if (!sFieldProps.readOnly && sFieldProps.reference == null) {
+            data[sFieldProps.apiName] = this[i];
           }
         }
       }
@@ -113,30 +113,46 @@ export abstract class RestObject extends SObject {
   }
 
   //copies data from a json object to restobject
-  private static mapData(sob: SObject, data: any): SObject {
+  protected static mapData(sob: SObject, data: any): SObject {
+
+    //create a map of lowercase API names -> sob property names
+    let apiNameMap = new Map<string, string>();
+    for (var i in sob) {
+      //clean properties
+      if (sob.hasOwnProperty(i)) {
+        let sFieldProps = getSFieldProps(sob, i);
+        if(sFieldProps){
+           apiNameMap.set(sFieldProps.apiName.toLowerCase(), i);
+        }else{
+          apiNameMap.set(i,i);
+        }
+      }
+    }
+
     //remove anything that we can't update
     for (var i in data) {
       //clean properties
       if (data.hasOwnProperty(i)) {
         //get decorators
 
-        let sFieldProps = getSFieldProps(sob, i);
+        let sobPropName = apiNameMap.get(i.toLowerCase());
+        let sFieldProps = getSFieldProps(sob, sobPropName);
 
         if (sFieldProps) {
           if (sFieldProps.reference != null) {
             var type: { new(): SObject; } = sFieldProps.reference();
             if (sFieldProps.childRelationship == true) {
-              sob[i] = [];
+              sob[sobPropName] = [];
               if (data[i]) {
                 data[i].records.forEach(record => {
-                  sob[i].push(RestObject.mapData(new type(), record));
+                  sob[sobPropName].push(RestObject.mapData(new type(), record));
                 })
               }
             } else {
-              sob[i] = RestObject.mapData(new type(), data[i]);
+              sob[sobPropName] = RestObject.mapData(new type(), data[i]);
             }
           } else {
-            sob[i] = data[i];
+            sob[sobPropName] = data[i];
           }
         }
       }

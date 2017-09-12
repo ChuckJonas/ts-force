@@ -1,8 +1,9 @@
 import { suite, test, slow, timeout } from 'mocha-typescript'
 import { should, assert } from 'chai'
-import * as nock from 'nock'
+import * as nock from 'nock';
 import { RestObject, BaseConfig, Rest } from '../src/index'
 import { Account } from './lib/generatedSobs'
+import { getSFieldProps, SFieldProperties } from '../src/main/lib/sObjectDecorators';
 // set up should
 should()
 
@@ -52,8 +53,7 @@ config.accessToken = '123abc'
 config.host = mockHost
 Rest.config = config
 
-@suite class RestObjectTest {
-
+@suite class GeneratedObjectTest{
 
   @test async 'Retrieved Objects Should have DML methods'() {
     const response = await Account.retrieve(`SELECT Id, Name, Parent.Id, Parent.Name, (SELECT Id, Name FROM Contacts) FROM Account WHERE Id = '0010m000006wIAP'`);
@@ -63,16 +63,38 @@ Rest.config = config
     assert.isFunction(acc.insert, 'Primary Object Should have DML functions!');
     assert.isFunction(acc.delete, 'Primary Object Should have DML functions!');
 
-    const parentAcc = acc.Parent;
+    const parentAcc = acc.parent;
     assert.isFunction(parentAcc.update, 'ParentObjects Should have DML functions!');
     assert.isFunction(parentAcc.insert, 'ParentObjects Should have DML functions!');
     assert.isFunction(parentAcc.delete, 'ParentObjects Should have DML functions!');
 
-    acc.Contacts.forEach(contact => {
+    acc.contacts.forEach(contact => {
       assert.isFunction(contact.update, 'Child Objects Should have DML functions!');
       assert.isFunction(contact.insert, 'Child Objects Should have DML functions!');
       assert.isFunction(contact.delete, 'Child Objects Should have DML functions!');
     })
+  }
+
+}
+
+@suite class RestObjectTest extends Account{
+
+  @test async 'Readonly & Relationships should be removed'() {
+    this.accountNumber = 'abc';
+    let parent = new Account();
+    parent.name = 'abc';
+    this.parent = parent
+    this.isDeleted = true;
+
+    let data: Account = this.prepareData();
+
+    let accountNumberMeta = getSFieldProps(this, 'accountNumber');
+    let parentMeta = getSFieldProps(this, 'parent');
+    let isDeletedMeta = getSFieldProps(this, 'isDeleted');
+    assert(data[accountNumberMeta.apiName] == this.accountNumber, 'Updatable Property should be mapped to data');
+    assert(data[parentMeta.apiName] == undefined, 'relational propery should not be copied');
+    assert(data[isDeletedMeta.apiName] == undefined, 'readonly');
+
   }
 
 }

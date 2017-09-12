@@ -1,147 +1,214 @@
-//file should be recreated everytime we update the generate from a blank scratch org
-
 import { RestObject, SObject, sField } from "../../src/index";
 export class Account extends RestObject {
     @sField({ apiName: 'Contacts', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: true })
-    Contacts: Contact[];
+    contacts: Contact[];
     @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    Id: string;
+    id: string;
     @sField({ apiName: 'IsDeleted', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    IsDeleted: string;
+    isDeleted: boolean;
     @sField({ apiName: 'MasterRecord', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false })
-    MasterRecord: Account;
+    masterRecord: Account;
     @sField({ apiName: 'MasterRecordId', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    MasterRecordId: string;
+    masterRecordId: string;
     @sField({ apiName: 'Name', readOnly: false, required: true, reference: undefined, childRelationship: false })
-    Name: string;
+    name: string;
     @sField({ apiName: 'Type', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Type: string;
+    type: string;
     @sField({ apiName: 'Parent', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false })
-    Parent: Account;
+    parent: Account;
     @sField({ apiName: 'ParentId', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ParentId: string;
+    parentId: string;
     @sField({ apiName: 'BillingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingStreet: string;
+    billingStreet: string;
     @sField({ apiName: 'BillingCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingCity: string;
+    billingCity: string;
     @sField({ apiName: 'BillingState', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingState: string;
+    billingState: string;
     @sField({ apiName: 'BillingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingPostalCode: string;
+    billingPostalCode: string;
     @sField({ apiName: 'BillingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingCountry: string;
+    billingCountry: string;
     @sField({ apiName: 'BillingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingLatitude: number;
+    billingLatitude: number;
     @sField({ apiName: 'BillingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingLongitude: number;
+    billingLongitude: number;
     @sField({ apiName: 'BillingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    BillingGeocodeAccuracy: string;
+    billingGeocodeAccuracy: string;
     @sField({ apiName: 'BillingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    BillingAddress: string;
+    billingAddress: string;
     @sField({ apiName: 'ShippingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingStreet: string;
+    shippingStreet: string;
     @sField({ apiName: 'ShippingCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingCity: string;
+    shippingCity: string;
     @sField({ apiName: 'ShippingState', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingState: string;
+    shippingState: string;
     @sField({ apiName: 'ShippingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingPostalCode: string;
+    shippingPostalCode: string;
     @sField({ apiName: 'ShippingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingCountry: string;
+    shippingCountry: string;
     @sField({ apiName: 'ShippingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingLatitude: number;
+    shippingLatitude: number;
     @sField({ apiName: 'ShippingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingLongitude: number;
+    shippingLongitude: number;
     @sField({ apiName: 'ShippingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ShippingGeocodeAccuracy: string;
+    shippingGeocodeAccuracy: string;
     @sField({ apiName: 'ShippingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    ShippingAddress: string;
+    shippingAddress: string;
     @sField({ apiName: 'Phone', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Phone: string;
+    phone: string;
     @sField({ apiName: 'Fax', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Fax: string;
+    fax: string;
     @sField({ apiName: 'AccountNumber', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    AccountNumber: string;
+    accountNumber: string;
     @sField({ apiName: 'Website', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Website: string;
+    website: string;
     @sField({ apiName: 'PhotoUrl', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    PhotoUrl: string;
+    photoUrl: string;
     @sField({ apiName: 'Sic', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Sic: string;
+    sic: string;
     @sField({ apiName: 'Industry', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Industry: string;
+    industry: string;
     @sField({ apiName: 'AnnualRevenue', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    AnnualRevenue: number;
+    annualRevenue: number;
     @sField({ apiName: 'NumberOfEmployees', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    NumberOfEmployees: string;
+    numberOfEmployees: string;
     @sField({ apiName: 'Ownership', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Ownership: string;
+    ownership: string;
     @sField({ apiName: 'TickerSymbol', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    TickerSymbol: string;
+    tickerSymbol: string;
     @sField({ apiName: 'Description', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Description: string;
+    description: string;
     @sField({ apiName: 'Rating', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Rating: string;
+    rating: string;
     @sField({ apiName: 'Site', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Site: string;
+    site: string;
     @sField({ apiName: 'OwnerId', readOnly: false, required: true, reference: undefined, childRelationship: false })
-    OwnerId: string;
+    ownerId: string;
     @sField({ apiName: 'CreatedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    CreatedDate: string;
+    createdDate: Date;
     @sField({ apiName: 'CreatedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    CreatedById: string;
+    createdById: string;
     @sField({ apiName: 'LastModifiedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastModifiedDate: string;
+    lastModifiedDate: Date;
     @sField({ apiName: 'LastModifiedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastModifiedById: string;
+    lastModifiedById: string;
     @sField({ apiName: 'SystemModstamp', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    SystemModstamp: string;
+    systemModstamp: Date;
     @sField({ apiName: 'LastActivityDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastActivityDate: string;
+    lastActivityDate: Date;
     @sField({ apiName: 'LastViewedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastViewedDate: string;
+    lastViewedDate: Date;
     @sField({ apiName: 'LastReferencedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastReferencedDate: string;
+    lastReferencedDate: Date;
     @sField({ apiName: 'Jigsaw', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Jigsaw: string;
+    jigsaw: string;
     @sField({ apiName: 'JigsawCompanyId', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    JigsawCompanyId: string;
+    jigsawCompanyId: string;
     @sField({ apiName: 'CleanStatus', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    CleanStatus: string;
+    cleanStatus: string;
     @sField({ apiName: 'AccountSource', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    AccountSource: string;
+    accountSource: string;
     @sField({ apiName: 'DunsNumber', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    DunsNumber: string;
+    dunsNumber: string;
     @sField({ apiName: 'Tradestyle', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Tradestyle: string;
+    tradestyle: string;
     @sField({ apiName: 'NaicsCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    NaicsCode: string;
+    naicsCode: string;
     @sField({ apiName: 'NaicsDesc', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    NaicsDesc: string;
+    naicsDesc: string;
     @sField({ apiName: 'YearStarted', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    YearStarted: string;
+    yearStarted: string;
     @sField({ apiName: 'SicDesc', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    SicDesc: string;
+    sicDesc: string;
     @sField({ apiName: 'DandbCompanyId', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    DandbCompanyId: string;
+    dandbCompanyId: string;
     @sField({ apiName: 'OperatingHoursId', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OperatingHoursId: string;
+    operatingHoursId: string;
     @sField({ apiName: 'CustomerPriority__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    CustomerPriority__c: string;
+    customerPriority: string;
     @sField({ apiName: 'SLA__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    SLA__c: string;
+    sLA: string;
     @sField({ apiName: 'Active__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Active__c: string;
+    active: string;
     @sField({ apiName: 'NumberofLocations__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    NumberofLocations__c: number;
+    numberofLocations: number;
     @sField({ apiName: 'UpsellOpportunity__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    UpsellOpportunity__c: string;
+    upsellOpportunity: string;
     @sField({ apiName: 'SLASerialNumber__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    SLASerialNumber__c: string;
+    sLASerialNumber: string;
     @sField({ apiName: 'SLAExpirationDate__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    SLAExpirationDate__c: string;
+    sLAExpirationDate: Date;
     constructor() {
         super('Account');
+        this.contacts = void 0;
+        this.id = void 0;
+        this.isDeleted = void 0;
+        this.masterRecord = void 0;
+        this.masterRecordId = void 0;
+        this.name = void 0;
+        this.type = void 0;
+        this.parent = void 0;
+        this.parentId = void 0;
+        this.billingStreet = void 0;
+        this.billingCity = void 0;
+        this.billingState = void 0;
+        this.billingPostalCode = void 0;
+        this.billingCountry = void 0;
+        this.billingLatitude = void 0;
+        this.billingLongitude = void 0;
+        this.billingGeocodeAccuracy = void 0;
+        this.billingAddress = void 0;
+        this.shippingStreet = void 0;
+        this.shippingCity = void 0;
+        this.shippingState = void 0;
+        this.shippingPostalCode = void 0;
+        this.shippingCountry = void 0;
+        this.shippingLatitude = void 0;
+        this.shippingLongitude = void 0;
+        this.shippingGeocodeAccuracy = void 0;
+        this.shippingAddress = void 0;
+        this.phone = void 0;
+        this.fax = void 0;
+        this.accountNumber = void 0;
+        this.website = void 0;
+        this.photoUrl = void 0;
+        this.sic = void 0;
+        this.industry = void 0;
+        this.annualRevenue = void 0;
+        this.numberOfEmployees = void 0;
+        this.ownership = void 0;
+        this.tickerSymbol = void 0;
+        this.description = void 0;
+        this.rating = void 0;
+        this.site = void 0;
+        this.ownerId = void 0;
+        this.createdDate = void 0;
+        this.createdById = void 0;
+        this.lastModifiedDate = void 0;
+        this.lastModifiedById = void 0;
+        this.systemModstamp = void 0;
+        this.lastActivityDate = void 0;
+        this.lastViewedDate = void 0;
+        this.lastReferencedDate = void 0;
+        this.jigsaw = void 0;
+        this.jigsawCompanyId = void 0;
+        this.cleanStatus = void 0;
+        this.accountSource = void 0;
+        this.dunsNumber = void 0;
+        this.tradestyle = void 0;
+        this.naicsCode = void 0;
+        this.naicsDesc = void 0;
+        this.yearStarted = void 0;
+        this.sicDesc = void 0;
+        this.dandbCompanyId = void 0;
+        this.operatingHoursId = void 0;
+        this.customerPriority = void 0;
+        this.sLA = void 0;
+        this.active = void 0;
+        this.numberofLocations = void 0;
+        this.upsellOpportunity = void 0;
+        this.sLASerialNumber = void 0;
+        this.sLAExpirationDate = void 0;
     }
     static async retrieve(qry: string): Promise<Account[]> {
         return await RestObject.query<Account>(Account, qry);
@@ -149,133 +216,196 @@ export class Account extends RestObject {
 }
 export class Contact extends RestObject {
     @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    Id: string;
+    id: string;
     @sField({ apiName: 'IsDeleted', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    IsDeleted: string;
+    isDeleted: boolean;
     @sField({ apiName: 'MasterRecord', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: false })
-    MasterRecord: Contact;
+    masterRecord: Contact;
     @sField({ apiName: 'MasterRecordId', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    MasterRecordId: string;
+    masterRecordId: string;
     @sField({ apiName: 'Account', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false })
-    Account: Account;
+    account: Account;
     @sField({ apiName: 'AccountId', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    AccountId: string;
+    accountId: string;
     @sField({ apiName: 'LastName', readOnly: false, required: true, reference: undefined, childRelationship: false })
-    LastName: string;
+    lastName: string;
     @sField({ apiName: 'FirstName', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    FirstName: string;
+    firstName: string;
     @sField({ apiName: 'Salutation', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Salutation: string;
+    salutation: string;
     @sField({ apiName: 'Name', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    Name: string;
+    name: string;
     @sField({ apiName: 'OtherStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherStreet: string;
+    otherStreet: string;
     @sField({ apiName: 'OtherCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherCity: string;
+    otherCity: string;
     @sField({ apiName: 'OtherState', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherState: string;
+    otherState: string;
     @sField({ apiName: 'OtherPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherPostalCode: string;
+    otherPostalCode: string;
     @sField({ apiName: 'OtherCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherCountry: string;
+    otherCountry: string;
     @sField({ apiName: 'OtherLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherLatitude: number;
+    otherLatitude: number;
     @sField({ apiName: 'OtherLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherLongitude: number;
+    otherLongitude: number;
     @sField({ apiName: 'OtherGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherGeocodeAccuracy: string;
+    otherGeocodeAccuracy: string;
     @sField({ apiName: 'OtherAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    OtherAddress: string;
+    otherAddress: string;
     @sField({ apiName: 'MailingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingStreet: string;
+    mailingStreet: string;
     @sField({ apiName: 'MailingCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingCity: string;
+    mailingCity: string;
     @sField({ apiName: 'MailingState', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingState: string;
+    mailingState: string;
     @sField({ apiName: 'MailingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingPostalCode: string;
+    mailingPostalCode: string;
     @sField({ apiName: 'MailingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingCountry: string;
+    mailingCountry: string;
     @sField({ apiName: 'MailingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingLatitude: number;
+    mailingLatitude: number;
     @sField({ apiName: 'MailingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingLongitude: number;
+    mailingLongitude: number;
     @sField({ apiName: 'MailingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MailingGeocodeAccuracy: string;
+    mailingGeocodeAccuracy: string;
     @sField({ apiName: 'MailingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    MailingAddress: string;
+    mailingAddress: string;
     @sField({ apiName: 'Phone', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Phone: string;
+    phone: string;
     @sField({ apiName: 'Fax', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Fax: string;
+    fax: string;
     @sField({ apiName: 'MobilePhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    MobilePhone: string;
+    mobilePhone: string;
     @sField({ apiName: 'HomePhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    HomePhone: string;
+    homePhone: string;
     @sField({ apiName: 'OtherPhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    OtherPhone: string;
+    otherPhone: string;
     @sField({ apiName: 'AssistantPhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    AssistantPhone: string;
+    assistantPhone: string;
     @sField({ apiName: 'ReportsTo', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: false })
-    ReportsTo: Contact;
+    reportsTo: Contact;
     @sField({ apiName: 'ReportsToId', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    ReportsToId: string;
+    reportsToId: string;
     @sField({ apiName: 'Email', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Email: string;
+    email: string;
     @sField({ apiName: 'Title', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Title: string;
+    title: string;
     @sField({ apiName: 'Department', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Department: string;
+    department: string;
     @sField({ apiName: 'AssistantName', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    AssistantName: string;
+    assistantName: string;
     @sField({ apiName: 'LeadSource', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    LeadSource: string;
+    leadSource: string;
     @sField({ apiName: 'Birthdate', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Birthdate: string;
+    birthdate: Date;
     @sField({ apiName: 'Description', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Description: string;
+    description: string;
     @sField({ apiName: 'OwnerId', readOnly: false, required: true, reference: undefined, childRelationship: false })
-    OwnerId: string;
+    ownerId: string;
     @sField({ apiName: 'CreatedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    CreatedDate: string;
+    createdDate: Date;
     @sField({ apiName: 'CreatedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    CreatedById: string;
+    createdById: string;
     @sField({ apiName: 'LastModifiedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastModifiedDate: string;
+    lastModifiedDate: Date;
     @sField({ apiName: 'LastModifiedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastModifiedById: string;
+    lastModifiedById: string;
     @sField({ apiName: 'SystemModstamp', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    SystemModstamp: string;
+    systemModstamp: Date;
     @sField({ apiName: 'LastActivityDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastActivityDate: string;
+    lastActivityDate: Date;
     @sField({ apiName: 'LastCURequestDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastCURequestDate: string;
+    lastCURequestDate: Date;
     @sField({ apiName: 'LastCUUpdateDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastCUUpdateDate: string;
+    lastCUUpdateDate: Date;
     @sField({ apiName: 'LastViewedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastViewedDate: string;
+    lastViewedDate: Date;
     @sField({ apiName: 'LastReferencedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    LastReferencedDate: string;
+    lastReferencedDate: Date;
     @sField({ apiName: 'EmailBouncedReason', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    EmailBouncedReason: string;
+    emailBouncedReason: string;
     @sField({ apiName: 'EmailBouncedDate', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    EmailBouncedDate: string;
+    emailBouncedDate: Date;
     @sField({ apiName: 'IsEmailBounced', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    IsEmailBounced: string;
+    isEmailBounced: boolean;
     @sField({ apiName: 'PhotoUrl', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    PhotoUrl: string;
+    photoUrl: string;
     @sField({ apiName: 'Jigsaw', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Jigsaw: string;
+    jigsaw: string;
     @sField({ apiName: 'JigsawContactId', readOnly: true, required: false, reference: undefined, childRelationship: false })
-    JigsawContactId: string;
+    jigsawContactId: string;
     @sField({ apiName: 'CleanStatus', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    CleanStatus: string;
+    cleanStatus: string;
     @sField({ apiName: 'Level__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Level__c: string;
+    level: string;
     @sField({ apiName: 'Languages__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
-    Languages__c: string;
+    languages: string;
     constructor() {
         super('Contact');
+        this.id = void 0;
+        this.isDeleted = void 0;
+        this.masterRecord = void 0;
+        this.masterRecordId = void 0;
+        this.account = void 0;
+        this.accountId = void 0;
+        this.lastName = void 0;
+        this.firstName = void 0;
+        this.salutation = void 0;
+        this.name = void 0;
+        this.otherStreet = void 0;
+        this.otherCity = void 0;
+        this.otherState = void 0;
+        this.otherPostalCode = void 0;
+        this.otherCountry = void 0;
+        this.otherLatitude = void 0;
+        this.otherLongitude = void 0;
+        this.otherGeocodeAccuracy = void 0;
+        this.otherAddress = void 0;
+        this.mailingStreet = void 0;
+        this.mailingCity = void 0;
+        this.mailingState = void 0;
+        this.mailingPostalCode = void 0;
+        this.mailingCountry = void 0;
+        this.mailingLatitude = void 0;
+        this.mailingLongitude = void 0;
+        this.mailingGeocodeAccuracy = void 0;
+        this.mailingAddress = void 0;
+        this.phone = void 0;
+        this.fax = void 0;
+        this.mobilePhone = void 0;
+        this.homePhone = void 0;
+        this.otherPhone = void 0;
+        this.assistantPhone = void 0;
+        this.reportsTo = void 0;
+        this.reportsToId = void 0;
+        this.email = void 0;
+        this.title = void 0;
+        this.department = void 0;
+        this.assistantName = void 0;
+        this.leadSource = void 0;
+        this.birthdate = void 0;
+        this.description = void 0;
+        this.ownerId = void 0;
+        this.createdDate = void 0;
+        this.createdById = void 0;
+        this.lastModifiedDate = void 0;
+        this.lastModifiedById = void 0;
+        this.systemModstamp = void 0;
+        this.lastActivityDate = void 0;
+        this.lastCURequestDate = void 0;
+        this.lastCUUpdateDate = void 0;
+        this.lastViewedDate = void 0;
+        this.lastReferencedDate = void 0;
+        this.emailBouncedReason = void 0;
+        this.emailBouncedDate = void 0;
+        this.isEmailBounced = void 0;
+        this.photoUrl = void 0;
+        this.jigsaw = void 0;
+        this.jigsawContactId = void 0;
+        this.cleanStatus = void 0;
+        this.level = void 0;
+        this.languages = void 0;
     }
     static async retrieve(qry: string): Promise<Contact[]> {
         return await RestObject.query<Contact>(Contact, qry);

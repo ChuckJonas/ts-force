@@ -19,9 +19,9 @@ This library is intended to use with code generation.  Files can be generated us
 `--sobs|-s`: list of comma seperated sobs to generate classes for
 `--outputFile|-o`: (Optional) where to save the output
 
-Relational properties are only included for the object you add.
-
 Decorators are used to determine how to map query responses and which fields we can send to which methods.
+
+Properties will be transformed from api names to the standard javascript convention: `My_Object__c -> myObject`.
 
 ### extending generated classes
 
@@ -79,10 +79,10 @@ let accs: Account[] = await Account.retrieve(
 );
 
 let contact = records[0].Contacts[0];
-contact.Name = 'new name';
+contact.name = 'new name';
 await contact.update();
-let parentObj = contact.Parent_Object__r;
-parentObj.Account__c = records[0].Id;
+let parentObj = contact.parentObject;
+parentObj.account = records[0].Id;
 await parentObj.update();
 ```
 
@@ -92,9 +92,9 @@ Each DML opporation is provided through the `RestObject` base class that each ge
 
 ```typescript
 let acc = new Account();
-acc.Name = 'John Doe';
+acc.name = 'John Doe';
 await acc.insert();
-acc.Name = 'Jane Doe';
+acc.name = 'Jane Doe';
 await acc.update();
 await acc.delete();
 ```
@@ -103,7 +103,6 @@ await acc.delete();
 
 - move class `type` to decorator
 - reactor `Rest` class to be more testable (statics are bad mmmk)
-- add ability to remap properties from API names
 - add bulk API support
 - add RemoteAction support
 - Add ability for `ts-force-gen` to run from DX or meta-data package context

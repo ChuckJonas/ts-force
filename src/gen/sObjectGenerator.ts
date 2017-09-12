@@ -2,6 +2,7 @@ import { Scope, SourceFile, PropertyDeclarationStructure, DecoratorStructure, JS
 import { Rest } from "../main/lib/rest";
 import { Field, SObjectDescribe, ChildRelationship } from "../main/lib/SObjectDescribe";
 import { SFieldProperties } from '../main/lib/sObjectDecorators';
+
 const superClass = 'RestObject';
 
 export class SObjectGenerator {
@@ -9,6 +10,12 @@ export class SObjectGenerator {
   public apiNames: string[];
   public sourceFile: SourceFile;
 
+    /**
+     * Generates RestObject Concrete types
+     * @param {SourceFile} sourceFile: Location to save the files
+     * @param {string[]} apiNames: Salesforce API Object Names to generate Classes for
+     * @memberof SObjectGenerator
+     */
   constructor(sourceFile: SourceFile, apiNames: string[]) {
     this.apiNames = apiNames;
     this.sourceFile = sourceFile;
@@ -57,7 +64,7 @@ export class SObjectGenerator {
         }
 
         props.push({
-          name: child.relationshipName,
+          name: sanatizeProperty(child.relationshipName),
           type: `${referenceClass}[]`,
           scope: Scope.Public,
           decorators: [
@@ -94,7 +101,7 @@ export class SObjectGenerator {
         }
 
         props.push({
-          name: field.relationshipName,
+          name: sanatizeProperty(field.relationshipName),
           type: referenceClass,
           scope: Scope.Public,
           decorators: [
@@ -105,7 +112,7 @@ export class SObjectGenerator {
       }
 
       let prop: PropertyDeclarationStructure = {
-        name: field.name,
+        name: sanatizeProperty(field.name),
         type: this.mapSObjectType(field.type),
         scope: Scope.Public,
         decorators: [this.getDecorator(field)],
@@ -122,8 +129,16 @@ export class SObjectGenerator {
       properties: props
     });
 
+
     const constr = classDeclaration.addConstructor();
-    constr.setBodyText(`super('${apiName}');`);
+
+    const propsInit = props.map(prop=>{
+      return `this.${prop.name} = void 0;`;
+    }).join('\n');
+
+    constr.setBodyText(`super('${apiName}');
+    ${propsInit}
+    `);
 
     const qryMethod = classDeclaration.addMethod({
       name: 'retrieve',
@@ -150,18 +165,24 @@ export class SObjectGenerator {
     return apiName.replace('__c', '').replace('_', '');
   }
 
+
   private mapSObjectType(sfType: string): string {
     switch (sfType) {
+      case 'datetime':
+      case 'date':
+        return 'Date';
+      case 'boolean':
+        return 'boolean';
       case 'double':
       case 'integer':
       case 'currency':
-      return 'number';
+        return 'number';
       case 'reference':
       case 'string':
       case 'picklist':
       case 'id':
       default:
-      return 'string';
+        return 'string';
     }
   }
 
@@ -187,5 +208,10 @@ export class SObjectGenerator {
     return this.generateDecorator(decoratorProps)
   }
 
+}
 
+export function sanatizeProperty(s :string): string{
+  s = s.replace('__c', '');
+  s = s.replace('_', '');
+  return s.charAt(0).toLowerCase() + s.slice(1);
 }
