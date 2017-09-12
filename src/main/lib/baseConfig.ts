@@ -1,4 +1,4 @@
-export class BaseConfig {
-  public accessToken: string
-  public instanceUrl: string
+export interface BaseConfig {
+  accessToken: string
+  instanceUrl: string
 }

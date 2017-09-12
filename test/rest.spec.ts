@@ -6,7 +6,7 @@ import { Rest, BaseConfig, SObject } from '../src/index'
 should()
 
 // new mock SObject for fun
-class MockSObj extends SObject{
+class MockSObj extends SObject {
   public name: string
   constructor () {
     super('MockSObj')
