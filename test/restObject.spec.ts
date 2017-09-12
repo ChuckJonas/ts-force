@@ -7,55 +7,90 @@ import { getSFieldProps, SFieldProperties } from '../src/main/lib/sObjectDecorat
 // set up should
 should()
 
-// set up nock
-const mockSfQueryResult = {
-  "done": true,
-  "records": [
-    {
-      "Contacts": {
-        "done": true,
-        "records": [
-          {
-            "Id": "0030m000007dOaiAAE",
-            "Name": "Jack Rogers",
-            "attributes": {
-              "type": "Contact",
-              "url": "/services/data/v40.0/sobjects/Contact/0030m000007dOaiAAE"
-            }
-          }
-        ],
-        "totalSize": 1
-      },
-      "Id": "0010m000006wIAPAA2",
-      "Name": "Burlington Textiles Corp of America",
-      "Parent": {
-        "Id": "0010m000006wIARAA2",
-        "Name": "Dickenson plc",
-        "attributes": {
-          "type": "Account",
-          "url": "/services/data/v40.0/sobjects/Account/0010m000006wIARAA2"
-        }
-      },
-      "attributes": {
-        "type": "Account",
-        "url": "/services/data/v40.0/sobjects/Account/0010m000006wIAPAA2"
-      }
-    }
-  ],
-  "totalSize": 1
-}
-
-const mockHost = 'http://salesforceissocoolguys.com'
-const nockObj = nock(mockHost).get(/query/).reply(200, mockSfQueryResult)
-// set up hosting
-const config = new BaseConfig()
-config.accessToken = '123abc'
-config.host = mockHost
-Rest.config = config
 
 @suite class GeneratedObjectTest{
 
+  before(){
+
+    // set up nock
+    const mockSfQueryResult = {
+      "done": true,
+      "records": [
+        {
+          "Contacts": {
+            "done": true,
+            "records": [
+              {
+                "Id": "0030m000007dOaiAAE",
+                "Name": "Jack Rogers",
+                "attributes": {
+                  "type": "Contact",
+                  "url": "/services/data/v40.0/sobjects/Contact/0030m000007dOaiAAE"
+                }
+              }
+            ],
+            "totalSize": 1
+          },
+          "Id": "0010m000006wIAPAA2",
+          "Name": "Burlington Textiles Corp of America",
+          "Parent": {
+            "Id": "0010m000006wIARAA2",
+            "Name": "Dickenson plc",
+            "attributes": {
+              "type": "Account",
+              "url": "/services/data/v40.0/sobjects/Account/0010m000006wIARAA2"
+            }
+          },
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v40.0/sobjects/Account/0010m000006wIAPAA2"
+          }
+        }
+      ],
+      "totalSize": 1
+    }
+
+    const mockHost = 'http://salesforceisocoolguys.com'
+
+    // set up hosting
+    const config = new BaseConfig()
+    config.accessToken = '123abc'
+    config.instanceUrl = mockHost
+    Rest.config = config
+    let nockObj = nock(mockHost).get(/query/).reply(200, mockSfQueryResult)
+  }
+
+  @test 'Should Have Vaules in the base config' () {
+    Rest.config.accessToken.should.eql('123abc')
+  }
+
+  @test async 'Should Allow for a query' () {
+    const response = await Rest.Instance.query('Select id from MockSObj')
+    response.totalSize.should.be.above(0)
+    response.records.should.be.an('array')
+  }
+
   @test async 'Retrieved Objects Should have DML methods'() {
+    const response = await Account.retrieve(`SELECT Id, Name, Parent.Id, Parent.Name, (SELECT Id, Name FROM Contacts) FROM Account WHERE Id = '0010m000006wIAP'`);
+    response.should.have.length(1)
+    const acc = response[0];
+    assert.isFunction(acc.update, 'Primary Object Should have DML functions!');
+    assert.isFunction(acc.insert, 'Primary Object Should have DML functions!');
+    assert.isFunction(acc.delete, 'Primary Object Should have DML functions!');
+
+    const parentAcc = acc.parent;
+    assert.isFunction(parentAcc.update, 'ParentObjects Should have DML functions!');
+    assert.isFunction(parentAcc.insert, 'ParentObjects Should have DML functions!');
+    assert.isFunction(parentAcc.delete, 'ParentObjects Should have DML functions!');
+
+    acc.contacts.forEach(contact => {
+      assert.isFunction(contact.update, 'Child Objects Should have DML functions!');
+      assert.isFunction(contact.insert, 'Child Objects Should have DML functions!');
+      assert.isFunction(contact.delete, 'Child Objects Should have DML functions!');
+    })
+  }
+
+  @test async 'Retrieved Should have DML methods'() {
     const response = await Account.retrieve(`SELECT Id, Name, Parent.Id, Parent.Name, (SELECT Id, Name FROM Contacts) FROM Account WHERE Id = '0010m000006wIAP'`);
     response.should.have.length(1)
     const acc = response[0];
