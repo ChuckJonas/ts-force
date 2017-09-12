@@ -18,12 +18,12 @@ This library is intended to use with code generation.  Files can be generated us
 
 ##### args
 
-`--userAlias|-u`: If specified `accessToken` & `instanceUrl` will be loaded using the `sfdx force:org:display` command.  Requires that [sfdx cli](https://developer.salesforce.com/tools/sfdxcli) is installed.
-`--accessToken|-a`: access token to connect to tooling API with
-`--instanceUrl|-i`: host url of the org your connecting with
-`--sobs|-s`: list of comma seperated sobs to generate classes for
-`--outputFile|-o`: where to save the output
-`--config|-c`: path to config json file.  If specified, all above args will pull from file instead
+- `--userAlias|-u`: If specified `accessToken` & `instanceUrl` will be loaded using the `sfdx force:org:display` command.  Requires that [sfdx cli](https://developer.salesforce.com/tools/sfdxcli) is installed.
+- `--accessToken|-a`: access token to connect to tooling API with
+- `--instanceUrl|-i`: host url of the org your connecting with
+- `--sobs|-s`: list of comma seperated sobs to generate classes for
+- `--outputFile|-o`: where to save the output
+- `--config|-c`: path to config json file.  If specified, all above args will pull from file instead
 
 ##### json config
 
@@ -131,5 +131,4 @@ await acc.delete();
 
 - reactor `Rest` class to be more testable (statics are bad mmmk)
 - add bulk API support
-- add RemoteAction support
 - Most robost authinication configuration (oAuth?)
