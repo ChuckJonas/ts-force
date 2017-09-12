@@ -25,6 +25,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "test/**/*.ts",
     "test/**/*.spec.ts"
   ],
   "exclude": [
