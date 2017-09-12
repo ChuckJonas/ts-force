@@ -114,7 +114,7 @@ export abstract class RestObject extends SObject {
       throw new Error('Must have Id to update!');
     }
 
-    let batchRequest = await new CompositeBatch()
+    let batchRequest = new CompositeBatch()
     .addUpdate(this);
 
     if(refresh === true){

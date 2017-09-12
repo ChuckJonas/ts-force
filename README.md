@@ -88,6 +88,29 @@ Rest.config = config;
 
 TBD
 
+### DML
+
+Each DML opporation is provided through the `RestObject` base class that each generated class implements.
+
+```typescript
+let acc = new Account();
+acc.name = 'John Doe';
+await acc.insert();
+acc.name = 'Jane Doe';
+await acc.update();
+await acc.refresh(); //retrieves all properties
+await acc.delete();
+```
+
+#### insert/update refresh
+
+`insert` and `update` have an optional `refresh` parameter.  Setting this to true will, use the composite API to `GET` the object properties after DML is performed.  This is extremely helpful for getting changes to formulas and from workflow rules and DOES NOT consume and additional API call!
+
+``` typescript
+await acc.insert(); //object properties not updated
+await acc.insert(true); //object properties updated from GET result
+```
+
 ### Quering Records
 
 Query record via a static method on each generated class.
@@ -114,17 +137,60 @@ parentObj.account = records[0].Id;
 await parentObj.update();
 ```
 
-### Record DML
+### Composite API
 
-Each DML opporation is provided through the `RestObject` base class that each generated class implements.
+The [Composite API](https://developer.salesforce.com/blogs/tech-pubs/2017/01/simplify-your-api-code-with-new-composite-resources.html) is a powerful way to bundle API calls into a single request
+
+#### Batch
+
+Composite Batch allows you to bundle multiple requests into a single API call.  Here's what a custom `upsert` implementaion would look like:
+
+```typescript
+let accounts = Account.retrieve('SELECT Id FROM Account');
+let newAcc = new Account();
+newAcc.name = 'I need to be inserted!';
+accounts.add(newAcc);
+
+let batchRequest = new CompositeBatch()
+accounts.forEach(acc=>{
+  if(acc.id){ //update
+    batchRequest.addUpdate(sob);
+  }else{ //insert
+    batchRequest.addInsert(sob);
+  }
+})
+await batchRequest.send();
+```
+
+#### Composite
+
+The Composite calls allow you to bind data from the previous call to the following!  The downside is they take a bit more work to setup.
+
+Imagine we wanted to update a record and then retrieve it's properties in a single API call.  We can achieve this with the following
 
 ```typescript
 let acc = new Account();
-acc.name = 'John Doe';
-await acc.insert();
-acc.name = 'Jane Doe';
-await acc.update();
-await acc.delete();
+acc.id = '12324123124';
+acc.refresh();
+
+const compositeRef = 'myAccount';
+
+let composite = new Composite().addRequest(
+  'POST',
+  `sobjects/${this.attributes.type}`,
+  compositeRef,
+  acc.prepareForDML()
+);
+
+if(refresh === true){
+  composite.addRequest(
+    'GET',
+    `sobjects/${this.attributes.type}/@{${compositeRef}.id}`,
+    'getObject'
+  );
+}
+
+const compositeResult = await composite.send();
 ```
 
 ## todo
