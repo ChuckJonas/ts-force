@@ -86,7 +86,7 @@ Rest.config = config
     this.parent = parent
     this.isDeleted = true;
 
-    let data: Account = this.prepareData();
+    let data: Account = this.prepareForDML();
 
     let accountNumberMeta = getSFieldProps(this, 'accountNumber');
     let parentMeta = getSFieldProps(this, 'parent');

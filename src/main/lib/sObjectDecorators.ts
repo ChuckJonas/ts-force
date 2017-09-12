@@ -1,13 +1,13 @@
 import { ChildRelationship } from './sObjectDescribe';
 import 'reflect-metadata';
-import { SObject } from './SObject';
+import { RestObject } from './SObject';
 
 const sFieldMetadataKey = Symbol("sField");
 
 export class SFieldProperties{
   public apiName: string;
   public readOnly: boolean;
-  public reference: () => { new(): SObject; }
+  public reference: () => { new(): RestObject; }
   public required: boolean;
   public childRelationship: boolean;
 }

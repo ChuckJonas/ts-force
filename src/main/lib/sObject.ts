@@ -1,13 +1,14 @@
 import { Rest, QueryResponse } from './rest';
 import { AxiosResponse } from 'axios';
 import { getSFieldProps, SFieldProperties } from './sObjectDecorators';
-/* Base SObject */
+
 
 export class SObjectAttributes {
   public type: string; // sf apex name
   public url: string // sf rest API url for record
 }
 
+/* Base SObject */
 export abstract class SObject {
   public Id: string | undefined;
   public attributes: SObjectAttributes;
@@ -21,8 +22,15 @@ export abstract class SObject {
 
 export interface DMLResponse {
   id: string;
-  errors: any[];
+  errors: string[];
   success: boolean;
+  warnings: string[];
+}
+
+export interface DMLError {
+  message: string;
+  errorCode: string;
+  fields: string[];
 }
 
 export abstract class RestObject extends SObject {
@@ -31,81 +39,70 @@ export abstract class RestObject extends SObject {
     super(type);
   }
 
-  public static async query<T extends SObject>(type: { new(): T; }, qry: string): Promise<T[]> {
-    try {
-      const response = await Rest.Instance.query(qry);
-      let sobs: Array<T> = [];
-      for (let i = 0; i < response.records.length; i++) {
-        let sob = new type();
-        //recursivly build up concrete restobjects
-        RestObject.mapData(sob, response.records[i]);
-        sobs.push(sob);
-      }
-      return sobs;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }
-
   public async insert(): Promise<DMLResponse> {
-    try {
-      let data = this.prepareData();
-      const response = await this.generateCall(`/sobjects/${this.attributes.type}/`, data);
-      // auto set the id to here
-      this.Id = response.data.id;
-      return response.data;
-    } catch (error) {
-      console.log(error.response.data);
-      return error;
-    }
+    let data = this.prepareForDML();
+    const response = await this.generateCall(`/sobjects/${this.attributes.type}/`, data);
+    // auto set the id to here
+    this.Id = response.data.id;
+    return response.data;
   }
 
   public async update(): Promise<DMLResponse> {
     if (this.Id == null) {
       throw new Error('Must have Id to update!');
     }
-    let data = this.prepareData();
+    let data = this.prepareForDML();
 
-    try {
-      const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=PATCH`, data);
-      return response.data;
-    } catch (error) {
-      console.log(error.response.data);
-      return error;
-    }
+    const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=PATCH`, data);
+    return response.data;
   }
 
   public async delete(): Promise<DMLResponse> {
     if (this.Id == null) {
       throw new Error('Must have Id to Delete!');
     }
-    try {
-      const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=DELETE`, this);
-      return response.data;
-    } catch (error) {
-      console.log(error.response.data);
-      return error;
+    const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.Id}?_HttpMethod=DELETE`, this);
+    return response.data;
+  }
+
+  protected static async query<T extends RestObject>(type: { new(): T; }, qry: string): Promise<T[]> {
+    const response = await Rest.Instance.query(qry);
+    let sobs: Array<T> = [];
+    for (let i = 0; i < response.records.length; i++) {
+      let sob = new type();
+      //recursivly build up concrete restobjects
+      RestObject.mapFromQuery(sob, response.records[i]);
+      sobs.push(sob);
     }
+    return sobs;
+  }
+
+  public static sanatizeProperty(s :string): string{
+    s = s.replace('__c', '').replace('_', '');
+    return s.charAt(0).toLowerCase() + s.slice(1);
   }
 
   private generateCall(path: string, data: SObject): Promise<AxiosResponse> {
     return Rest.Instance.request.post(path, data);
   }
 
-  //removes any readonly/reference properties to prepare for update/insert
-  protected prepareData(): any {
+  //prepares data for DML opporations
+  protected prepareForDML(): any {
     let data = {};
-    //remove anything that we can't update
+
+    //loop each property
     for (var i in this) {
       //clean properties
       if (this.hasOwnProperty(i)) {
-        //remove readonly && reference types
+
         let sFieldProps = getSFieldProps(this, i);
         if (sFieldProps) {
-          if (!sFieldProps.readOnly && sFieldProps.reference == null) {
-            data[sFieldProps.apiName] = this[i];
+          if (sFieldProps.readOnly || sFieldProps.reference != null) {
+            //remove readonly && reference types
+            continue;
           }
+          //copy with mapping
+          data[sFieldProps.apiName] = this[i];
         }
       }
     }
@@ -113,46 +110,41 @@ export abstract class RestObject extends SObject {
   }
 
   //copies data from a json object to restobject
-  protected static mapData(sob: SObject, data: any): SObject {
+  protected static mapFromQuery(sob: RestObject, data: any): SObject {
 
     //create a map of lowercase API names -> sob property names
-    let apiNameMap = new Map<string, string>();
-    for (var i in sob) {
-      //clean properties
-      if (sob.hasOwnProperty(i)) {
-        let sFieldProps = getSFieldProps(sob, i);
-        if(sFieldProps){
-           apiNameMap.set(sFieldProps.apiName.toLowerCase(), i);
-        }else{
-          apiNameMap.set(i,i);
-        }
-      }
-    }
+    let apiNameMap = sob.getNameMapping();
 
-    //remove anything that we can't update
+    //loop through returned data
     for (var i in data) {
-      //clean properties
       if (data.hasOwnProperty(i)) {
-        //get decorators
 
+        //translate prop name & get decorator
         let sobPropName = apiNameMap.get(i.toLowerCase());
         let sFieldProps = getSFieldProps(sob, sobPropName);
 
-        if (sFieldProps) {
-          if (sFieldProps.reference != null) {
-            var type: { new(): SObject; } = sFieldProps.reference();
-            if (sFieldProps.childRelationship == true) {
-              sob[sobPropName] = [];
-              if (data[i]) {
-                data[i].records.forEach(record => {
-                  sob[sobPropName].push(RestObject.mapData(new type(), record));
-                })
-              }
-            } else {
-              sob[sobPropName] = RestObject.mapData(new type(), data[i]);
+        if(!sFieldProps){ //no mapping found
+          continue;
+        }
+
+        if (!sFieldProps.reference) {
+          sob[sobPropName] = data[i];
+        } else {
+          //reference type
+          var type: { new(): RestObject; } = sFieldProps.reference();
+
+          if (sFieldProps.childRelationship == true) {
+            //child type, map each record
+            sob[sobPropName] = [];
+            if (data[i]) {
+              data[i].records.forEach(record => {
+                sob[sobPropName].push(RestObject.mapFromQuery(new type(), record));
+              });
             }
+
           } else {
-            sob[sobPropName] = data[i];
+            //parent type.  Map data
+            sob[sobPropName] = RestObject.mapFromQuery(new type(), data[i]);
           }
         }
       }
@@ -160,4 +152,24 @@ export abstract class RestObject extends SObject {
     return sob;
   }
 
+  //returns a mapping of API Name (lower case) -> Property Name
+  private getNameMapping(): Map<string, string>{
+    let apiNameMap = new Map<string, string>();
+    for (var i in this) {
+      //clean properties
+      if (this.hasOwnProperty(i)) {
+        let sFieldProps = getSFieldProps(this, i);
+        if(sFieldProps){
+          apiNameMap.set(sFieldProps.apiName.toLowerCase(), i);
+        }else{
+          apiNameMap.set(i,i);
+        }
+      }
+    }
+    return apiNameMap;
+  }
+
 }
+
+
+

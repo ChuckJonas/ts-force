@@ -28,7 +28,7 @@
     "test": "mocha",
     "build": "tsc -p tsconfig.build.json",
     "watch": "mocha-typescript-watch",
-    "prepare": "tsc"
+    "prepublishOnly": "npm run clean-build"
   },
   "engines": {
     "node": ">=4.5"
