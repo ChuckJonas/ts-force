@@ -39,7 +39,7 @@ export class Rest {
     let qryString = encodeURIComponent(query);
 
     try {
-      let resp = await this.request.get(`/query?q=${qryString}`);
+      let resp = await this.request.get(`/queryAll?q=${qryString}`);
       return resp.data;
     } catch (error) {
       console.log(error.response.data);
@@ -52,8 +52,9 @@ export class Rest {
   }
 
 }
-
 export interface QueryResponse<T> {
   totalSize: number;
   records: T[];
 }
+
+
