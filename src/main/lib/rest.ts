@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import { SObject } from './sObject'
 import { SObjectDescribe } from './sObjectDescribe'
-import { BaseConfig } from './baseConfig';
+import { BaseConfig } from '../../auth/baseConfig';
 
 
 export class Rest {

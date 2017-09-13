@@ -22,9 +22,10 @@
   ],
   "license": "MIT",
   "scripts": {
-    "clean-build": "rm -r -f ./build && npm run build",
+    "clean": "rm -r -f ./build",
+    "clean-build": "npmr run clean && npm run build",
     "link": "npm run clean-build && npm link",
-    "pretest": "tsc",
+    "pretest": "npm run clean && tsc",
     "test": "mocha",
     "build": "tsc -p tsconfig.build.json",
     "watch": "mocha-typescript-watch",

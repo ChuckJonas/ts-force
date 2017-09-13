@@ -53,9 +53,11 @@ should()
     const mockHost = 'http://salesforceisocoolguys.com'
 
     // set up hosting
-    const config = new BaseConfig()
-    config.accessToken = '123abc'
-    config.instanceUrl = mockHost
+    const config: BaseConfig = {
+      accessToken: '123abc',
+      instanceUrl: mockHost
+    }
+
     Rest.config = config
     let nockObj = nock(mockHost).get(/query/).reply(200, mockSfQueryResult)
   }
