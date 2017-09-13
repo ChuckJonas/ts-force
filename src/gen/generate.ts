@@ -17,10 +17,10 @@ interface AuthConfig extends BaseConfig{
 }
 
 interface Config{
-  auth: AuthConfig
-  sObjects: string[];
+  auth?: AuthConfig
+  sObjects?: string[];
   exclude?: Map<string, string[]>;
-  outPath: string;
+  outPath?: string;
 }
 
 run();
@@ -39,27 +39,41 @@ async function generateLoadConfig(): Promise<Config>{
 
   var args = minimist(process.argv.slice(2));
 
-  var configPath = args.config || args.c;
-
-  let config: Config  = {
-    auth: {
-      clientId: args.c || args.clientId,
-      clientSecret: args.x || args.clientSecret,
-      username: args.u || args.username,
-      password: args.p || args.password,
-      oAuthHost: args.h || args.oAuthHost,
-      accessToken: args.accessToken || args.a,
-      instanceUrl: args.instanceUrl || args.i
-    },
-    outPath: args.outputFile || args.o,
-    sObjects: (args.sObjects || args.s).split(','),
-  }
-
+  let config: Config = {};
+  var configPath = args.config || args.j;
   if(configPath){
-    let configFile: Config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-    Object.assign(configFile, config);
+    config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
   }
 
+  //setup commandline args
+
+  if(args.c || args.clientId){
+    config.auth.clientId = args.c || args.clientId;
+  }
+  if(args.x || args.clientSecret){
+    config.auth.clientSecret = args.x || args.clientSecret
+  }
+  if(args.u || args.username){
+    config.auth.username = args.u || args.username
+  }
+  if(args.p || args.password){
+    config.auth.password = args.p || args.password
+  }
+  if(args.h || args.oAuthHost){
+    config.auth.oAuthHost = args.h || args.oAuthHost
+  }
+  if(args.accessToken || args.a){
+    config.auth.accessToken = args.accessToken || args.a
+  }
+  if(args.instanceUrl || args.i){
+    config.auth.instanceUrl = args.instanceUrl || args.i
+  }
+  if(args.outputFile || args.o)
+    config.outPath = args.outputFile || args.o;
+
+  if(args.sObjects || args.s){
+    config.sObjects = (args.sObjects || args.s).split(',')
+  }
 
   if(config.auth.accessToken === undefined){
     //if just username is set, load from sfdx

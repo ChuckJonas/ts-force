@@ -19,7 +19,7 @@ This library is intended to use with code generation.  Files can be generated us
 
 A json configuration file can be passed in via the `--config|c` arg:
 
-`ts-force-gen -c ./config/ts-force-config.json`
+`ts-force-gen -j ./config/ts-force-config.json`
 
 *Username/Pass configuration:*
 
@@ -70,7 +70,7 @@ Most args can also be passed in directly via the command line.  Config File & ar
 - `--instanceUrl|-i`: instance of the org your connecting with.  Not required if using the user/pass or dx flows
 - `--sobs|-s`: list of comma seperated sobs to generate classes for
 - `--outputFile|-o`: where to save the output
-- `--config|-c`: path to config json file.  If specified, all above args will pull from file instead
+- `--config|-j`: path to config JSON file.  If specified, all above args will pull from file instead
 
 #### generated classes
 
