@@ -1,4 +1,5 @@
 # ts-force
+![alt text](https://img.shields.io/badge/build-experimental-orange.svg)
 
 a typescript client for connecting with salesforce APIs.  Currently meant to run on Visualforce and have "Access Token" passed in via global scope.
 
