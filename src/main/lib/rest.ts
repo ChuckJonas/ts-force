@@ -24,13 +24,8 @@ export class Rest {
 
     public async getSObjectDescribe (apiName: string): Promise<SObjectDescribe> {
 
-        try {
-            let resp = await this.request.get(`/sobjects/${apiName}/describe/`)
-            return resp.data
-        } catch (error) {
-            console.log(error.response.data)
-            return error
-        }
+        let resp = await this.request.get(`/sobjects/${apiName}/describe/`)
+        return resp.data
     }
 
     // get records of type T.  Do magic to cast plain json to T

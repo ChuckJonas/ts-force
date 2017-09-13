@@ -40,8 +40,12 @@ export class SObjectGenerator {
 
     // class generation
     public async generateSObjectClass (apiName: string): Promise<void> {
-
-        let sobDescribe = await this.retrieveDescribe(apiName)
+        let sobDescribe: SObjectDescribe
+        try {
+            sobDescribe = await this.retrieveDescribe(apiName)
+        }catch (e) {
+            throw new Error(`Could not retreive describe metadata for ${apiName}. Check SObject spelling and authorization `)
+        }
 
         let props: PropertyDeclarationStructure[] = []
 
@@ -102,30 +106,37 @@ export class SObjectGenerator {
     private generateChildrenProps (apiName: string, children: ChildRelationship[]): PropertyDeclarationStructure[] {
         let props = []
         children.forEach(child => {
+            try {
+                // don't generate if not in the list of types or ??
+                if (this.apiNames.indexOf(child.childSObject) === -1
+                    || child.childSObject === apiName
+                || child.deprecatedAndHidden === true
+                || child.relationshipName === null) {
+                    return
+                }
 
-            // don't generate if not in the list of types or ??
-            if (this.apiNames.indexOf(child.childSObject) === -1 || child.childSObject === apiName) {
-                return
+                let referenceClass = this.sanatizeClassName(child.childSObject)
+
+                let decoratorProps = {
+                    apiName: child.relationshipName,
+                    readOnly: true,
+                    required: false,
+                    childRelationship: true,
+                    reference: referenceClass
+                }
+
+                props.push({
+                    name: RestObject.sanatizeProperty(child.relationshipName),
+                    type: `${referenceClass}[]`,
+                    scope: Scope.Public,
+                    decorators: [
+                        this.generateDecorator(decoratorProps)
+                    ]
+                })
+            }catch (e) {
+                console.log(child)
+                throw e
             }
-
-            let referenceClass = this.sanatizeClassName(child.childSObject)
-
-            let decoratorProps = {
-                apiName: child.relationshipName,
-                readOnly: true,
-                required: false,
-                childRelationship: true,
-                reference: referenceClass
-            }
-
-            props.push({
-                name: RestObject.sanatizeProperty(child.relationshipName),
-                type: `${referenceClass}[]`,
-                scope: Scope.Public,
-                decorators: [
-                    this.generateDecorator(decoratorProps)
-                ]
-            })
         })
         return props
     }
@@ -134,50 +145,60 @@ export class SObjectGenerator {
         let props = []
         // add members
         fields.forEach(field => {
-            let docs: JSDocStructure[] = []
-            if (field.inlineHelpText != null) {
-                docs.push({ description: field.inlineHelpText })
-            }
 
-            // only include reference types if we are also generating the referenced class
-            if (field.type === 'reference' && this.apiNames.indexOf(field.referenceTo[0]) > -1) {
-                let referenceClass: string
-
-                if (field.referenceTo.length > 1) {
-                    referenceClass = 'any' // polymorphic?
-                } else {
-                    referenceClass = this.sanatizeClassName(field.referenceTo[0])
-                }
-                let refApiName = field.referenceTo[0] // polymorphic not support
-
-                let decoratorProps = {
-                    apiName: field.relationshipName,
-                    readOnly: true,
-                    required: false,
-                    childRelationship: false,
-                    reference: referenceClass
+            try {
+                let docs: JSDocStructure[] = []
+                if (field.inlineHelpText != null) {
+                    docs.push({ description: field.inlineHelpText })
                 }
 
-                props.push({
-                    name: RestObject.sanatizeProperty(field.relationshipName),
-                    type: referenceClass,
+                // only include reference types if we are also generating the referenced class
+                if (
+                    (field.type === 'reference' && this.apiNames.indexOf(field.referenceTo[0]) > -1)
+                    && field.relationshipName !== null
+                ) {
+
+                    let referenceClass: string
+
+                    if (field.referenceTo.length > 1) {
+                        referenceClass = 'any' // polymorphic?
+                    } else {
+                        referenceClass = this.sanatizeClassName(field.referenceTo[0])
+                    }
+                    let refApiName = field.referenceTo[0] // polymorphic not support
+
+                    let decoratorProps = {
+                        apiName: field.relationshipName,
+                        readOnly: true,
+                        required: false,
+                        childRelationship: false,
+                        reference: referenceClass
+                    }
+
+                    props.push({
+                        name: RestObject.sanatizeProperty(field.relationshipName),
+                        type: referenceClass,
+                        scope: Scope.Public,
+                        decorators: [
+                            this.generateDecorator(decoratorProps)
+                        ],
+                        docs: docs
+                    })
+                }
+
+                let prop: PropertyDeclarationStructure = {
+                    name: RestObject.sanatizeProperty(field.name),
+                    type: this.mapSObjectType(field.type),
                     scope: Scope.Public,
-                    decorators: [
-                        this.generateDecorator(decoratorProps)
-                    ],
+                    decorators: [this.getDecorator(field)],
                     docs: docs
-                })
-            }
+                }
 
-            let prop: PropertyDeclarationStructure = {
-                name: RestObject.sanatizeProperty(field.name),
-                type: this.mapSObjectType(field.type),
-                scope: Scope.Public,
-                decorators: [this.getDecorator(field)],
-                docs: docs
+                props.push(prop)
+            }catch (e) {
+                console.log(field)
+                throw e
             }
-
-            props.push(prop)
         })
         return props
     }
@@ -186,19 +207,19 @@ export class SObjectGenerator {
         switch (sfType) {
             case 'datetime':
             case 'date':
-                return 'Date'
+            return 'Date'
             case 'boolean':
-                return 'boolean'
+            return 'boolean'
             case 'double':
             case 'integer':
             case 'currency':
-                return 'number'
+            return 'number'
             case 'reference':
             case 'string':
             case 'picklist':
             case 'id':
             default:
-                return 'string'
+            return 'string'
         }
     }
 
