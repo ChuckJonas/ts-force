@@ -1,6 +1,6 @@
 import { ChildRelationship } from './sObjectDescribe';
 import 'reflect-metadata';
-import { RestObject } from './SObject';
+import { RestObject } from './sObject';
 
 const sFieldMetadataKey = Symbol("sField");
 

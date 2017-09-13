@@ -2,7 +2,7 @@ import { Scope, SourceFile,
   PropertyDeclarationStructure,
   DecoratorStructure, JSDocStructure, ClassDeclaration } from "ts-simple-ast";
   import { Rest, RestObject } from "../index"
-  import { Field, SObjectDescribe, ChildRelationship } from "../main/lib/SObjectDescribe";
+  import { Field, SObjectDescribe, ChildRelationship } from "../main/lib/sObjectDescribe";
 import { SFieldProperties } from '../main/lib/sObjectDecorators';
 
 const superClass = 'RestObject';
