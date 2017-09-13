@@ -1,7 +1,7 @@
 # ts-force
 
 ![alt text](https://img.shields.io/badge/stage-alpha-yellow.svg)
-![alt text](https://img.shields.io/travis/ChuckJonas/ts-force.svg)
+![alt text](https://travis-ci.org/ChuckJonas/ts-force.svg?branch=master)
 ![alt text](https://img.shields.io/npm/v/ts-force.svg)
 
 a typescript client for connecting with salesforce APIs.  Currently meant to run on Visualforce and have "Access Token" passed in via global scope.
