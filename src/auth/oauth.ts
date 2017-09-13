@@ -1,5 +1,6 @@
  // Get Rest Configs through oauth
 import axios, { AxiosError, AxiosInstance } from 'axios'
+import * as qs from 'qs'
 import { BaseConfig } from './baseConfig'
 
 export interface OAuthRequestBody {
@@ -42,7 +43,7 @@ export class UsernamePasswordConfig extends AuthConfig {
     this.password = password
     this.grantType = 'password'
   }
-  public reqBody(): PasswordRequestBody {
+  public reqBody (): PasswordRequestBody {
     // Object spred notation for the win!
     return {...this.baseBody(), username: this.username, password: this.password}
   }
@@ -67,7 +68,6 @@ export class OAuth implements BaseConfig {
   public accessToken: string
   public instanceUrl: string
 
-  public oAuthHost: string
   private config: AuthTypes
   private request: AxiosInstance
   constructor (config: AuthTypes) {
@@ -80,20 +80,10 @@ export class OAuth implements BaseConfig {
     })
   }
   public async initialize (): Promise<OAuth> {
-    const res = await this.request.post('', this.toFormData(this.config.reqBody()))
+    const res = await this.request.post('', qs.stringify(this.config.reqBody())
+  )
     this.accessToken = res.data.access_token
     this.instanceUrl = res.data.instance_url
     return this
-  }
-
-  //form encode... this will probably need to be refactored to support other flows
-  private toFormData(details: any): string{
-    var formBody = [];
-    for (var property in details) {
-      var encodedKey = encodeURIComponent(property);
-      var encodedValue = encodeURIComponent(details[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-    return formBody.join("&");
   }
 }
