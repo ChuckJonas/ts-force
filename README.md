@@ -132,11 +132,7 @@ let config = new UsernamePasswordConfig(
     'password1');
 
   let oAuth = new OAuth(config);
-  oAuth.initialize().then(authResult =>
-    Rest.config = authResult
-  ).catch(e=>{
-    console.log(e);
-  });
+  Rest.config = await oAuth.initialize()
   ```
 
 ### DML
@@ -243,6 +239,26 @@ if(refresh === true){
 
 const compositeResult = await composite.send();
 ```
+
+## Running Unit Tests
+
+In order to run unit test you must first create a .env.test file with the following credentals that link to a valid salesforce account
+
+```.env.test
+CLIENT_ID =
+CLIENT_SECRET =
+USERNAME =
+PASSWORD =
+HOST =
+```
+
+Then run 
+
+```
+npm test
+```
+
+Test should run automagically
 
 ## todo
 

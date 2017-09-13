@@ -26,7 +26,7 @@
     "clean-build": "npm run clean && npm run build",
     "link": "npm run clean-build && npm link",
     "pretest": "npm run clean && tsc",
-    "test": "mocha",
+    "test": "mocha -r dotenv/config dotenv_config_path=.env.test",
     "build": "tsc -p tsconfig.build.json",
     "watch": "mocha-typescript-watch",
     "prepublishOnly": "npm run clean-build"
@@ -39,8 +39,10 @@
     "@types/mocha": "^2.2.43",
     "@types/nock": "^8.2.1",
     "@types/node": "^8.0.4",
-    "minimist": "^1.2.0",
+    "@types/qs": "^6.5.0",
     "chai": "^4.1.2",
+    "dotenv": "^4.0.0",
+    "minimist": "^1.2.0",
     "mocha": "^3.5.2",
     "mocha-typescript": "^1.1.8",
     "nock": "^9.0.14",
@@ -52,6 +54,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
   }
