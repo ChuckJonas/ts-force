@@ -1,12 +1,14 @@
 # ts-force
 
-![alt text](https://img.shields.io/badge/build-experimental-orange.svg)
+![alt text](https://img.shields.io/badge/stage-alpha-yellow.svg)
+![alt text](https://img.shields.io/travis/ChuckJonas/ts-force.svg)
+![alt text](https://img.shields.io/npm/v/ts-force.svg)
 
 a typescript client for connecting with salesforce APIs.  Currently meant to run on Visualforce and have "Access Token" passed in via global scope.
 
 `npm install ts-force`
 
-***NOTE: ts-force is still very experimental and will likely continue to under-go breaking refactors for sometime.  USE AT OWN RISK!***
+***NOTE: ts-force is still very young and will likely under-go breaking refactors for some time***
 
 ## Usage
 
@@ -230,13 +232,12 @@ let composite = new Composite().addRequest(
   acc.prepareForDML()
 );
 
-if(refresh === true){
-  composite.addRequest(
+composite.addRequest(
     'GET',
     `sobjects/${this.attributes.type}/@{${compositeRef}.id}`,
     'getObject'
-  );
-}
+);
+
 
 const compositeResult = await composite.send();
 ```
