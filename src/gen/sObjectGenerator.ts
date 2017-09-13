@@ -55,7 +55,6 @@ export class SObjectGenerator {
 
       let classDeclaration = this.generateClass(apiName, className, props)
 
-      console.log('Generating method')
       const qryMethod = classDeclaration.addMethod({
         name: 'retrieve',
         isStatic: true,
@@ -74,16 +73,14 @@ export class SObjectGenerator {
     }
 
     private generateClass (apiName: string, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
-      console.log('Generating Class')
-      console.log(superClass)
       let classDeclaration = this.sourceFile.addClass({
         name: className,
         extends: superClass,
         isExported: true,
-        properties: props
+        properties: props,
+        docs: [{description: `Generated class for ${apiName}` }]
       })
 
-      console.log('Generating constructor')
       const constr = classDeclaration.addConstructor()
 
       const propsInit = props.map(prop => {

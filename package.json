@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "1.0.11",
+  "version": "1.0.14",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -22,10 +22,11 @@
   ],
   "license": "MIT",
   "scripts": {
-    "clean-build": "rm -r -f ./build && npm run build",
+    "clean": "rm -r -f ./build",
+    "clean-build": "npm run clean && npm run build",
     "link": "npm run clean-build && npm link",
-    "pretest": "tsc",
-    "test": "mocha -r dotenv/config dotenv_config_path=.env.test",
+    "pretest": "npm run clean && tsc",
+    "test": "mocha",
     "build": "tsc -p tsconfig.build.json",
     "watch": "mocha-typescript-watch",
     "prepublishOnly": "npm run clean-build"
@@ -38,9 +39,8 @@
     "@types/mocha": "^2.2.43",
     "@types/nock": "^8.2.1",
     "@types/node": "^8.0.4",
-    "chai": "^4.1.2",
-    "dotenv": "^4.0.0",
     "minimist": "^1.2.0",
+    "chai": "^4.1.2",
     "mocha": "^3.5.2",
     "mocha-typescript": "^1.1.8",
     "nock": "^9.0.14",
