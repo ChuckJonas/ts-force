@@ -23,7 +23,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -r -f ./build",
-    "clean-build": "npmr run clean && npm run build",
+    "clean-build": "npm run clean && npm run build",
     "link": "npm run clean-build && npm link",
     "pretest": "npm run clean && tsc",
     "test": "mocha",

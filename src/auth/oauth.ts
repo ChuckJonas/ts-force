@@ -42,7 +42,7 @@ export class UsernamePasswordConfig extends AuthConfig {
     this.password = password
     this.grantType = 'password'
   }
-  public reqBody (): PasswordRequestBody {
+  public reqBody(): PasswordRequestBody {
     // Object spred notation for the win!
     return {...this.baseBody(), username: this.username, password: this.password}
   }
@@ -73,13 +73,27 @@ export class OAuth implements BaseConfig {
   constructor (config: AuthTypes) {
     this.config = config
     this.request = axios.create({
-      baseURL: `${this.config.host}/services/oauth2/token`
+      baseURL: `${this.config.host}/services/oauth2/token`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     })
   }
   public async initialize (): Promise<OAuth> {
-    const res = await this.request.post('', this.config.reqBody)
+    const res = await this.request.post('', this.toFormData(this.config.reqBody()))
     this.accessToken = res.data.access_token
     this.oAuthHost = res.data.instance_url
     return this
+  }
+
+  //form encode... this will probably need to be refactored to support other flows
+  private toFormData(details: any): string{
+    var formBody = [];
+    for (var property in details) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(details[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+    return formBody.join("&");
   }
 }
