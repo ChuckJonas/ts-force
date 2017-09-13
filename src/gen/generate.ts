@@ -6,13 +6,18 @@ import { Rest } from "../main/lib/rest"
 import * as minimist from 'minimist';
 import * as path from 'path';
 import * as fs from 'fs';
+import {OAuth, UsernamePasswordConfig} from '../auth/oauth'
 
-interface DXConfig extends BaseConfig{
-  userAlias: string;
+interface AuthConfig extends BaseConfig{
+  username?: string;
+  password?: string;
+  oAuthHost?: string;
+  clientId?: string;
+  clientSecret?: string;
 }
 
 interface Config{
-  auth: DXConfig
+  auth: AuthConfig
   sObjects: string[];
   exclude?: Map<string, string[]>;
   outPath: string;
@@ -21,68 +26,100 @@ interface Config{
 run();
 
 function run(){
-  let config = generateLoadConfig();
-  generate(config);
+  generateLoadConfig().then(config=>{
+    generate(config);
+  }).catch(e=>{
+    console.log('Failed to Authinicate.  Check config or cmd params!');
+    console.log(e);
+  });
+
 }
 
-function generateLoadConfig(): Config{
+async function generateLoadConfig(): Promise<Config>{
 
   var args = minimist(process.argv.slice(2));
 
   var configPath = args.config || args.c;
 
-  let config: Config;
-  if(configPath){
-    config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-  }else{
-    config = {
-      auth: {
-        userAlias: args.u || args.userAlias,
-        accessToken: args.accessToken || args.a,
-        instanceUrl: args.instanceUrl || args.i
-      },
-      outPath: args.outputFile || args.o,
-      sObjects: (args.sObjects || args.s).split(','),
-    }
+  let config: Config  = {
+    auth: {
+      clientId: args.c || args.clientId,
+      clientSecret: args.x || args.clientSecret,
+      username: args.u || args.username,
+      password: args.p || args.password,
+      oAuthHost: args.h || args.oAuthHost,
+      accessToken: args.accessToken || args.a,
+      instanceUrl: args.instanceUrl || args.i
+    },
+    outPath: args.outputFile || args.o,
+    sObjects: (args.sObjects || args.s).split(','),
   }
 
-  //load from sfdx
-  if(config.auth.userAlias !== undefined){
+  if(configPath){
+    let configFile: Config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    Object.assign(configFile, config);
+  }
+
+
+  if(config.auth.accessToken === undefined){
+    //if just username is set, load from sfdx
+    if(config.auth.username !== undefined && config.auth.password === undefined){
+
       var child_process = require('child_process');
-      var orgInfo = JSON.parse(child_process.execSync(`sfdx force:org:display -u ${config.auth.userAlias} --json`).toString('utf8'));
+      var orgInfo = JSON.parse(child_process.execSync(`sfdx force:org:display -u ${config.auth.username} --json`).toString('utf8'));
 
       config.auth.accessToken = orgInfo.result.accessToken;
       config.auth.instanceUrl = orgInfo.result.instanceUrl;
+    }else if(config.auth.username !== undefined && config.auth.password !== undefined){
+
+      //otherwise lets try username/password flow
+      let pwConfig = new UsernamePasswordConfig(
+        config.auth.clientId,
+        config.auth.clientSecret,
+        config.auth.oAuthHost,
+        config.auth.username,
+        config.auth.password);
+
+        let oAuth = new OAuth(pwConfig);
+        await oAuth.initialize();
+        config.auth = oAuth;
+      }else{
+        throw new Error('No valid authinication configuration found!');
+      }
     }
 
-  //could also retrieve this using sfdx
-  Rest.config = config.auth;
+    //could also retrieve this using sfdx
+    Rest.config = config.auth;
 
-  return config;
+    return config;
 
-}
 
-function generate(config: Config){
-  const ast = new Ast();
-  let save = true;
-  if(config.outPath == null){
-    config.outPath = './tmp.ts';
-    save = false;
+
+
+
   }
-  const source = ast.addSourceFileFromStructure(config.outPath, {});
 
-  let gen = new SObjectGenerator(
-    source,
-    config.sObjects
-  );
-
-  gen.generateFile().then(()=>{
-    source.formatText();
-    console.log(source.getText());
-    if(save){
-      source.save();
+  function generate(config: Config){
+    const ast = new Ast();
+    let save = true;
+    if(config.outPath == null){
+      config.outPath = './tmp.ts';
+      save = false;
     }
-  }).catch(error=>{
-    console.log(error);
-  })
-}
+    const source = ast.addSourceFileFromStructure(config.outPath, {});
+
+    let gen = new SObjectGenerator(
+      source,
+      config.sObjects
+    );
+
+    gen.generateFile().then(()=>{
+      source.formatText();
+      console.log(source.getText());
+      if(save){
+        source.save();
+      }
+    }).catch(error=>{
+      console.log(error);
+    })
+  }

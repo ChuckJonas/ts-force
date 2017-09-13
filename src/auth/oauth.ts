@@ -82,7 +82,7 @@ export class OAuth implements BaseConfig {
   public async initialize (): Promise<OAuth> {
     const res = await this.request.post('', this.toFormData(this.config.reqBody()))
     this.accessToken = res.data.access_token
-    this.oAuthHost = res.data.instance_url
+    this.instanceUrl = res.data.instance_url
     return this
   }
 
