@@ -28,7 +28,8 @@ export class SObjectGenerator {
             namedImports: [
                 { name: 'RestObject' },
                 { name: 'SObject' },
-                { name: 'sField' }
+                { name: 'sField' },
+                { name: 'PolyRestObject'}
             ]
         })
 
@@ -161,7 +162,7 @@ export class SObjectGenerator {
                     let referenceClass: string
 
                     if (field.referenceTo.length > 1) {
-                        referenceClass = 'any' // polymorphic?
+                        referenceClass = 'PolyRestObject' // polymorphic?
                     } else {
                         referenceClass = this.sanatizeClassName(field.referenceTo[0])
                     }

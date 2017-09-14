@@ -58,57 +58,15 @@ export abstract class RestObject extends SObject {
 
     protected static async query<T extends RestObject> (type: { new(): T; }, qry: string): Promise<T[]> {
         const response = await Rest.Instance.query(qry)
+        console.log(response)
         let sobs: Array<T> = []
         for (let i = 0; i < response.records.length; i++) {
             let sob = new type()
             // recursivly build up concrete restobjects
-            RestObject.mapFromQuery(sob, response.records[i])
+            sob.mapFromQuery(response.records[i])
             sobs.push(sob)
         }
         return sobs
-    }
-
-    // copies data from a json object to restobject
-    protected static mapFromQuery (sob: RestObject, data: any): SObject {
-
-        // create a map of lowercase API names -> sob property names
-        let apiNameMap = sob.getNameMapping()
-
-        // loop through returned data
-        for (let i in data) {
-            if (data.hasOwnProperty(i)) {
-
-                // translate prop name & get decorator
-                let sobPropName = apiNameMap.get(i.toLowerCase())
-                let sFieldProps = getSFieldProps(sob, sobPropName)
-
-                if (!sFieldProps) { // no mapping found
-                    continue
-                }
-
-                if (!sFieldProps.reference) {
-                    sob[sobPropName] = data[i]
-                } else {
-                    // reference type
-                    let type: { new(): RestObject; } = sFieldProps.reference()
-
-                    if (sFieldProps.childRelationship === true) {
-                        // child type, map each record
-                        sob[sobPropName] = []
-                        if (data[i]) {
-                            data[i].records.forEach(record => {
-                                sob[sobPropName].push(RestObject.mapFromQuery(new type(), record))
-                            })
-                        }
-
-                    } else {
-                        // parent type.  Map data
-                        sob[sobPropName] = RestObject.mapFromQuery(new type(), data[i])
-                    }
-                }
-            }
-        }
-        return sob
     }
 
     public async refresh (): Promise<void> {
@@ -117,7 +75,7 @@ export abstract class RestObject extends SObject {
         }
 
         const response = await Rest.Instance.request.get(`/sobjects/${this.attributes.type}/${this.id}`)
-        RestObject.mapFromQuery(this, response.data)
+        this.mapFromQuery(response.data)
     }
     /**
     * inserts the sobject to Salesfroce
@@ -149,7 +107,7 @@ export abstract class RestObject extends SObject {
 
         if (refresh === true) {
             let getResult = compositeResult.compositeResponse[1].body
-            RestObject.mapFromQuery(this, getResult)
+            this.mapFromQuery(getResult)
         }else {
             this.id = compositeResult.compositeResponse[0].body.id
             return
@@ -179,7 +137,7 @@ export abstract class RestObject extends SObject {
 
         if (refresh === true) {
             let getResult = batchResponse.results[1].result
-            RestObject.mapFromQuery(this, getResult)
+            this.mapFromQuery(getResult)
         }else {
             return
         }
@@ -224,6 +182,51 @@ export abstract class RestObject extends SObject {
             }
         }
         return data
+    }
+
+     // copies data from a json object to restobject
+    protected mapFromQuery (data: SObject): RestObject {
+
+        // create a map of lowercase API names -> sob property names
+        let apiNameMap = this.getNameMapping()
+
+        // loop through returned data
+        for (let i in data) {
+            if (data.hasOwnProperty(i)) {
+
+                // translate prop name & get decorator
+                let sobPropName = apiNameMap.get(i.toLowerCase())
+                console.log(sobPropName)
+                let sFieldProps = getSFieldProps(this, sobPropName)
+                console.log(sFieldProps)
+                if (!sFieldProps) { // no mapping found
+                    continue
+                }
+
+                if (!sFieldProps.reference) {
+                    this[sobPropName] = data[i]
+                } else {
+                    // reference type
+                    let type: { new(): RestObject; } = sFieldProps.reference()
+                    let typeInstance = new type()
+
+                    if (sFieldProps.childRelationship === true) {
+                        // child type, map each record
+                        this[sobPropName] = []
+                        if (data[i]) {
+                            data[i].records.forEach(record => {
+                                this[sobPropName].push(typeInstance.mapFromQuery(record))
+                            })
+                        }
+
+                    } else {
+                        // parent type.  Map data
+                        this[sobPropName] = typeInstance.mapFromQuery(data[i])
+                    }
+                }
+            }
+        }
+        return this
     }
 
     // returns a mapping of API Name (lower case) -> Property Name

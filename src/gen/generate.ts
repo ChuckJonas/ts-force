@@ -45,7 +45,7 @@ async function generateLoadConfig (): Promise<Config> {
         config = JSON.parse(fs.readFileSync(configPath, 'utf8'))
     }
 
-  // setup commandline args
+    // setup commandline args
 
     if (args.c || args.clientId) {
         config.auth.clientId = args.c || args.clientId
@@ -77,7 +77,7 @@ async function generateLoadConfig (): Promise<Config> {
     }
 
     if (config.auth.accessToken === undefined) {
-    // if just username is set, load from sfdx
+        // if just username is set, load from sfdx
         if (config.auth.username !== undefined && config.auth.password === undefined) {
 
             let childProcess = require('child_process')
@@ -87,13 +87,14 @@ async function generateLoadConfig (): Promise<Config> {
             config.auth.instanceUrl = orgInfo.result.instanceUrl
         }else if (config.auth.username !== undefined && config.auth.password !== undefined) {
 
-      // otherwise lets try username/password flow
+            // otherwise lets try username/password flow
             let pwConfig = new UsernamePasswordConfig(
-        config.auth.clientId,
-        config.auth.clientSecret,
-        config.auth.oAuthHost,
-        config.auth.username,
-        config.auth.password)
+                config.auth.clientId,
+                config.auth.clientSecret,
+                config.auth.oAuthHost,
+                config.auth.username,
+                config.auth.password
+            )
 
             let oAuth = new OAuth(pwConfig)
             await oAuth.initialize()
@@ -120,8 +121,8 @@ function generate (config: Config) {
     const source = ast.addSourceFileFromStructure(config.outPath, {})
 
     let gen = new SObjectGenerator(
-      source,
-      config.sObjects
+        source,
+        config.sObjects
     )
 
     gen.generateFile().then(() => {
