@@ -1,7 +1,8 @@
-import { Scope, SourceFile, PropertyDeclarationStructure, DecoratorStructure, JSDocStructure, ClassDeclaration } from 'ts-simple-ast'
+import { Scope, SourceFile, PropertyDeclarationStructure, ParameterDeclaration, DecoratorStructure, JSDocStructure, ClassDeclaration } from 'ts-simple-ast'
 import { Rest, RestObject } from '../index'
 import { Field, SObjectDescribe, ChildRelationship } from '../main/lib/sObjectDescribe'
 import { SFieldProperties } from '../main/lib/sObjectDecorators'
+import { Spinner } from 'cli-spinner'
 
 const superClass = 'RestObject'
 
@@ -9,6 +10,7 @@ export class SObjectGenerator {
 
     public apiNames: string[]
     public sourceFile: SourceFile
+    public spinner: any
 
     /**
     * Generates RestObject Concrete types
@@ -22,6 +24,18 @@ export class SObjectGenerator {
     }
 
     public async generateFile () {
+        this.spinner = new Spinner({
+            text: 'warming up...',
+            stream: process.stderr,
+            onTick: function (msg) {
+                this.clearLine(this.stream)
+                this.stream.write(msg)
+            }
+        })
+        this.spinner.setSpinnerString(5)
+        this.spinner.setSpinnerDelay(20)
+        this.spinner.start()
+
         // add imports
         this.sourceFile.addImport({
             moduleSpecifier: 'ts-force',
@@ -34,13 +48,16 @@ export class SObjectGenerator {
         })
 
         for (let i = 0; i < this.apiNames.length; i++) {
-            await this.generateSObjectClass(this.apiNames[i])
-        }
 
+            await this.generateSObjectClass(this.apiNames[i])
+
+        }
+        this.spinner.stop()
     }
 
     // class generation
     public async generateSObjectClass (apiName: string): Promise<void> {
+        this.spinner.setSpinnerTitle(`Generating: ${apiName}`)
         let sobDescribe: SObjectDescribe
         try {
             sobDescribe = await this.retrieveDescribe(apiName)
@@ -56,6 +73,7 @@ export class SObjectGenerator {
 
         let className = this.sanatizeClassName(apiName)
 
+        this.generateInterface(className, props)
         let classDeclaration = this.generateClass(apiName, className, props)
 
         const qryMethod = classDeclaration.addMethod({
@@ -75,29 +93,57 @@ export class SObjectGenerator {
 
     }
 
+    private generateInterface (className: string, properties: PropertyDeclarationStructure[]) {
+        let propsInterface = this.sourceFile.addInterface({
+            name: this.generatePropInterfaceName(className),
+            docs: [{description: `Property Interface for ${className}` }]
+        })
+
+        properties.forEach(prop => {
+            let ip = propsInterface.addProperty({
+                name: prop.name,
+                type: prop.type
+            })
+            ip.setIsOptional(true)
+        })
+    }
+
     private generateClass (apiName: string, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
+        let propInterfaceName = this.generatePropInterfaceName(className)
+
         let classDeclaration = this.sourceFile.addClass({
             name: className,
             extends: superClass,
             isExported: true,
             properties: props,
+            implements: [propInterfaceName],
             docs: [{description: `Generated class for ${apiName}` }]
         })
 
         const constr = classDeclaration.addConstructor()
+        const param = constr.addParameter({
+            name: 'props',
+            type: propInterfaceName
+        })
+        param.setIsOptional(true)
 
         const propsInit = props.map(prop => {
             return `this.${prop.name} = void 0;`
         }).join('\n')
 
         constr.setBodyText(`super('${apiName}');
-        ${propsInit}`)
+        ${propsInit}
+        Object.assign(this,props)`)
 
         return classDeclaration
     }
 
     private async retrieveDescribe (apiName: string): Promise<SObjectDescribe> {
         return await Rest.Instance.getSObjectDescribe(apiName)
+    }
+
+    private generatePropInterfaceName (className: string) {
+        return `${className}Props`
     }
 
     private sanatizeClassName (apiName: string): string {

@@ -144,13 +144,17 @@ let config = new UsernamePasswordConfig(
 Each DML opporation is provided through the `RestObject` base class that each generated class implements.
 
 ```typescript
-let acc = new Account();
-acc.name = 'John Doe';
+
+let acc = new Account({ //all props can be set in constructor
+    name: 'John Doe',
+    website: 'example.com'
+});
 await acc.insert();
 acc.name = 'Jane Doe';
 await acc.update();
-await acc.refresh(); //retrieves all properties
+await acc.refresh(); //retrieves all first class properties
 await acc.delete();
+
 ```
 
 #### insert/update refresh
@@ -158,8 +162,10 @@ await acc.delete();
 `insert` and `update` have an optional `refresh` parameter.  Setting this to true will, use the composite API to `GET` the object properties after DML is performed.  This is extremely helpful for getting changes to formulas and from workflow rules and DOES NOT consume and additional API call!
 
 ``` typescript
+
 await acc.insert(); //object properties not updated
 await acc.insert(true); //object properties updated from GET result
+
 ```
 
 ### Quering Records
@@ -167,7 +173,9 @@ await acc.insert(true); //object properties updated from GET result
 Query record via a static method on each generated class.
 
 ```typescript
+
 let accs: Account[] = Account.retrieve('SELECT Id FROM Account');
+
 ```
 
 #### Relationships
@@ -197,6 +205,7 @@ The [Composite API](https://developer.salesforce.com/blogs/tech-pubs/2017/01/sim
 Composite Batch allows you to bundle multiple requests into a single API call.  Here's what a custom `upsert` implementaion would look like:
 
 ```typescript
+
 let accounts = Account.retrieve('SELECT Id FROM Account');
 let newAcc = new Account();
 newAcc.name = 'I need to be inserted!';
@@ -211,6 +220,7 @@ accounts.forEach(acc=>{
   }
 })
 await batchRequest.send();
+
 ```
 
 #### Composite
@@ -220,6 +230,7 @@ The Composite calls allow you to bind data from the previous call to the followi
 Imagine we wanted to update a record and then retrieve it's properties in a single API call.  We can achieve this with the following
 
 ```typescript
+
 let acc = new Account();
 acc.id = '12324123124';
 acc.refresh();
@@ -241,8 +252,8 @@ composite.addRequest(
     acc.handleCompositeResult
 );
 
-
 const compositeResult = await composite.send();
+
 ```
 
 #### passing callbacks
@@ -250,30 +261,27 @@ const compositeResult = await composite.send();
 Optionally, a callback can be passed into each composite request that will be passed the respective data once the composite request is complete.  You can see this in action in the above example where `acc.handleCompositeResult` is passed into the function.  The result from the `GET` request will be passed to this function in the rest object:
 
 ```typescript
+
 handleCompositeResult = (result: CompositeResponse) => {
     this.mapFromQuery(result.body)
 }
+
 ```
 
 ## Running Unit Tests
 
 In order to run unit test you must first create a .env.test file with the following credentals that link to a valid salesforce account
 
-```.env.test
+```bat
+
 CLIENT_ID =
 CLIENT_SECRET =
 USERNAME =
 PASSWORD =
 HOST =
+
 ```
 
 Then run `npm test`
 
-
 Test should run automagically
-
-## todo
-
-- reactor `Rest` class to be more testable (statics are bad mmmk)
-- add bulk API support
-- Most robost authinication configuration (oAuth?)
