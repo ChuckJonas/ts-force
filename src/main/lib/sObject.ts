@@ -202,7 +202,12 @@ export abstract class RestObject extends SObject {
                 }
 
                 if (!sFieldProps.reference) {
-                    this[sobPropName] = data[i]
+                    if (data[i] === null) {
+                        this[sobPropName] = void 0
+                    }else {
+                        this[sobPropName] = data[i]
+                    }
+
                 } else {
                     // reference type
                     let type: { new(): RestObject; } = sFieldProps.reference()
