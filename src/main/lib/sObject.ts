@@ -68,11 +68,17 @@ export abstract class RestObject extends SObject {
         return sobs
     }
 
-    handleCompositeResult = (result: CompositeResponse) => {
+    handleCompositeUpdateResult = (result: CompositeResponse) => {
+         this.id = result.body.id
+    }
+
+    handleCompositeGetResult = (result: CompositeResponse) => {
+        console.log('composite get result')
+        console.log(result.body)
         this.mapFromQuery(result.body)
     }
 
-    handleCompositeBatchResult = (result: CompositeBatchResult) => {
+    handleCompositeBatchGetResult = (result: CompositeBatchResult) => {
         this.mapFromQuery(result.result)
     }
 
@@ -94,31 +100,23 @@ export abstract class RestObject extends SObject {
     public async insert (refresh ?: boolean): Promise < void > {
         let insertCompositeRef = 'newObject'
 
-        let composite = new Composite().addRequest(
-            'POST',
-            `sobjects/${this.attributes.type}`,
-            insertCompositeRef,
-            this.prepareForDML()
-        )
+        let composite = new Composite().addRequest({
+                method: 'POST',
+                url: `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}`,
+                referenceId: insertCompositeRef,
+                body: this.prepareForDML()
+        }, this.handleCompositeUpdateResult)
 
         if (refresh === true) {
-            composite.addRequest(
-                'GET',
-                `sobjects/${this.attributes.type}/@{${insertCompositeRef}.id}`,
-                'getObject'
-            )
+            composite.addRequest({
+                method: 'GET',
+                url: `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}/@{${insertCompositeRef}.id}`,
+                referenceId: 'getObject'
+            }, this.handleCompositeGetResult)
         }
 
         const compositeResult = await composite.send()
         this.handleCompositeErrors(compositeResult)
-
-        if (refresh === true) {
-            let getResult = compositeResult.compositeResponse[1].body
-            this.mapFromQuery(getResult)
-        }else {
-            this.id = compositeResult.compositeResponse[0].body.id
-            return
-        }
     }
 
     /**
@@ -137,7 +135,7 @@ export abstract class RestObject extends SObject {
         .addUpdate(this)
 
         if (refresh === true) {
-            batchRequest.addGet(this, this.handleCompositeBatchResult)
+            batchRequest.addGet(this, this.handleCompositeBatchGetResult)
         }
         const batchResponse = await batchRequest.send()
         this.handleCompositeBatchErrors(batchResponse)

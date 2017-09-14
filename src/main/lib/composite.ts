@@ -118,13 +118,8 @@ export class Composite {
         this.client = Rest.Instance
     }
 
-    public addRequest (method: string, resource: string, referenceId: string, body?: any, callback?: (n: CompositeResponse) => void): Composite {
-        this.compositeRequest.push({
-            method: method,
-            url: `/services/data/${this.client.version}/${resource}`,
-            referenceId: referenceId,
-            body: body
-        })
+    public addRequest (request: CompositeRequest, callback?: (n: CompositeResponse) => void): Composite {
+        this.compositeRequest.push(request)
         this.callbacks.push(callback)
         return this
     }
@@ -135,15 +130,17 @@ export class Composite {
             compositeRequest: this.compositeRequest
         }
         let resp = await this.client.request.post(`/composite`, payload)
+
         let result: CompositeResult = resp.data
         for (let i = 0; i < this.callbacks.length; i++) {
+
             let callback = this.callbacks[i]
             if (callback !== undefined) {
                 callback(result.compositeResponse[i])
             }
         }
 
-        return
+        return result
     }
 }
 
