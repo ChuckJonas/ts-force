@@ -1,5 +1,5 @@
 import { Rest, QueryResponse } from './rest'
-import { Composite, CompositeBatch, BatchResponse, CompositeResult } from './composite'
+import { Composite, CompositeResult, CompositeResponse, CompositeBatch, BatchResponse, CompositeBatchResult } from './composite'
 import { AxiosResponse } from 'axios'
 import { sField, getSFieldProps, SFieldProperties } from './sObjectDecorators'
 
@@ -56,9 +56,8 @@ export abstract class RestObject extends SObject {
         return apiName.charAt(0).toLowerCase() + s.slice(1)
     }
 
-    protected static async query<T extends RestObject> (type: { new(): T; }, qry: string): Promise<T[]> {
+    protected static async query < T extends RestObject > (type: { new(): T }, qry: string): Promise < T[] > {
         const response = await Rest.Instance.query(qry)
-        console.log(response)
         let sobs: Array<T> = []
         for (let i = 0; i < response.records.length; i++) {
             let sob = new type()
@@ -69,7 +68,15 @@ export abstract class RestObject extends SObject {
         return sobs
     }
 
-    public async refresh (): Promise<void> {
+    handleCompositeResult = (result: CompositeResponse) => {
+        this.mapFromQuery(result.body)
+    }
+
+    handleCompositeBatchResult = (result: CompositeBatchResult) => {
+        this.mapFromQuery(result.result)
+    }
+
+    public async refresh (): Promise < void > {
         if (this.id == null) {
             throw new Error('Must have Id to refresh!')
         }
@@ -84,7 +91,7 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<void>}
     * @memberof RestObject
     */
-    public async insert (refresh?: boolean): Promise<void> {
+    public async insert (refresh ?: boolean): Promise < void > {
         let insertCompositeRef = 'newObject'
 
         let composite = new Composite().addRequest(
@@ -120,7 +127,7 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<void>}
     * @memberof RestObject
     */
-    public async update (refresh?: boolean): Promise<void> {
+    public async update (refresh ?: boolean): Promise < void > {
 
         if (this.id == null) {
             throw new Error('Must have Id to update!')
@@ -130,17 +137,12 @@ export abstract class RestObject extends SObject {
         .addUpdate(this)
 
         if (refresh === true) {
-            batchRequest.addGet(this)
+            batchRequest.addGet(this, this.handleCompositeBatchResult)
         }
         const batchResponse = await batchRequest.send()
         this.handleCompositeBatchErrors(batchResponse)
 
-        if (refresh === true) {
-            let getResult = batchResponse.results[1].result
-            this.mapFromQuery(getResult)
-        }else {
-            return
-        }
+        return
     }
 
     /**
@@ -149,7 +151,7 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<DMLResponse>}
     * @memberof RestObject
     */
-    public async delete (): Promise<DMLResponse> {
+    public async delete (): Promise < DMLResponse > {
         if (this.id == null) {
             throw new Error('Must have Id to Delete!')
         }
@@ -196,9 +198,7 @@ export abstract class RestObject extends SObject {
 
                 // translate prop name & get decorator
                 let sobPropName = apiNameMap.get(i.toLowerCase())
-                console.log(sobPropName)
                 let sFieldProps = getSFieldProps(this, sobPropName)
-                console.log(sFieldProps)
                 if (!sFieldProps) { // no mapping found
                     continue
                 }
@@ -230,7 +230,7 @@ export abstract class RestObject extends SObject {
     }
 
     // returns a mapping of API Name (lower case) -> Property Name
-    private getNameMapping (): Map<string, string> {
+    private getNameMapping (): Map < string, string > {
         let apiNameMap = new Map<string, string>()
         for (let i in this) {
             // clean properties
@@ -271,7 +271,7 @@ export abstract class RestObject extends SObject {
         }
     }
 
-    private generateCall (path: string, data: SObject): Promise<AxiosResponse> {
+    private generateCall (path: string, data: SObject): Promise < AxiosResponse > {
         return Rest.Instance.request.post(path, data)
     }
 

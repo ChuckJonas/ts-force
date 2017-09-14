@@ -225,7 +225,8 @@ acc.refresh();
 
 const compositeRef = 'myAccount';
 
-let composite = new Composite().addRequest(
+let composite = new Composite()
+.addRequest(
   'POST',
   `sobjects/${this.attributes.type}`,
   compositeRef,
@@ -235,11 +236,22 @@ let composite = new Composite().addRequest(
 composite.addRequest(
     'GET',
     `sobjects/${this.attributes.type}/@{${compositeRef}.id}`,
-    'getObject'
+    'getObject',
+    acc.handleCompositeResult
 );
 
 
 const compositeResult = await composite.send();
+```
+
+#### passing callbacks
+
+Optionally, a callback can be passed into each composite request that will be passed the respective data once the composite request is complete.  You can see this in action in the above example where `acc.handleCompositeResult` is passed into the function.  The result from the `GET` request will be passed to this function in the rest object:
+
+```typescript
+handleCompositeResult = (result: CompositeResponse) => {
+    this.mapFromQuery(result.body)
+}
 ```
 
 ## Running Unit Tests
@@ -254,11 +266,8 @@ PASSWORD =
 HOST =
 ```
 
-Then run
+Then run `npm test`
 
-```
-npm test
-```
 
 Test should run automagically
 

@@ -5,9 +5,12 @@ import { AxiosResponse } from 'axios'
 export class CompositeBatch {
     public batchRequests: BatchRequest[]
 
+    public callbacks: Array<(n: CompositeBatchResult) => void>
+
     private client: Rest
     constructor () {
         this.batchRequests = []
+        this.callbacks = []
         this.client = Rest.Instance
     }
 
@@ -17,69 +20,80 @@ export class CompositeBatch {
             batchRequests: this.batchRequests
         }
         let resp = await this.client.request.post(`/composite/batch`, payload)
-        return resp.data
+        let batchResponse: BatchResponse = resp.data
+        for (let i = 0; i < this.callbacks.length; i++) {
+            let callback = this.callbacks[i]
+            if (callback !== undefined) {
+                callback(batchResponse.results[i])
+            }
+        }
+
+        return batchResponse
     }
 
-    public addGet (obj: RestObject): CompositeBatch {
-        this.batchRequests.push(
-            {
-                method: 'GET',
-                url: `${this.client.version}/sobjects/${obj.attributes.type}/${obj.id}`
-            }
-        )
+    public addGet (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
+        let request: BatchRequest = {
+             method: 'GET',
+            url: `${this.client.version}/sobjects/${obj.attributes.type}/${obj.id}`
+        }
+        this.addBatchRequest(request, callback)
         return this
     }
 
-    public addUpdate (obj: RestObject): CompositeBatch {
-        this.batchRequests.push(
-            {
+    public addUpdate (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
+        let request: BatchRequest = {
                 method: 'PATCH',
                 url: `${this.client.version}/sobjects/${obj.attributes.type}/${obj.id}`,
                 richInput: obj.prepareForDML()
             }
-        )
+        this.addBatchRequest(request, callback)
         return this
     }
 
-    public addInsert (obj: RestObject): CompositeBatch {
-        this.batchRequests.push(
-            {
+    public addInsert (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
+        let request: BatchRequest = {
                 method: 'POST',
                 url: `${this.client.version}/sobjects/${obj.attributes.type}/`,
                 richInput: obj.prepareForDML()
             }
-        )
+        this.addBatchRequest(request, callback)
+
         return this
     }
 
-    public addDelete (obj: RestObject): CompositeBatch {
-        this.batchRequests.push(
-            {
+    public addDelete (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
+        let request: BatchRequest = {
                 method: 'DELETE',
                 url: `${this.client.version}/sobjects/${obj.attributes.type}/${obj.id}`
             }
-        )
+        this.addBatchRequest(request, callback)
+
         return this
     }
 
-    public addQuery (query: string): CompositeBatch {
+    public addQuery (query: string, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
         let qryString = encodeURIComponent(query)
-        this.batchRequests.push(
-            {
+        let request: BatchRequest = {
                 method: 'GET',
                 url: `${this.client.version}/queryAll?q=${qryString}`
             }
-        )
+        this.addBatchRequest(request, callback)
+
         return this
+    }
+
+    private addBatchRequest (request: BatchRequest, callback?: (n: CompositeBatchResult) => void) {
+        this.batchRequests.push(request)
+        this.callbacks.push(callback)
     }
 }
 
 export interface BatchResponse {
     hasErrors: boolean
-    results: CompositeResult[]
+    results: CompositeBatchResult[]
 }
 
-export interface CompositeResult {
+export interface CompositeBatchResult {
     statusCode: number
     result: any
 }
@@ -96,19 +110,22 @@ export interface CompositeBatchPayload {
 
 export class Composite {
     public compositeRequest: CompositeRequest[]
+    public callbacks: Array<(n: CompositeResponse) => void>
     private client: Rest
     constructor () {
         this.compositeRequest = []
+        this.callbacks = []
         this.client = Rest.Instance
     }
 
-    public addRequest (method: string, resource: string, referenceId: string, body?: any): Composite {
+    public addRequest (method: string, resource: string, referenceId: string, body?: any, callback?: (n: CompositeResponse) => void): Composite {
         this.compositeRequest.push({
             method: method,
             url: `/services/data/${this.client.version}/${resource}`,
             referenceId: referenceId,
             body: body
         })
+        this.callbacks.push(callback)
         return this
     }
 
@@ -118,7 +135,15 @@ export class Composite {
             compositeRequest: this.compositeRequest
         }
         let resp = await this.client.request.post(`/composite`, payload)
-        return resp.data
+        let result: CompositeResult = resp.data
+        for (let i = 0; i < this.callbacks.length; i++) {
+            let callback = this.callbacks[i]
+            if (callback !== undefined) {
+                callback(result.compositeResponse[i])
+            }
+        }
+
+        return
     }
 }
 
