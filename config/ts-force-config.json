@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "username": "charlie@callawaycloudconsulting.com.sandbox",
+    "password": "9uiBRMGfhvcXXXkdcj5dsVCjbQNeMFaLSWfaV4p",
+    "clientId": "3MVG9uudbyLbNPZM3i42JAmhE6CP_gxp.whWSrw9rtSGvBB6MXDOIF9DldfO1jYZZ6ktr.OPIY2GVzwVn9OlK",
+    "clientSecret": "6312218562425878359",
+    "oAuthHost": "https://login.salesforce.com"
+  },
+  "sObjects": ["Account","Contact"],
+  "outPath": "./test/lib/generatedSobs.ts"
+}

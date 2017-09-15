@@ -8,6 +8,8 @@
       }
     ],
     "jsdoc-format": false,
-    "no-trailing-whitespace": false
+    "no-trailing-whitespace": false,
+    "semicolon": [true, "always"]
   }
+
 }
