@@ -10,7 +10,7 @@ export class SObjectGenerator {
 
     public apiNames: string[]
     public sourceFile: SourceFile
-    public spinner: any
+    public spinner: any;
 
     /**
     * Generates RestObject Concrete types
@@ -19,8 +19,8 @@ export class SObjectGenerator {
     * @memberof SObjectGenerator
     */
     constructor (sourceFile: SourceFile, apiNames: string[]) {
-        this.apiNames = apiNames
-        this.sourceFile = sourceFile
+        this.apiNames = apiNames;
+        this.sourceFile = sourceFile;
     }
 
     public async generateFile () {
@@ -31,10 +31,10 @@ export class SObjectGenerator {
                 this.clearLine(this.stream)
                 this.stream.write(msg)
             }
-        })
-        this.spinner.setSpinnerString(5)
-        this.spinner.setSpinnerDelay(20)
-        this.spinner.start()
+        });
+        this.spinner.setSpinnerString(5);
+        this.spinner.setSpinnerDelay(20);
+        this.spinner.start();
 
         try {
         // add imports
@@ -46,40 +46,40 @@ export class SObjectGenerator {
                 { name: 'sField' },
                 { name: 'PolyRestObject'}
             ]
-        })
+        });
 
         for (let i = 0; i < this.apiNames.length; i++) {
 
-            await this.generateSObjectClass(this.apiNames[i])
+            await this.generateSObjectClass(this.apiNames[i]);
 
         }
         }catch (e) {
-            this.spinner.stop()
-            throw e
+            this.spinner.stop();
+            throw e;
         }
-        this.spinner.stop()
+        this.spinner.stop();
     }
 
     // class generation
     public async generateSObjectClass (apiName: string): Promise<void> {
-        this.spinner.setSpinnerTitle(`Generating: ${apiName}`)
-        let sobDescribe: SObjectDescribe
+        this.spinner.setSpinnerTitle(`Generating: ${apiName}`);
+        let sobDescribe: SObjectDescribe;
         try {
-            sobDescribe = await this.retrieveDescribe(apiName)
+            sobDescribe = await this.retrieveDescribe(apiName);
         }catch (e) {
-            throw new Error(`Could not retreive describe metadata for ${apiName}. Check SObject spelling and authorization `)
+            throw new Error(`Could not retreive describe metadata for ${apiName}. Check SObject spelling and authorization `);
         }
 
-        let props: PropertyDeclarationStructure[] = []
+        let props: PropertyDeclarationStructure[] = [];
 
         // generate props from fields & children
-        props.push(...this.generateChildrenProps(apiName, sobDescribe.childRelationships))
-        props.push(...this.generateFieldProps(sobDescribe.fields))
+        props.push(...this.generateChildrenProps(apiName, sobDescribe.childRelationships));
+        props.push(...this.generateFieldProps(sobDescribe.fields));
 
-        let className = this.sanatizeClassName(apiName)
+        let className = this.sanatizeClassName(apiName);
 
-        this.generateInterface(className, props)
-        let classDeclaration = this.generateClass(apiName, className, props)
+        this.generateInterface(className, props);
+        let classDeclaration = this.generateClass(apiName, className, props);
 
         const qryMethod = classDeclaration.addMethod({
             name: 'retrieve',
@@ -90,11 +90,11 @@ export class SObjectGenerator {
             ],
             returnType: `Promise<${className}[]>`,
             isAsync: true
-        })
+        });
 
         qryMethod.setBodyText(
             `return await ${superClass}.query<${className}>(${className}, qry);`
-        )
+        );
 
     }
 
@@ -103,19 +103,19 @@ export class SObjectGenerator {
             name: this.generatePropInterfaceName(className),
             isExported: true,
             docs: [{description: `Property Interface for ${className}` }]
-        })
+        });
 
         properties.forEach(prop => {
             let ip = propsInterface.addProperty({
                 name: prop.name,
                 type: prop.type
-            })
-            ip.setIsOptional(true)
-        })
+            });
+            ip.setIsOptional(true);
+        });
     }
 
     private generateClass (apiName: string, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
-        let propInterfaceName = this.generatePropInterfaceName(className)
+        let propInterfaceName = this.generatePropInterfaceName(className);
 
         let classDeclaration = this.sourceFile.addClass({
             name: className,
@@ -124,41 +124,41 @@ export class SObjectGenerator {
             properties: props,
             implements: [propInterfaceName],
             docs: [{description: `Generated class for ${apiName}` }]
-        })
+        });
 
-        const interfaceParamName = 'fields'
-        const constr = classDeclaration.addConstructor()
+        const interfaceParamName = 'fields';
+        const constr = classDeclaration.addConstructor();
         const param = constr.addParameter({
             name: interfaceParamName,
             type: propInterfaceName
-        })
-        param.setIsOptional(true)
+        });
+        param.setIsOptional(true);
 
         const propsInit = props.map(prop => {
-            return `this.${prop.name} = void 0;`
-        }).join('\n')
+            return `this.${prop.name} = void 0;`;
+        }).join('\n');
 
         constr.setBodyText(`super('${apiName}');
         ${propsInit}
-        Object.assign(this,${interfaceParamName})`)
+        Object.assign(this,${interfaceParamName})`);
 
-        return classDeclaration
+        return classDeclaration;
     }
 
     private async retrieveDescribe (apiName: string): Promise<SObjectDescribe> {
-        return await Rest.Instance.getSObjectDescribe(apiName)
+        return await Rest.Instance.getSObjectDescribe(apiName);
     }
 
     private generatePropInterfaceName (className: string) {
-        return `${className}Fields`
+        return `${className}Fields`;
     }
 
     private sanatizeClassName (apiName: string): string {
-        return apiName.replace('__c', '').replace('_', '')
+        return apiName.replace('__c', '').replace('_', '');
     }
 
     private generateChildrenProps (apiName: string, children: ChildRelationship[]): PropertyDeclarationStructure[] {
-        let props = []
+        let props = [];
         children.forEach(child => {
             try {
                 // don't generate if not in the list of types or ??
@@ -166,10 +166,10 @@ export class SObjectGenerator {
                     || child.childSObject === apiName
                 || child.deprecatedAndHidden === true
                 || child.relationshipName === null) {
-                    return
+                    return;
                 }
 
-                let referenceClass = this.sanatizeClassName(child.childSObject)
+                let referenceClass = this.sanatizeClassName(child.childSObject);
 
                 let decoratorProps = {
                     apiName: child.relationshipName,
@@ -177,7 +177,7 @@ export class SObjectGenerator {
                     required: false,
                     childRelationship: true,
                     reference: referenceClass
-                }
+                };
 
                 props.push({
                     name: RestObject.sanatizeProperty(child.relationshipName),
@@ -186,24 +186,24 @@ export class SObjectGenerator {
                     decorators: [
                         this.generateDecorator(decoratorProps)
                     ]
-                })
+                });
             }catch (e) {
-                console.log(child)
-                throw e
+                console.log(child);
+                throw e;
             }
-        })
-        return props
+        });
+        return props;
     }
 
     private generateFieldProps (fields: Field[]): PropertyDeclarationStructure[] {
-        let props = []
+        let props = [];
         // add members
         fields.forEach(field => {
 
             try {
-                let docs: JSDocStructure[] = []
+                let docs: JSDocStructure[] = [];
                 if (field.inlineHelpText != null) {
-                    docs.push({ description: field.inlineHelpText })
+                    docs.push({ description: field.inlineHelpText });
                 }
 
                 // only include reference types if we are also generating the referenced class
@@ -212,14 +212,14 @@ export class SObjectGenerator {
                     && field.relationshipName !== null
                 ) {
 
-                    let referenceClass: string
+                    let referenceClass: string;
 
                     if (field.referenceTo.length > 1) {
-                        referenceClass = 'PolyRestObject' // polymorphic?
+                        referenceClass = 'PolyRestObject'; // polymorphic?
                     } else {
-                        referenceClass = this.sanatizeClassName(field.referenceTo[0])
+                        referenceClass = this.sanatizeClassName(field.referenceTo[0]);
                     }
-                    let refApiName = field.referenceTo[0] // polymorphic not support
+                    let refApiName = field.referenceTo[0]; // polymorphic not support
 
                     let decoratorProps = {
                         apiName: field.relationshipName,
@@ -227,7 +227,7 @@ export class SObjectGenerator {
                         required: false,
                         childRelationship: false,
                         reference: referenceClass
-                    }
+                    };
 
                     props.push({
                         name: RestObject.sanatizeProperty(field.relationshipName),
@@ -237,7 +237,7 @@ export class SObjectGenerator {
                             this.generateDecorator(decoratorProps)
                         ],
                         docs: docs
-                    })
+                    });
                 }
 
                 let prop: PropertyDeclarationStructure = {
@@ -246,34 +246,34 @@ export class SObjectGenerator {
                     scope: Scope.Public,
                     decorators: [this.getDecorator(field)],
                     docs: docs
-                }
+                };
 
-                props.push(prop)
+                props.push(prop);
             }catch (e) {
-                console.log(field)
-                throw e
+                console.log(field);
+                throw e;
             }
-        })
-        return props
+        });
+        return props;
     }
 
     private mapSObjectType (sfType: string): string {
         switch (sfType) {
             case 'datetime':
             case 'date':
-            return 'Date'
+            return 'Date';
             case 'boolean':
-            return 'boolean'
+            return 'boolean';
             case 'double':
             case 'integer':
             case 'currency':
-            return 'number'
+            return 'number';
             case 'reference':
             case 'string':
             case 'picklist':
             case 'id':
             default:
-            return 'string'
+            return 'string';
         }
     }
 
@@ -286,19 +286,19 @@ export class SObjectGenerator {
             reference: null,
             salesforceLabel: field.label,
             salesforceType: field.type
-        }
+        };
 
-        return this.generateDecorator(decoratorProps)
+        return this.generateDecorator(decoratorProps);
     }
 
     private generateDecorator (decoratorProps: any) {
-        let ref = decoratorProps.reference != null ? `()=>{return ${decoratorProps.reference}}` : 'undefined'
+        let ref = decoratorProps.reference != null ? `()=>{return ${decoratorProps.reference}}` : 'undefined';
         return {
             name: `sField`,
             arguments: [
                 `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}, salesforceType: '${decoratorProps.salesforceType}'}`
             ]
-        }
+        };
     }
 
 }

@@ -1,17 +1,17 @@
-import axios, { AxiosError, AxiosInstance } from 'axios'
-import { SObject } from './sObject'
-import { SObjectDescribe } from './sObjectDescribe'
-import { BaseConfig } from '../../auth/baseConfig'
+import axios, { AxiosError, AxiosInstance } from 'axios';
+import { SObject } from './sObject';
+import { SObjectDescribe } from './sObjectDescribe';
+import { BaseConfig } from '../../auth/baseConfig';
 
 export class Rest {
-    public static config: BaseConfig
+    public static config: BaseConfig;
 
-    private static _instance: Rest
+    private static _instance: Rest;
 
-    public request: AxiosInstance
-    public version: string
+    public request: AxiosInstance;
+    public version: string;
     constructor () {
-        this.version = 'v40.0'
+        this.version = 'v40.0';
         this.request = axios.create({
             baseURL: `${Rest.config.instanceUrl}/services/data/${this.version}/`,
             headers: {
@@ -19,34 +19,34 @@ export class Rest {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
-        })
+        });
     }
 
     public async getSObjectDescribe (apiName: string): Promise<SObjectDescribe> {
 
-        let resp = await this.request.get(`/sobjects/${apiName}/describe/`)
-        return resp.data
+        let resp = await this.request.get(`/sobjects/${apiName}/describe/`);
+        return resp.data;
     }
 
     // get records of type T.  Do magic to cast plain json to T
     public async query (query: string): Promise<QueryResponse<any>> {
-        let qryString = encodeURIComponent(query)
+        let qryString = encodeURIComponent(query);
 
         try {
-            let resp = await this.request.get(`/queryAll?q=${qryString}`)
-            return resp.data
+            let resp = await this.request.get(`/queryAll?q=${qryString}`);
+            return resp.data;
         } catch (error) {
-            console.log(error.response.data)
-            return error
+            console.log(error.response.data);
+            return error;
         }
     }
 
     public static get Instance () {
-        return this._instance || (this._instance = new this())
+        return this._instance || (this._instance = new this());
     }
 
 }
 export interface QueryResponse<T> {
-    totalSize: number
-    records: T[]
+    totalSize: number;
+    records: T[];
 }

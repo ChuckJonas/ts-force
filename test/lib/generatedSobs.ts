@@ -1,4 +1,4 @@
-import { RestObject, SObject, sField } from "../../src/index";
+import { RestObject, SObject, sField } from '../../src/index';
 export class Account extends RestObject {
     @sField({ apiName: 'Contacts', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: true })
     contacts: Contact[];
@@ -138,7 +138,7 @@ export class Account extends RestObject {
     sLASerialNumber: string;
     @sField({ apiName: 'SLAExpirationDate__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
     sLAExpirationDate: Date;
-    constructor() {
+    constructor () {
         super('Account');
         this.contacts = void 0;
         this.id = void 0;
@@ -210,7 +210,7 @@ export class Account extends RestObject {
         this.sLASerialNumber = void 0;
         this.sLAExpirationDate = void 0;
     }
-    static async retrieve(qry: string): Promise<Account[]> {
+    static async retrieve (qry: string): Promise<Account[]> {
         return await RestObject.query<Account>(Account, qry);
     }
 }
@@ -341,7 +341,7 @@ export class Contact extends RestObject {
     level: string;
     @sField({ apiName: 'Languages__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
     languages: string;
-    constructor() {
+    constructor () {
         super('Contact');
         this.id = void 0;
         this.isDeleted = void 0;
@@ -407,7 +407,7 @@ export class Contact extends RestObject {
         this.level = void 0;
         this.languages = void 0;
     }
-    static async retrieve(qry: string): Promise<Contact[]> {
+    static async retrieve (qry: string): Promise<Contact[]> {
         return await RestObject.query<Contact>(Contact, qry);
     }
 }
