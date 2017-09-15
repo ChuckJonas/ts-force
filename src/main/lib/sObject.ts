@@ -11,7 +11,7 @@ export class SObjectAttributes {
 /* Base SObject */
 export abstract class SObject {
 
-    @sField({apiName: 'Id', readOnly: true, required: false, reference: null, childRelationship: false})
+    @sField({apiName: 'Id', readOnly: true, required: false, reference: null, childRelationship: false, salesforceType: 'id'})
     public id: string | undefined
     public attributes: SObjectAttributes
 

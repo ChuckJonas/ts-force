@@ -36,6 +36,7 @@ export class SObjectGenerator {
         this.spinner.setSpinnerDelay(20)
         this.spinner.start()
 
+        try {
         // add imports
         this.sourceFile.addImport({
             moduleSpecifier: 'ts-force',
@@ -51,6 +52,10 @@ export class SObjectGenerator {
 
             await this.generateSObjectClass(this.apiNames[i])
 
+        }
+        }catch (e) {
+            this.spinner.stop()
+            throw e
         }
         this.spinner.stop()
     }
@@ -96,6 +101,7 @@ export class SObjectGenerator {
     private generateInterface (className: string, properties: PropertyDeclarationStructure[]) {
         let propsInterface = this.sourceFile.addInterface({
             name: this.generatePropInterfaceName(className),
+            isExported: true,
             docs: [{description: `Property Interface for ${className}` }]
         })
 
@@ -120,9 +126,10 @@ export class SObjectGenerator {
             docs: [{description: `Generated class for ${apiName}` }]
         })
 
+        const interfaceParamName = 'fields'
         const constr = classDeclaration.addConstructor()
         const param = constr.addParameter({
-            name: 'props',
+            name: interfaceParamName,
             type: propInterfaceName
         })
         param.setIsOptional(true)
@@ -133,7 +140,7 @@ export class SObjectGenerator {
 
         constr.setBodyText(`super('${apiName}');
         ${propsInit}
-        Object.assign(this,props)`)
+        Object.assign(this,${interfaceParamName})`)
 
         return classDeclaration
     }
@@ -276,7 +283,9 @@ export class SObjectGenerator {
             readOnly: field.updateable === false && field.createable === false,
             required: (field.createable || field.updateable) && field.nillable === false,
             childRelationship: false,
-            reference: null
+            reference: null,
+            salesforceLabel: field.label,
+            salesforceType: field.type
         }
 
         return this.generateDecorator(decoratorProps)
@@ -287,7 +296,7 @@ export class SObjectGenerator {
         return {
             name: `sField`,
             arguments: [
-                `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}}`
+                `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}, salesforceType: '${decoratorProps.salesforceType}'}`
             ]
         }
     }

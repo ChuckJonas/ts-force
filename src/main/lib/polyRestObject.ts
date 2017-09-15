@@ -5,39 +5,39 @@ import { RestObject, SObject } from './sObject'
 */
 export class PolyRestObject extends RestObject {
 
-    @sField({ apiName: 'id', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'id' })
     id: string
-    @sField({ apiName: 'name', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Name', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     name: string
-    @sField({ apiName: 'lastName', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastName', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     lastName: string
-    @sField({ apiName: 'firstName', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'FirstName', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     firstName: string
-    @sField({ apiName: 'type', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Type', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     type: string
-    @sField({ apiName: 'alias', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Alias', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     alias: string
-    @sField({ apiName: 'userRoleId', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'UserRoleId', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     userRoleId: string
-    @sField({ apiName: 'recordTypeId', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'RecordTypeId', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     recordTypeId: string
-    @sField({ apiName: 'isActive', readOnly: false, required: true, reference: undefined, childRelationship: false })
-    isActive: string
-    @sField({ apiName: 'profileId', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'IsActive', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'boolean' })
+    isActive: boolean
+    @sField({ apiName: 'ProfileId', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     profileId: string
-    @sField({ apiName: 'title', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Title', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     title: string
-    @sField({ apiName: 'email', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Email', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'email' })
     email: string
-    @sField({ apiName: 'phone', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Phone', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     phone: string
-    @sField({ apiName: 'nameOrAlias', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'NameOrAlias', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     nameOrAlias: string
-    @sField({ apiName: 'username', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Username', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     username: string
-    @sField({ apiName: 'lastViewedDate', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastViewedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastViewedDate: Date
-    @sField({ apiName: 'lastReferencedDate', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastReferencedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastReferencedDate: Date
 
     constructor () {

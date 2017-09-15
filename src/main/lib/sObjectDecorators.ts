@@ -10,6 +10,8 @@ export class SFieldProperties {
     public reference: () => { new(): RestObject; }
     public required: boolean
     public childRelationship: boolean
+    public salesforceType: string
+    public salesforceLabel?: string
 }
 
 export function sField (props: SFieldProperties) {
