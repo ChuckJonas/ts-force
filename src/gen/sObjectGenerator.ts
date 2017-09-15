@@ -1,15 +1,15 @@
-import { Scope, SourceFile, PropertyDeclarationStructure, ParameterDeclaration, DecoratorStructure, JSDocStructure, ClassDeclaration } from 'ts-simple-ast'
-import { Rest, RestObject } from '../index'
-import { Field, SObjectDescribe, ChildRelationship } from '../main/lib/sObjectDescribe'
-import { SFieldProperties } from '../main/lib/sObjectDecorators'
-import { Spinner } from 'cli-spinner'
+import { Scope, SourceFile, PropertyDeclarationStructure, ParameterDeclaration, DecoratorStructure, JSDocStructure, ClassDeclaration } from 'ts-simple-ast';
+import { Rest, RestObject } from '../index';
+import { Field, SObjectDescribe, ChildRelationship } from '../main/lib/sObjectDescribe';
+import { SFieldProperties } from '../main/lib/sObjectDecorators';
+import { Spinner } from 'cli-spinner';
 
-const superClass = 'RestObject'
+const superClass = 'RestObject';
 
 export class SObjectGenerator {
 
-    public apiNames: string[]
-    public sourceFile: SourceFile
+    public apiNames: string[];
+    public sourceFile: SourceFile;
     public spinner: any;
 
     /**
@@ -28,8 +28,8 @@ export class SObjectGenerator {
             text: 'warming up...',
             stream: process.stderr,
             onTick: function (msg) {
-                this.clearLine(this.stream)
-                this.stream.write(msg)
+                this.clearLine(this.stream);
+                this.stream.write(msg);
             }
         });
         this.spinner.setSpinnerString(5);

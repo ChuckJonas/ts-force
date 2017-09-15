@@ -1,10 +1,10 @@
-import { Rest, QueryResponse } from './rest'
-import { Composite, CompositeResult, CompositeResponse, CompositeBatch, BatchResponse, CompositeBatchResult } from './composite'
-import { AxiosResponse } from 'axios'
-import { sField, getSFieldProps, SFieldProperties } from './sObjectDecorators'
+import { Rest, QueryResponse } from './rest';
+import { Composite, CompositeResult, CompositeResponse, CompositeBatch, BatchResponse, CompositeBatchResult } from './composite';
+import { AxiosResponse } from 'axios';
+import { sField, getSFieldProps, SFieldProperties } from './sObjectDecorators';
 
 export class SObjectAttributes {
-    public type: string // sf apex name
+    public type: string; // sf apex name
     public url: string; // sf rest API url for record
 }
 
