@@ -143,7 +143,7 @@ export class SObjectGenerator {
     }
 
     private generatePropInterfaceName (className: string) {
-        return `${className}Props`
+        return `${className}Fields`
     }
 
     private sanatizeClassName (apiName: string): string {

@@ -73,8 +73,6 @@ export abstract class RestObject extends SObject {
     }
 
     handleCompositeGetResult = (result: CompositeResponse) => {
-        console.log('composite get result')
-        console.log(result.body)
         this.mapFromQuery(result.body)
     }
 
@@ -211,18 +209,21 @@ export abstract class RestObject extends SObject {
                 } else {
                     // reference type
                     let type: { new(): RestObject; } = sFieldProps.reference()
-                    let typeInstance = new type()
 
                     if (sFieldProps.childRelationship === true) {
                         // child type, map each record
                         this[sobPropName] = []
                         if (data[i]) {
                             data[i].records.forEach(record => {
+                                let typeInstance = new type()
+                                console.log('child: ')
+                                console.log(record)
                                 this[sobPropName].push(typeInstance.mapFromQuery(record))
                             })
                         }
 
                     } else {
+                        let typeInstance = new type()
                         // parent type.  Map data
                         this[sobPropName] = typeInstance.mapFromQuery(data[i])
                     }
