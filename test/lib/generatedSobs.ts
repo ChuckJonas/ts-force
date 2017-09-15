@@ -1,144 +1,221 @@
 import { RestObject, SObject, sField } from '../../src/index';
-export class Account extends RestObject {
-    @sField({ apiName: 'Contacts', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: true })
+/**
+ * Property Interface for Account
+ */
+export interface AccountFields {
+    contacts?: Contact[];
+    id?: string;
+    isDeleted?: boolean;
+    masterRecord?: Account;
+    masterRecordId?: string;
+    name?: string;
+    type?: string;
+    parent?: Account;
+    parentId?: string;
+    billingStreet?: string;
+    billingCity?: string;
+    billingState?: string;
+    billingPostalCode?: string;
+    billingCountry?: string;
+    billingLatitude?: number;
+    billingLongitude?: number;
+    billingGeocodeAccuracy?: string;
+    billingAddress?: string;
+    shippingStreet?: string;
+    shippingCity?: string;
+    shippingState?: string;
+    shippingPostalCode?: string;
+    shippingCountry?: string;
+    shippingLatitude?: number;
+    shippingLongitude?: number;
+    shippingGeocodeAccuracy?: string;
+    shippingAddress?: string;
+    phone?: string;
+    fax?: string;
+    accountNumber?: string;
+    website?: string;
+    photoUrl?: string;
+    sic?: string;
+    industry?: string;
+    annualRevenue?: number;
+    numberOfEmployees?: string;
+    ownership?: string;
+    tickerSymbol?: string;
+    description?: string;
+    rating?: string;
+    site?: string;
+    ownerId?: string;
+    createdDate?: Date;
+    createdById?: string;
+    lastModifiedDate?: Date;
+    lastModifiedById?: string;
+    systemModstamp?: Date;
+    lastActivityDate?: Date;
+    lastViewedDate?: Date;
+    lastReferencedDate?: Date;
+    jigsaw?: string;
+    jigsawCompanyId?: string;
+    cleanStatus?: string;
+    accountSource?: string;
+    dunsNumber?: string;
+    tradestyle?: string;
+    naicsCode?: string;
+    naicsDesc?: string;
+    yearStarted?: string;
+    sicDesc?: string;
+    dandbCompanyId?: string;
+    operatingHoursId?: string;
+    customerPriority?: string;
+    sLA?: string;
+    active?: string;
+    numberofLocations?: number;
+    upsellOpportunity?: string;
+    sLASerialNumber?: string;
+    sLAExpirationDate?: Date;
+}
+/**
+ * Generated class for Account
+ */
+export class Account extends RestObject implements AccountFields {
+    @sField({ apiName: 'Contacts', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: true, salesforceType: 'undefined' })
     contacts: Contact[];
-    @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'id' })
     id: string;
-    @sField({ apiName: 'IsDeleted', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'IsDeleted', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'boolean' })
     isDeleted: boolean;
-    @sField({ apiName: 'MasterRecord', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false })
+    @sField({ apiName: 'MasterRecord', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false, salesforceType: 'undefined' })
     masterRecord: Account;
-    @sField({ apiName: 'MasterRecordId', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MasterRecordId', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     masterRecordId: string;
-    @sField({ apiName: 'Name', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Name', readOnly: false, required: true, reference: undefined, childRelationship: false, salesforceType: 'string' })
     name: string;
-    @sField({ apiName: 'Type', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Type', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     type: string;
-    @sField({ apiName: 'Parent', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false })
+    @sField({ apiName: 'Parent', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false, salesforceType: 'undefined' })
     parent: Account;
-    @sField({ apiName: 'ParentId', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ParentId', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     parentId: string;
-    @sField({ apiName: 'BillingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'textarea' })
     billingStreet: string;
-    @sField({ apiName: 'BillingCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingCity', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     billingCity: string;
-    @sField({ apiName: 'BillingState', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingState', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     billingState: string;
-    @sField({ apiName: 'BillingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     billingPostalCode: string;
-    @sField({ apiName: 'BillingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     billingCountry: string;
-    @sField({ apiName: 'BillingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     billingLatitude: number;
-    @sField({ apiName: 'BillingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     billingLongitude: number;
-    @sField({ apiName: 'BillingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     billingGeocodeAccuracy: string;
-    @sField({ apiName: 'BillingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'BillingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'address' })
     billingAddress: string;
-    @sField({ apiName: 'ShippingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'textarea' })
     shippingStreet: string;
-    @sField({ apiName: 'ShippingCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingCity', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     shippingCity: string;
-    @sField({ apiName: 'ShippingState', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingState', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     shippingState: string;
-    @sField({ apiName: 'ShippingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     shippingPostalCode: string;
-    @sField({ apiName: 'ShippingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     shippingCountry: string;
-    @sField({ apiName: 'ShippingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     shippingLatitude: number;
-    @sField({ apiName: 'ShippingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     shippingLongitude: number;
-    @sField({ apiName: 'ShippingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     shippingGeocodeAccuracy: string;
-    @sField({ apiName: 'ShippingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ShippingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'address' })
     shippingAddress: string;
-    @sField({ apiName: 'Phone', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Phone', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     phone: string;
-    @sField({ apiName: 'Fax', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Fax', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     fax: string;
-    @sField({ apiName: 'AccountNumber', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'AccountNumber', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     accountNumber: string;
-    @sField({ apiName: 'Website', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Website', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'url' })
     website: string;
-    @sField({ apiName: 'PhotoUrl', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'PhotoUrl', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'url' })
     photoUrl: string;
-    @sField({ apiName: 'Sic', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Sic', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     sic: string;
-    @sField({ apiName: 'Industry', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Industry', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     industry: string;
-    @sField({ apiName: 'AnnualRevenue', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'AnnualRevenue', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'currency' })
     annualRevenue: number;
-    @sField({ apiName: 'NumberOfEmployees', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'NumberOfEmployees', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'int' })
     numberOfEmployees: string;
-    @sField({ apiName: 'Ownership', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Ownership', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     ownership: string;
-    @sField({ apiName: 'TickerSymbol', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'TickerSymbol', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     tickerSymbol: string;
-    @sField({ apiName: 'Description', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Description', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'textarea' })
     description: string;
-    @sField({ apiName: 'Rating', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Rating', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     rating: string;
-    @sField({ apiName: 'Site', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Site', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     site: string;
-    @sField({ apiName: 'OwnerId', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OwnerId', readOnly: false, required: true, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     ownerId: string;
-    @sField({ apiName: 'CreatedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'CreatedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     createdDate: Date;
-    @sField({ apiName: 'CreatedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'CreatedById', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     createdById: string;
-    @sField({ apiName: 'LastModifiedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastModifiedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastModifiedDate: Date;
-    @sField({ apiName: 'LastModifiedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastModifiedById', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     lastModifiedById: string;
-    @sField({ apiName: 'SystemModstamp', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'SystemModstamp', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     systemModstamp: Date;
-    @sField({ apiName: 'LastActivityDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastActivityDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'date' })
     lastActivityDate: Date;
-    @sField({ apiName: 'LastViewedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastViewedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastViewedDate: Date;
-    @sField({ apiName: 'LastReferencedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastReferencedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastReferencedDate: Date;
-    @sField({ apiName: 'Jigsaw', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Jigsaw', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     jigsaw: string;
-    @sField({ apiName: 'JigsawCompanyId', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'JigsawCompanyId', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     jigsawCompanyId: string;
-    @sField({ apiName: 'CleanStatus', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'CleanStatus', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     cleanStatus: string;
-    @sField({ apiName: 'AccountSource', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'AccountSource', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     accountSource: string;
-    @sField({ apiName: 'DunsNumber', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'DunsNumber', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     dunsNumber: string;
-    @sField({ apiName: 'Tradestyle', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Tradestyle', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     tradestyle: string;
-    @sField({ apiName: 'NaicsCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'NaicsCode', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     naicsCode: string;
-    @sField({ apiName: 'NaicsDesc', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'NaicsDesc', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     naicsDesc: string;
-    @sField({ apiName: 'YearStarted', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'YearStarted', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     yearStarted: string;
-    @sField({ apiName: 'SicDesc', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'SicDesc', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     sicDesc: string;
-    @sField({ apiName: 'DandbCompanyId', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'DandbCompanyId', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     dandbCompanyId: string;
-    @sField({ apiName: 'OperatingHoursId', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OperatingHoursId', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     operatingHoursId: string;
-    @sField({ apiName: 'CustomerPriority__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'CustomerPriority__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     customerPriority: string;
-    @sField({ apiName: 'SLA__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'SLA__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     sLA: string;
-    @sField({ apiName: 'Active__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Active__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     active: string;
-    @sField({ apiName: 'NumberofLocations__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'NumberofLocations__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     numberofLocations: number;
-    @sField({ apiName: 'UpsellOpportunity__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'UpsellOpportunity__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     upsellOpportunity: string;
-    @sField({ apiName: 'SLASerialNumber__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'SLASerialNumber__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     sLASerialNumber: string;
-    @sField({ apiName: 'SLAExpirationDate__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'SLAExpirationDate__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'date' })
     sLAExpirationDate: Date;
-    constructor () {
+    constructor (fields?: AccountFields) {
         super('Account');
         this.contacts = void 0;
         this.id = void 0;
@@ -209,139 +286,211 @@ export class Account extends RestObject {
         this.upsellOpportunity = void 0;
         this.sLASerialNumber = void 0;
         this.sLAExpirationDate = void 0;
+        Object.assign(this, fields);
     }
     static async retrieve (qry: string): Promise<Account[]> {
         return await RestObject.query<Account>(Account, qry);
     }
 }
-export class Contact extends RestObject {
-    @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false })
+/**
+ * Property Interface for Contact
+ */
+export interface ContactFields {
+    id?: string;
+    isDeleted?: boolean;
+    masterRecord?: Contact;
+    masterRecordId?: string;
+    account?: Account;
+    accountId?: string;
+    lastName?: string;
+    firstName?: string;
+    salutation?: string;
+    name?: string;
+    otherStreet?: string;
+    otherCity?: string;
+    otherState?: string;
+    otherPostalCode?: string;
+    otherCountry?: string;
+    otherLatitude?: number;
+    otherLongitude?: number;
+    otherGeocodeAccuracy?: string;
+    otherAddress?: string;
+    mailingStreet?: string;
+    mailingCity?: string;
+    mailingState?: string;
+    mailingPostalCode?: string;
+    mailingCountry?: string;
+    mailingLatitude?: number;
+    mailingLongitude?: number;
+    mailingGeocodeAccuracy?: string;
+    mailingAddress?: string;
+    phone?: string;
+    fax?: string;
+    mobilePhone?: string;
+    homePhone?: string;
+    otherPhone?: string;
+    assistantPhone?: string;
+    reportsTo?: Contact;
+    reportsToId?: string;
+    email?: string;
+    title?: string;
+    department?: string;
+    assistantName?: string;
+    leadSource?: string;
+    birthdate?: Date;
+    description?: string;
+    ownerId?: string;
+    createdDate?: Date;
+    createdById?: string;
+    lastModifiedDate?: Date;
+    lastModifiedById?: string;
+    systemModstamp?: Date;
+    lastActivityDate?: Date;
+    lastCURequestDate?: Date;
+    lastCUUpdateDate?: Date;
+    lastViewedDate?: Date;
+    lastReferencedDate?: Date;
+    emailBouncedReason?: string;
+    emailBouncedDate?: Date;
+    isEmailBounced?: boolean;
+    photoUrl?: string;
+    jigsaw?: string;
+    jigsawContactId?: string;
+    cleanStatus?: string;
+    level?: string;
+    languages?: string;
+}
+/**
+ * Generated class for Contact
+ */
+export class Contact extends RestObject  implements ContactFields {
+    @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'id' })
     id: string;
-    @sField({ apiName: 'IsDeleted', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'IsDeleted', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'boolean' })
     isDeleted: boolean;
-    @sField({ apiName: 'MasterRecord', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: false })
+    @sField({ apiName: 'MasterRecord', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: false, salesforceType: 'undefined' })
     masterRecord: Contact;
-    @sField({ apiName: 'MasterRecordId', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MasterRecordId', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     masterRecordId: string;
-    @sField({ apiName: 'Account', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false })
+    @sField({ apiName: 'Account', readOnly: true, required: false, reference: () => { return Account; }, childRelationship: false, salesforceType: 'undefined' })
     account: Account;
-    @sField({ apiName: 'AccountId', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'AccountId', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     accountId: string;
-    @sField({ apiName: 'LastName', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastName', readOnly: false, required: true, reference: undefined, childRelationship: false, salesforceType: 'string' })
     lastName: string;
-    @sField({ apiName: 'FirstName', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'FirstName', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     firstName: string;
-    @sField({ apiName: 'Salutation', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Salutation', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     salutation: string;
-    @sField({ apiName: 'Name', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Name', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     name: string;
-    @sField({ apiName: 'OtherStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherStreet', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'textarea' })
     otherStreet: string;
-    @sField({ apiName: 'OtherCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherCity', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     otherCity: string;
-    @sField({ apiName: 'OtherState', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherState', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     otherState: string;
-    @sField({ apiName: 'OtherPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     otherPostalCode: string;
-    @sField({ apiName: 'OtherCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherCountry', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     otherCountry: string;
-    @sField({ apiName: 'OtherLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     otherLatitude: number;
-    @sField({ apiName: 'OtherLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     otherLongitude: number;
-    @sField({ apiName: 'OtherGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     otherGeocodeAccuracy: string;
-    @sField({ apiName: 'OtherAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherAddress', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'address' })
     otherAddress: string;
-    @sField({ apiName: 'MailingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingStreet', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'textarea' })
     mailingStreet: string;
-    @sField({ apiName: 'MailingCity', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingCity', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     mailingCity: string;
-    @sField({ apiName: 'MailingState', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingState', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     mailingState: string;
-    @sField({ apiName: 'MailingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingPostalCode', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     mailingPostalCode: string;
-    @sField({ apiName: 'MailingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingCountry', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     mailingCountry: string;
-    @sField({ apiName: 'MailingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingLatitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     mailingLatitude: number;
-    @sField({ apiName: 'MailingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingLongitude', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'double' })
     mailingLongitude: number;
-    @sField({ apiName: 'MailingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingGeocodeAccuracy', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     mailingGeocodeAccuracy: string;
-    @sField({ apiName: 'MailingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MailingAddress', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'address' })
     mailingAddress: string;
-    @sField({ apiName: 'Phone', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Phone', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     phone: string;
-    @sField({ apiName: 'Fax', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Fax', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     fax: string;
-    @sField({ apiName: 'MobilePhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'MobilePhone', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     mobilePhone: string;
-    @sField({ apiName: 'HomePhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'HomePhone', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     homePhone: string;
-    @sField({ apiName: 'OtherPhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OtherPhone', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     otherPhone: string;
-    @sField({ apiName: 'AssistantPhone', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'AssistantPhone', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'phone' })
     assistantPhone: string;
-    @sField({ apiName: 'ReportsTo', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: false })
+    @sField({ apiName: 'ReportsTo', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: false, salesforceType: 'undefined' })
     reportsTo: Contact;
-    @sField({ apiName: 'ReportsToId', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'ReportsToId', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     reportsToId: string;
-    @sField({ apiName: 'Email', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Email', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'email' })
     email: string;
-    @sField({ apiName: 'Title', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Title', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     title: string;
-    @sField({ apiName: 'Department', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Department', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     department: string;
-    @sField({ apiName: 'AssistantName', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'AssistantName', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     assistantName: string;
-    @sField({ apiName: 'LeadSource', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LeadSource', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     leadSource: string;
-    @sField({ apiName: 'Birthdate', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Birthdate', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'date' })
     birthdate: Date;
-    @sField({ apiName: 'Description', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Description', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'textarea' })
     description: string;
-    @sField({ apiName: 'OwnerId', readOnly: false, required: true, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'OwnerId', readOnly: false, required: true, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     ownerId: string;
-    @sField({ apiName: 'CreatedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'CreatedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     createdDate: Date;
-    @sField({ apiName: 'CreatedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'CreatedById', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     createdById: string;
-    @sField({ apiName: 'LastModifiedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastModifiedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastModifiedDate: Date;
-    @sField({ apiName: 'LastModifiedById', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastModifiedById', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'reference' })
     lastModifiedById: string;
-    @sField({ apiName: 'SystemModstamp', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'SystemModstamp', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     systemModstamp: Date;
-    @sField({ apiName: 'LastActivityDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastActivityDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'date' })
     lastActivityDate: Date;
-    @sField({ apiName: 'LastCURequestDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastCURequestDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastCURequestDate: Date;
-    @sField({ apiName: 'LastCUUpdateDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastCUUpdateDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastCUUpdateDate: Date;
-    @sField({ apiName: 'LastViewedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastViewedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastViewedDate: Date;
-    @sField({ apiName: 'LastReferencedDate', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'LastReferencedDate', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     lastReferencedDate: Date;
-    @sField({ apiName: 'EmailBouncedReason', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'EmailBouncedReason', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     emailBouncedReason: string;
-    @sField({ apiName: 'EmailBouncedDate', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'EmailBouncedDate', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'datetime' })
     emailBouncedDate: Date;
-    @sField({ apiName: 'IsEmailBounced', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'IsEmailBounced', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'boolean' })
     isEmailBounced: boolean;
-    @sField({ apiName: 'PhotoUrl', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'PhotoUrl', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'url' })
     photoUrl: string;
-    @sField({ apiName: 'Jigsaw', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Jigsaw', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     jigsaw: string;
-    @sField({ apiName: 'JigsawContactId', readOnly: true, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'JigsawContactId', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     jigsawContactId: string;
-    @sField({ apiName: 'CleanStatus', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'CleanStatus', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     cleanStatus: string;
-    @sField({ apiName: 'Level__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Level__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'picklist' })
     level: string;
-    @sField({ apiName: 'Languages__c', readOnly: false, required: false, reference: undefined, childRelationship: false })
+    @sField({ apiName: 'Languages__c', readOnly: false, required: false, reference: undefined, childRelationship: false, salesforceType: 'string' })
     languages: string;
-    constructor () {
+    constructor (fields?: ContactFields) {
         super('Contact');
         this.id = void 0;
         this.isDeleted = void 0;
@@ -406,6 +555,7 @@ export class Contact extends RestObject {
         this.cleanStatus = void 0;
         this.level = void 0;
         this.languages = void 0;
+        Object.assign(this, fields);
     }
     static async retrieve (qry: string): Promise<Contact[]> {
         return await RestObject.query<Contact>(Contact, qry);
