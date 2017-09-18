@@ -2,7 +2,7 @@ import { suite, test, slow, timeout } from 'mocha-typescript';
 import { should, assert } from 'chai';
 import * as nock from 'nock';
 import { RestObject, BaseConfig, Rest } from '../src/index';
-import { Account } from './lib/generatedSobs';
+import { Account, Contact } from './lib/generatedSobs';
 import { getSFieldProps, SFieldProperties } from '../src/main/lib/sObjectDecorators';
 // set up should
 should();
@@ -54,7 +54,8 @@ should();
     // set up hosting
     const config: BaseConfig = {
       accessToken: '123abc',
-      instanceUrl: mockHost
+      instanceUrl: mockHost,
+      version: 40
     };
 
     Rest.config = config;

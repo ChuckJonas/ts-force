@@ -15,11 +15,10 @@ export class CompositeBatch {
     }
 
     public async send (): Promise<BatchResponse> {
-        console.log(this.batchRequests);
         let payload: CompositeBatchPayload = {
             batchRequests: this.batchRequests
         };
-        let resp = await this.client.request.post(`/composite/batch`, payload);
+        let resp = await this.client.request.post(`/services/data/${Rest.Instance.version}/composite/batch`, payload);
         let batchResponse: BatchResponse = resp.data;
         for (let i = 0; i < this.callbacks.length; i++) {
             let callback = this.callbacks[i];

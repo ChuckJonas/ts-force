@@ -106,6 +106,7 @@ async function generateLoadConfig (): Promise<Config> {
 
     // could also retrieve this using sfdx
     Rest.config = config.auth;
+    Rest.config.version = 40; // should be moved to config
 
     return config;
 
