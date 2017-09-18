@@ -11,9 +11,10 @@ export class Rest {
     public request: AxiosInstance;
     public version: string;
     constructor () {
-        this.version = 'v40.0';
+
+        this.version = `v${Rest.config.version ? Rest.config.version.toFixed(1) : '40.0'}`;
         this.request = axios.create({
-            baseURL: `${Rest.config.instanceUrl}/services/data/${this.version}/`,
+            baseURL: `${Rest.config.instanceUrl}`,
             headers: {
                 'Authorization': 'Bearer ' + Rest.config.accessToken,
                 'Content-Type': 'application/json',
@@ -24,7 +25,7 @@ export class Rest {
 
     public async getSObjectDescribe (apiName: string): Promise<SObjectDescribe> {
 
-        let resp = await this.request.get(`/sobjects/${apiName}/describe/`);
+        let resp = await this.request.get(`/services/data/${this.version}/sobjects/${apiName}/describe/`);
         return resp.data;
     }
 
@@ -33,7 +34,7 @@ export class Rest {
         let qryString = encodeURIComponent(query);
 
         try {
-            let resp = await this.request.get(`/queryAll?q=${qryString}`);
+            let resp = await this.request.get(`/services/data/${this.version}/queryAll?q=${qryString}`);
             return resp.data;
         } catch (error) {
             console.log(error.response.data);

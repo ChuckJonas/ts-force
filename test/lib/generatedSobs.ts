@@ -3,80 +3,80 @@ import { RestObject, SObject, sField } from '../../src/index';
  * Property Interface for Account
  */
 export interface AccountFields {
-    contacts?: Contact[];
-    id?: string;
-    isDeleted?: boolean;
-    masterRecord?: Account;
-    masterRecordId?: string;
-    name?: string;
-    type?: string;
-    parent?: Account;
-    parentId?: string;
-    billingStreet?: string;
-    billingCity?: string;
-    billingState?: string;
-    billingPostalCode?: string;
-    billingCountry?: string;
-    billingLatitude?: number;
-    billingLongitude?: number;
-    billingGeocodeAccuracy?: string;
-    billingAddress?: string;
-    shippingStreet?: string;
-    shippingCity?: string;
-    shippingState?: string;
-    shippingPostalCode?: string;
-    shippingCountry?: string;
-    shippingLatitude?: number;
-    shippingLongitude?: number;
-    shippingGeocodeAccuracy?: string;
-    shippingAddress?: string;
-    phone?: string;
-    fax?: string;
-    accountNumber?: string;
-    website?: string;
-    photoUrl?: string;
-    sic?: string;
-    industry?: string;
-    annualRevenue?: number;
-    numberOfEmployees?: string;
-    ownership?: string;
-    tickerSymbol?: string;
-    description?: string;
-    rating?: string;
-    site?: string;
-    ownerId?: string;
-    createdDate?: Date;
-    createdById?: string;
-    lastModifiedDate?: Date;
-    lastModifiedById?: string;
-    systemModstamp?: Date;
-    lastActivityDate?: Date;
-    lastViewedDate?: Date;
-    lastReferencedDate?: Date;
-    jigsaw?: string;
-    jigsawCompanyId?: string;
-    cleanStatus?: string;
-    accountSource?: string;
-    dunsNumber?: string;
-    tradestyle?: string;
-    naicsCode?: string;
-    naicsDesc?: string;
-    yearStarted?: string;
-    sicDesc?: string;
-    dandbCompanyId?: string;
-    operatingHoursId?: string;
-    customerPriority?: string;
-    sLA?: string;
-    active?: string;
-    numberofLocations?: number;
-    upsellOpportunity?: string;
-    sLASerialNumber?: string;
-    sLAExpirationDate?: Date;
+    readonly contacts?: Contact[];
+    readonly id?: string;
+    readonly isDeleted?: boolean;
+    readonly masterRecord?: Account;
+    readonly masterRecordId?: string;
+    readonly name?: string;
+    readonly type?: string;
+    readonly parent?: Account;
+    readonly parentId?: string;
+    readonly billingStreet?: string;
+    readonly billingCity?: string;
+    readonly billingState?: string;
+    readonly billingPostalCode?: string;
+    readonly billingCountry?: string;
+    readonly billingLatitude?: number;
+    readonly billingLongitude?: number;
+    readonly billingGeocodeAccuracy?: string;
+    readonly billingAddress?: string;
+    readonly shippingStreet?: string;
+    readonly shippingCity?: string;
+    readonly shippingState?: string;
+    readonly shippingPostalCode?: string;
+    readonly shippingCountry?: string;
+    readonly shippingLatitude?: number;
+    readonly shippingLongitude?: number;
+    readonly shippingGeocodeAccuracy?: string;
+    readonly shippingAddress?: string;
+    readonly phone?: string;
+    readonly fax?: string;
+    readonly accountNumber?: string;
+    readonly website?: string;
+    readonly photoUrl?: string;
+    readonly sic?: string;
+    readonly industry?: string;
+    readonly annualRevenue?: number;
+    readonly numberOfEmployees?: string;
+    readonly ownership?: string;
+    readonly tickerSymbol?: string;
+    readonly description?: string;
+    readonly rating?: string;
+    readonly site?: string;
+    readonly ownerId?: string;
+    readonly createdDate?: Date;
+    readonly createdById?: string;
+    readonly lastModifiedDate?: Date;
+    readonly lastModifiedById?: string;
+    readonly systemModstamp?: Date;
+    readonly lastActivityDate?: Date;
+    readonly lastViewedDate?: Date;
+    readonly lastReferencedDate?: Date;
+    readonly jigsaw?: string;
+    readonly jigsawCompanyId?: string;
+    readonly cleanStatus?: string;
+    readonly accountSource?: string;
+    readonly dunsNumber?: string;
+    readonly tradestyle?: string;
+    readonly naicsCode?: string;
+    readonly naicsDesc?: string;
+    readonly yearStarted?: string;
+    readonly sicDesc?: string;
+    readonly dandbCompanyId?: string;
+    readonly operatingHoursId?: string;
+    readonly customerPriority?: string;
+    readonly sLA?: string;
+    readonly active?: string;
+    readonly numberofLocations?: number;
+    readonly upsellOpportunity?: string;
+    readonly sLASerialNumber?: string;
+    readonly sLAExpirationDate?: Date;
 }
 /**
  * Generated class for Account
  */
-export class Account extends RestObject implements AccountFields {
+export class Account extends RestObject  implements AccountFields {
     @sField({ apiName: 'Contacts', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: true, salesforceType: 'undefined' })
     contacts: Contact[];
     @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'id' })
@@ -291,74 +291,77 @@ export class Account extends RestObject implements AccountFields {
     static async retrieve (qry: string): Promise<Account[]> {
         return await RestObject.query<Account>(Account, qry);
     }
+    toImmutable (): AccountFields {
+        return this.clone();
+    }
 }
 /**
  * Property Interface for Contact
  */
 export interface ContactFields {
-    id?: string;
-    isDeleted?: boolean;
-    masterRecord?: Contact;
-    masterRecordId?: string;
-    account?: Account;
-    accountId?: string;
-    lastName?: string;
-    firstName?: string;
-    salutation?: string;
-    name?: string;
-    otherStreet?: string;
-    otherCity?: string;
-    otherState?: string;
-    otherPostalCode?: string;
-    otherCountry?: string;
-    otherLatitude?: number;
-    otherLongitude?: number;
-    otherGeocodeAccuracy?: string;
-    otherAddress?: string;
-    mailingStreet?: string;
-    mailingCity?: string;
-    mailingState?: string;
-    mailingPostalCode?: string;
-    mailingCountry?: string;
-    mailingLatitude?: number;
-    mailingLongitude?: number;
-    mailingGeocodeAccuracy?: string;
-    mailingAddress?: string;
-    phone?: string;
-    fax?: string;
-    mobilePhone?: string;
-    homePhone?: string;
-    otherPhone?: string;
-    assistantPhone?: string;
-    reportsTo?: Contact;
-    reportsToId?: string;
-    email?: string;
-    title?: string;
-    department?: string;
-    assistantName?: string;
-    leadSource?: string;
-    birthdate?: Date;
-    description?: string;
-    ownerId?: string;
-    createdDate?: Date;
-    createdById?: string;
-    lastModifiedDate?: Date;
-    lastModifiedById?: string;
-    systemModstamp?: Date;
-    lastActivityDate?: Date;
-    lastCURequestDate?: Date;
-    lastCUUpdateDate?: Date;
-    lastViewedDate?: Date;
-    lastReferencedDate?: Date;
-    emailBouncedReason?: string;
-    emailBouncedDate?: Date;
-    isEmailBounced?: boolean;
-    photoUrl?: string;
-    jigsaw?: string;
-    jigsawContactId?: string;
-    cleanStatus?: string;
-    level?: string;
-    languages?: string;
+    readonly id?: string;
+    readonly isDeleted?: boolean;
+    readonly masterRecord?: Contact;
+    readonly masterRecordId?: string;
+    readonly account?: Account;
+    readonly accountId?: string;
+    readonly lastName?: string;
+    readonly firstName?: string;
+    readonly salutation?: string;
+    readonly name?: string;
+    readonly otherStreet?: string;
+    readonly otherCity?: string;
+    readonly otherState?: string;
+    readonly otherPostalCode?: string;
+    readonly otherCountry?: string;
+    readonly otherLatitude?: number;
+    readonly otherLongitude?: number;
+    readonly otherGeocodeAccuracy?: string;
+    readonly otherAddress?: string;
+    readonly mailingStreet?: string;
+    readonly mailingCity?: string;
+    readonly mailingState?: string;
+    readonly mailingPostalCode?: string;
+    readonly mailingCountry?: string;
+    readonly mailingLatitude?: number;
+    readonly mailingLongitude?: number;
+    readonly mailingGeocodeAccuracy?: string;
+    readonly mailingAddress?: string;
+    readonly phone?: string;
+    readonly fax?: string;
+    readonly mobilePhone?: string;
+    readonly homePhone?: string;
+    readonly otherPhone?: string;
+    readonly assistantPhone?: string;
+    readonly reportsTo?: Contact;
+    readonly reportsToId?: string;
+    readonly email?: string;
+    readonly title?: string;
+    readonly department?: string;
+    readonly assistantName?: string;
+    readonly leadSource?: string;
+    readonly birthdate?: Date;
+    readonly description?: string;
+    readonly ownerId?: string;
+    readonly createdDate?: Date;
+    readonly createdById?: string;
+    readonly lastModifiedDate?: Date;
+    readonly lastModifiedById?: string;
+    readonly systemModstamp?: Date;
+    readonly lastActivityDate?: Date;
+    readonly lastCURequestDate?: Date;
+    readonly lastCUUpdateDate?: Date;
+    readonly lastViewedDate?: Date;
+    readonly lastReferencedDate?: Date;
+    readonly emailBouncedReason?: string;
+    readonly emailBouncedDate?: Date;
+    readonly isEmailBounced?: boolean;
+    readonly photoUrl?: string;
+    readonly jigsaw?: string;
+    readonly jigsawContactId?: string;
+    readonly cleanStatus?: string;
+    readonly level?: string;
+    readonly languages?: string;
 }
 /**
  * Generated class for Contact
@@ -559,5 +562,8 @@ export class Contact extends RestObject  implements ContactFields {
     }
     static async retrieve (qry: string): Promise<Contact[]> {
         return await RestObject.query<Contact>(Contact, qry);
+    }
+    toImmutable (): ContactFields {
+        return this.clone();
     }
 }

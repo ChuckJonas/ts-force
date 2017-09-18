@@ -2,6 +2,7 @@ import { Rest, QueryResponse } from './rest';
 import { Composite, CompositeResult, CompositeResponse, CompositeBatch, BatchResponse, CompositeBatchResult } from './composite';
 import { AxiosResponse } from 'axios';
 import { sField, getSFieldProps, SFieldProperties } from './sObjectDecorators';
+import * as _ from 'lodash';
 
 export class SObjectAttributes {
     public type: string; // sf apex name
@@ -19,6 +20,7 @@ export abstract class SObject {
 
         this.attributes = new SObjectAttributes();
         this.attributes.type = type;
+        this.attributes.url = `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}`;
     }
 }
 
@@ -80,13 +82,18 @@ export abstract class RestObject extends SObject {
         this.mapFromQuery(result.result);
     }
 
-    public async refresh (): Promise < void > {
+    public clone (): this {
+        return _.cloneDeep(this);
+    }
+
+    public async refresh (): Promise < this > {
         if (this.id == null) {
             throw new Error('Must have Id to refresh!');
         }
 
-        const response = await Rest.Instance.request.get(`/sobjects/${this.attributes.type}/${this.id}`);
+        const response = await Rest.Instance.request.get(`${this.attributes.url}/${this.id}`);
         this.mapFromQuery(response.data);
+        return this;
     }
     /**
     * inserts the sobject to Salesfroce
@@ -95,12 +102,12 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<void>}
     * @memberof RestObject
     */
-    public async insert (refresh ?: boolean): Promise < void > {
+    public async insert (refresh ?: boolean): Promise < this > {
         let insertCompositeRef = 'newObject';
 
         let composite = new Composite().addRequest({
                 method: 'POST',
-                url: `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}`,
+                url: this.attributes.url,
                 referenceId: insertCompositeRef,
                 body: this.prepareForDML()
         }, this.handleCompositeUpdateResult);
@@ -108,13 +115,14 @@ export abstract class RestObject extends SObject {
         if (refresh === true) {
             composite.addRequest({
                 method: 'GET',
-                url: `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}/@{${insertCompositeRef}.id}`,
+                url: `${this.attributes.url}/@{${insertCompositeRef}.id}`,
                 referenceId: 'getObject'
             }, this.handleCompositeGetResult);
         }
 
         const compositeResult = await composite.send();
         this.handleCompositeErrors(compositeResult);
+        return this;
     }
 
     /**
@@ -123,7 +131,7 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<void>}
     * @memberof RestObject
     */
-    public async update (refresh ?: boolean): Promise < void > {
+    public async update (refresh ?: boolean): Promise < this > {
 
         if (this.id == null) {
             throw new Error('Must have Id to update!');
@@ -138,7 +146,7 @@ export abstract class RestObject extends SObject {
         const batchResponse = await batchRequest.send();
         this.handleCompositeBatchErrors(batchResponse);
 
-        return;
+        return this;
     }
 
     /**
@@ -151,7 +159,7 @@ export abstract class RestObject extends SObject {
         if (this.id == null) {
             throw new Error('Must have Id to Delete!');
         }
-        const response = await this.generateCall(`/sobjects/${this.attributes.type}/${this.id}?_HttpMethod=DELETE`, this);
+        const response = await this.generateCall(`${this.attributes.url}/${this.id}?_HttpMethod=DELETE`, this);
         return response.data;
     }
 
@@ -216,8 +224,6 @@ export abstract class RestObject extends SObject {
                         if (data[i]) {
                             data[i].records.forEach(record => {
                                 let typeInstance = new type();
-                                console.log('child: ');
-                                console.log(record);
                                 this[sobPropName].push(typeInstance.mapFromQuery(record));
                             });
                         }

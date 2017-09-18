@@ -9,6 +9,7 @@ const superClass = 'RestObject';
 export class SObjectGenerator {
 
     public apiNames: string[];
+    public classInterfaceMap: Map<string, string>;
     public sourceFile: SourceFile;
     public spinner: any;
 
@@ -20,6 +21,7 @@ export class SObjectGenerator {
     */
     constructor (sourceFile: SourceFile, apiNames: string[]) {
         this.apiNames = apiNames;
+        this.classInterfaceMap = new Map<string,string>();
         this.sourceFile = sourceFile;
     }
 
@@ -43,8 +45,7 @@ export class SObjectGenerator {
             namedImports: [
                 { name: 'RestObject' },
                 { name: 'SObject' },
-                { name: 'sField' },
-                { name: 'PolyRestObject'}
+                { name: 'sField' }
             ]
         });
 
@@ -77,6 +78,8 @@ export class SObjectGenerator {
         props.push(...this.generateFieldProps(sobDescribe.fields));
 
         let className = this.sanatizeClassName(apiName);
+        let interfaceName = this.generatePropInterfaceName(className);
+        this.classInterfaceMap.set(className, interfaceName);
 
         this.generateInterface(className, props);
         let classDeclaration = this.generateClass(apiName, className, props);
@@ -96,26 +99,37 @@ export class SObjectGenerator {
             `return await ${superClass}.query<${className}>(${className}, qry);`
         );
 
+        const immutableMethod = classDeclaration.addMethod({
+            name: 'toImmutable',
+            scope: Scope.Public,
+            returnType: interfaceName
+        });
+
+        immutableMethod.setBodyText(
+            `return this.clone();`
+        );
+
     }
 
     private generateInterface (className: string, properties: PropertyDeclarationStructure[]) {
         let propsInterface = this.sourceFile.addInterface({
-            name: this.generatePropInterfaceName(className),
+            name: this.classInterfaceMap.get(className),
             isExported: true,
-            docs: [{description: `Property Interface for ${className}` }]
+            docs: [{description: `Immutable Property Interface for ${className}` }]
         });
 
         properties.forEach(prop => {
             let ip = propsInterface.addProperty({
                 name: prop.name,
-                type: prop.type
+                type: prop.type,
+                isReadonly: true
             });
             ip.setIsOptional(true);
         });
     }
 
     private generateClass (apiName: string, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
-        let propInterfaceName = this.generatePropInterfaceName(className);
+        let propInterfaceName = this.classInterfaceMap.get(className);
 
         let classDeclaration = this.sourceFile.addClass({
             name: className,
@@ -208,18 +222,21 @@ export class SObjectGenerator {
 
                 // only include reference types if we are also generating the referenced class
                 if (
-                    (field.type === 'reference' && this.apiNames.indexOf(field.referenceTo[0]) > -1)
+                    field.type === 'reference'
+                    && (
+                        this.apiNames.indexOf(field.referenceTo[0]) > -1
+                        || (field.referenceTo.length > 1 && this.apiNames.indexOf('Name') > -1)
+                    )
                     && field.relationshipName !== null
                 ) {
 
                     let referenceClass: string;
 
                     if (field.referenceTo.length > 1) {
-                        referenceClass = 'PolyRestObject'; // polymorphic?
+                        referenceClass = 'Name'; // polymorphic object
                     } else {
                         referenceClass = this.sanatizeClassName(field.referenceTo[0]);
                     }
-                    let refApiName = field.referenceTo[0]; // polymorphic not support
 
                     let decoratorProps = {
                         apiName: field.relationshipName,
