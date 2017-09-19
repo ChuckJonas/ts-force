@@ -54,7 +54,7 @@ export abstract class RestObject extends SObject {
     * @memberof RestObject
     */
     public static sanatizeProperty (apiName: string): string {
-        let s = apiName.replace('__c', '').replace('_', '');
+        let s = apiName.replace('__c', '').replace('__r', '').replace(/_/g, '');
         return apiName.charAt(0).toLowerCase() + s.slice(1);
     }
 
@@ -194,7 +194,7 @@ export abstract class RestObject extends SObject {
     protected mapFromQuery (data: SObject): RestObject {
 
         // create a map of lowercase API names -> sob property names
-        let apiNameMap = this.getNameMapping();
+        let apiNameMap = this.getNameMapping(); // should be cached properly
 
         // loop through returned data
         for (let i in data) {
