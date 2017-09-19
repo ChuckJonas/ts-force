@@ -194,7 +194,7 @@ export class SObjectGenerator {
                 };
 
                 props.push({
-                    name: RestObject.sanatizeProperty(child.relationshipName),
+                    name: RestObject.sanatizeProperty(child.relationshipName, false),
                     type: `${referenceClass}[]`,
                     scope: Scope.Public,
                     decorators: [
@@ -247,7 +247,7 @@ export class SObjectGenerator {
                     };
 
                     props.push({
-                        name: RestObject.sanatizeProperty(field.relationshipName),
+                        name: RestObject.sanatizeProperty(field.relationshipName, false),
                         type: referenceClass,
                         scope: Scope.Public,
                         decorators: [
@@ -258,7 +258,7 @@ export class SObjectGenerator {
                 }
 
                 let prop: PropertyDeclarationStructure = {
-                    name: RestObject.sanatizeProperty(field.name),
+                    name: RestObject.sanatizeProperty(field.name, field.type === 'reference'),
                     type: this.mapSObjectType(field.type),
                     scope: Scope.Public,
                     decorators: [this.getDecorator(field)],

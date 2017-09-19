@@ -53,9 +53,9 @@ export abstract class RestObject extends SObject {
     * @returns {string} converted in cammel case
     * @memberof RestObject
     */
-    public static sanatizeProperty (apiName: string): string {
+    public static sanatizeProperty (apiName: string, reference: boolean): string {
         let s = apiName.replace('__c', '').replace('__r', '').replace(/_/g, '');
-        return apiName.charAt(0).toLowerCase() + s.slice(1);
+        return apiName.charAt(0).toLowerCase() + s.slice(1) + (reference ? 'Id' : '');
     }
 
     protected static async query < T extends RestObject > (type: { new(): T }, qry: string): Promise < T[] > {
