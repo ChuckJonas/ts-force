@@ -1,7 +1,7 @@
 {
   "extends": "./config/tsconfig.flexible", // also available: "./config/tsconfig.strict"
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es5",
     "outDir": "build",
     "moduleResolution": "node",
     "module": "commonjs",
