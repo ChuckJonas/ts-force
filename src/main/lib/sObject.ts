@@ -159,7 +159,7 @@ export abstract class RestObject extends SObject {
         if (this.id == null) {
             throw new Error('Must have Id to Delete!');
         }
-        const response = await this.generateCall(`${this.attributes.url}/${this.id}?_HttpMethod=DELETE`, this);
+        const response = await Rest.Instance.request.delete(`${this.attributes.url}/${this.id}`);
         return response.data;
     }
 
@@ -279,10 +279,6 @@ export abstract class RestObject extends SObject {
             });
             throw new Error(JSON.stringify(errors));
         }
-    }
-
-    private generateCall (path: string, data: SObject): Promise < AxiosResponse > {
-        return Rest.Instance.request.post(path, data);
     }
 
 }

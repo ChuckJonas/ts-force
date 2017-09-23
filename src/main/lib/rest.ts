@@ -34,7 +34,7 @@ export class Rest {
         let qryString = encodeURIComponent(query);
 
         try {
-            let resp = await this.request.get(`/services/data/${this.version}/queryAll?q=${qryString}`);
+            let resp = await this.request.get(`/services/data/${this.version}/query?q=${qryString}`);
             return resp.data;
         } catch (error) {
             console.log(error.response.data);

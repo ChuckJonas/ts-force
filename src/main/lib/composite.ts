@@ -74,7 +74,7 @@ export class CompositeBatch {
         let qryString = encodeURIComponent(query);
         let request: BatchRequest = {
                 method: 'GET',
-                url: `${this.client.version}/queryAll?q=${qryString}`
+                url: `${this.client.version}/query?q=${qryString}`
             };
         this.addBatchRequest(request, callback);
 
