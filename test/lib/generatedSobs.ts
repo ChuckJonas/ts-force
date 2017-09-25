@@ -76,7 +76,7 @@ export interface AccountFields {
 /**
  * Generated class for Account
  */
-export class Account extends RestObject  implements AccountFields {
+export class Account extends RestObject implements AccountFields {
     @sField({ apiName: 'Contacts', readOnly: true, required: false, reference: () => { return Contact; }, childRelationship: true, salesforceType: 'undefined' })
     contacts: Contact[];
     @sField({ apiName: 'Id', readOnly: true, required: false, reference: undefined, childRelationship: false, salesforceType: 'id' })
