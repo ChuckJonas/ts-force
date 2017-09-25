@@ -1,4 +1,4 @@
-import { RestObject, SObject, sField } from '../../src/index';
+import { RestObject, sField } from '../../src/index';
 /**
  * Property Interface for Account
  */

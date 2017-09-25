@@ -44,7 +44,6 @@ export class SObjectGenerator {
             moduleSpecifier: 'ts-force',
             namedImports: [
                 { name: 'RestObject' },
-                { name: 'SObject' },
                 { name: 'sField' }
             ]
         });
