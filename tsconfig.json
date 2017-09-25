@@ -11,7 +11,6 @@
     "listFiles": false,
     "traceResolution": false,
     "experimentalDecorators": true,
-    "strictNullChecks": true,
     "pretty": true,
     "lib" : [
       "es6"
