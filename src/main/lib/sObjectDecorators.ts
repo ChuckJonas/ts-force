@@ -7,7 +7,7 @@ const sFieldMetadataKey = Symbol('sField');
 export class SFieldProperties {
     public apiName: string;
     public readOnly: boolean;
-    public reference: () => { new(): RestObject; };
+    public reference?: () => { new(): RestObject; };
     public required: boolean;
     public childRelationship: boolean;
     public salesforceType: string;
