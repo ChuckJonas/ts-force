@@ -45,19 +45,6 @@ export abstract class RestObject extends SObject {
         super(type);
     }
 
-    /**
-    * Converts API name to javascript property name
-    *
-    * @static
-    * @param {string} apiName Salesforce API name
-    * @returns {string} converted in cammel case
-    * @memberof RestObject
-    */
-    public static sanatizeProperty (apiName: string, reference: boolean): string {
-        let s = apiName.replace('__c', '').replace('__r', '').replace(/_/g, '');
-        return apiName.charAt(0).toLowerCase() + s.slice(1) + (reference ? 'Id' : '');
-    }
-
     protected static async query < T extends RestObject > (type: { new(): T }, qry: string): Promise < T[] > {
         const response = await Rest.Instance.query(qry);
         let sobs: Array<T> = [];

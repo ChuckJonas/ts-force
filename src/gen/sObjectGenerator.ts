@@ -3,12 +3,13 @@ import { Rest, RestObject } from '../index';
 import { Field, SObjectDescribe, ChildRelationship } from '../main/lib/sObjectDescribe';
 import { SFieldProperties } from '../main/lib/sObjectDecorators';
 import { Spinner } from 'cli-spinner';
+import { SObjectConfig, FieldMapping } from './sObjectConfig';
 
 const superClass = 'RestObject';
 
 export class SObjectGenerator {
 
-    public apiNames: string[];
+    public sObjectConfigs: SObjectConfig[];
     public classInterfaceMap: Map<string, string>;
     public sourceFile: SourceFile;
     public spinner: any;
@@ -16,11 +17,11 @@ export class SObjectGenerator {
     /**
     * Generates RestObject Concrete types
     * @param {SourceFile} sourceFile: Location to save the files
-    * @param {string[]} apiNames: Salesforce API Object Names to generate Classes for
+    * @param {string[]} sObjectConfigs: Salesforce API Object Names to generate Classes for
     * @memberof SObjectGenerator
     */
-    constructor (sourceFile: SourceFile, apiNames: string[]) {
-        this.apiNames = apiNames;
+    constructor (sourceFile: SourceFile, sObjectConfigs: SObjectConfig[]) {
+        this.sObjectConfigs = sObjectConfigs;
         this.classInterfaceMap = new Map<string,string>();
         this.sourceFile = sourceFile;
     }
@@ -49,9 +50,9 @@ export class SObjectGenerator {
             ]
         });
 
-        for (let i = 0; i < this.apiNames.length; i++) {
+        for (let i = 0; i < this.sObjectConfigs.length; i++) {
 
-            await this.generateSObjectClass(this.apiNames[i]);
+            await this.generateSObjectClass(this.sObjectConfigs[i]);
 
         }
         }catch (e) {
@@ -62,27 +63,27 @@ export class SObjectGenerator {
     }
 
     // class generation
-    public async generateSObjectClass (apiName: string): Promise<void> {
-        this.spinner.setSpinnerTitle(`Generating: ${apiName}`);
+    public async generateSObjectClass (sobConfig: SObjectConfig): Promise<void> {
+        this.spinner.setSpinnerTitle(`Generating: ${sobConfig.apiName}`);
         let sobDescribe: SObjectDescribe;
         try {
-            sobDescribe = await this.retrieveDescribe(apiName);
+            sobDescribe = await this.retrieveDescribe(sobConfig.apiName);
         }catch (e) {
-            throw new Error(`Could not retreive describe metadata for ${apiName}. Check SObject spelling and authorization `);
+            throw new Error(`Could not retreive describe metadata for ${sobConfig.apiName}. Check SObject spelling and authorization `);
         }
 
         let props: PropertyDeclarationStructure[] = [];
 
         // generate props from fields & children
-        props.push(...this.generateChildrenProps(apiName, sobDescribe.childRelationships));
-        props.push(...this.generateFieldProps(sobDescribe.fields));
+        props.push(...this.generateChildrenProps(sobConfig, sobDescribe.childRelationships));
+        props.push(...this.generateFieldProps(sobConfig, sobDescribe.fields));
 
-        let className = this.sanatizeClassName(apiName);
+        let className = this.sanatizeClassName(sobConfig);
         let interfaceName = this.generatePropInterfaceName(className);
         this.classInterfaceMap.set(className, interfaceName);
 
         this.generateInterface(className, props);
-        let classDeclaration = this.generateClass(apiName, className, props);
+        let classDeclaration = this.generateClass(sobConfig, className, props);
 
         const qryMethod = classDeclaration.addMethod({
             name: 'retrieve',
@@ -128,7 +129,7 @@ export class SObjectGenerator {
         });
     }
 
-    private generateClass (apiName: string, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
+    private generateClass (sobConfig: SObjectConfig, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
         let propInterfaceName = this.classInterfaceMap.get(className);
 
         let classDeclaration = this.sourceFile.addClass({
@@ -137,7 +138,7 @@ export class SObjectGenerator {
             isExported: true,
             properties: props,
             implements: [propInterfaceName],
-            docs: [{description: `Generated class for ${apiName}` }]
+            docs: [{description: `Generated class for ${sobConfig.apiName}` }]
         });
 
         const interfaceParamName = 'fields';
@@ -152,7 +153,7 @@ export class SObjectGenerator {
             return `this.${prop.name} = void 0;`;
         }).join('\n');
 
-        constr.setBodyText(`super('${apiName}');
+        constr.setBodyText(`super('${sobConfig.apiName}');
         ${propsInit}
         Object.assign(this,${interfaceParamName})`);
 
@@ -167,23 +168,47 @@ export class SObjectGenerator {
         return `${className}Fields`;
     }
 
-    private sanatizeClassName (apiName: string): string {
-        return apiName.replace('__c', '').replace('_', '');
+    private sanatizeClassName (sobConfig: SObjectConfig): string {
+        if (sobConfig.autoConvertNames) {
+            return sobConfig.apiName.replace('__c', '').replace('_', '');
+        }
+        return sobConfig.apiName;
     }
 
-    private generateChildrenProps (apiName: string, children: ChildRelationship[]): PropertyDeclarationStructure[] {
+    private sanatizeProperty (sobConfig: SObjectConfig, apiName: string, reference: boolean): string {
+        let fieldMapping;
+        if (sobConfig.fieldMappings) {
+            fieldMapping = sobConfig.fieldMappings.find(mapping => {
+                return mapping.apiName.toLowerCase() === apiName.toLowerCase();
+            });
+        }
+
+        if (fieldMapping) {
+            return fieldMapping.propName;
+        }else if (sobConfig.autoConvertNames) {
+            let s = apiName.replace('__c', '').replace('__r', '').replace(/_/g, '');
+            return apiName.charAt(0).toLowerCase() + s.slice(1) + (reference ? 'Id' : '');
+        }else {
+            return apiName;
+        }
+    }
+
+    private generateChildrenProps (sobConfig: SObjectConfig, children: ChildRelationship[]): PropertyDeclarationStructure[] {
         let props = [];
         children.forEach(child => {
             try {
+                let relatedSobIndex = this.sObjectConfigs.findIndex(config => {
+                    return config.apiName === child.childSObject;
+                });
                 // don't generate if not in the list of types or ??
-                if (this.apiNames.indexOf(child.childSObject) === -1
-                    || child.childSObject === apiName
+                if (relatedSobIndex === -1
+                || child.childSObject === sobConfig.apiName
                 || child.deprecatedAndHidden === true
                 || child.relationshipName === null) {
                     return;
                 }
 
-                let referenceClass = this.sanatizeClassName(child.childSObject);
+                let referenceClass = this.sanatizeClassName(this.sObjectConfigs[relatedSobIndex]);
 
                 let decoratorProps = {
                     apiName: child.relationshipName,
@@ -194,7 +219,7 @@ export class SObjectGenerator {
                 };
 
                 props.push({
-                    name: RestObject.sanatizeProperty(child.relationshipName, false),
+                    name: this.sanatizeProperty(this.sObjectConfigs[relatedSobIndex], child.relationshipName, false),
                     type: `${referenceClass}[]`,
                     scope: Scope.Public,
                     decorators: [
@@ -209,7 +234,7 @@ export class SObjectGenerator {
         return props;
     }
 
-    private generateFieldProps (fields: Field[]): PropertyDeclarationStructure[] {
+    private generateFieldProps (sobConfig: SObjectConfig, fields: Field[]): PropertyDeclarationStructure[] {
         let props = [];
         // add members
         fields.forEach(field => {
@@ -220,12 +245,15 @@ export class SObjectGenerator {
                     docs.push({ description: field.inlineHelpText });
                 }
 
+                let relatedSobIndex = this.sObjectConfigs.findIndex(config => {
+                    return config.apiName === field.referenceTo[0];
+                });
+
                 // only include reference types if we are also generating the referenced class
                 if (
                     field.type === 'reference'
                     && (
-                        this.apiNames.indexOf(field.referenceTo[0]) > -1
-                        || (field.referenceTo.length > 1 && this.apiNames.indexOf('Name') > -1)
+                        relatedSobIndex > -1
                     )
                     && field.relationshipName !== null
                 ) {
@@ -235,7 +263,7 @@ export class SObjectGenerator {
                     if (field.referenceTo.length > 1) {
                         referenceClass = 'Name'; // polymorphic object
                     } else {
-                        referenceClass = this.sanatizeClassName(field.referenceTo[0]);
+                        referenceClass = this.sanatizeClassName(this.sObjectConfigs[relatedSobIndex]);
                     }
 
                     let decoratorProps = {
@@ -247,7 +275,7 @@ export class SObjectGenerator {
                     };
 
                     props.push({
-                        name: RestObject.sanatizeProperty(field.relationshipName, false),
+                        name: this.sanatizeProperty(this.sObjectConfigs[relatedSobIndex], field.relationshipName, false),
                         type: referenceClass,
                         scope: Scope.Public,
                         decorators: [
@@ -258,7 +286,7 @@ export class SObjectGenerator {
                 }
 
                 let prop: PropertyDeclarationStructure = {
-                    name: RestObject.sanatizeProperty(field.name, field.type === 'reference'),
+                    name: this.sanatizeProperty(sobConfig, field.name, field.type === 'reference'),
                     type: this.mapSObjectType(field.type),
                     scope: Scope.Public,
                     decorators: [this.getDecorator(field)],

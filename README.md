@@ -36,7 +36,18 @@ A json configuration file can be passed in via the `--config|c` arg:
     "clientSecret": "12314515",
     "oAuthHost": "https://na31.salesforce.com"
   },
-  "sObjects": ["Account", "Contact"],
+  "sObjects": [
+      "Account",
+      {
+        "apiName": "Contact",
+        "fieldMappings": [
+          {
+            "apiName" : "Name__c",
+            "propName": "nameCustom"
+          }
+        ]
+      }
+    ],
   "outPath": "./src/generated/sobs.ts"
 }
 ```

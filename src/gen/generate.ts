@@ -7,6 +7,7 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 import * as fs from 'fs';
 import { OAuth, UsernamePasswordConfig } from '../auth/oauth';
+import { SObjectConfig } from './sObjectConfig';
 
 interface AuthConfig extends BaseConfig {
     username?: string;
@@ -18,7 +19,7 @@ interface AuthConfig extends BaseConfig {
 
 interface Config {
     auth?: AuthConfig;
-    sObjects?: string[];
+    sObjects?: (string|SObjectConfig)[];
     exclude?: Map<string, string[]>;
     outPath?: string;
 }
@@ -121,9 +122,18 @@ function generate (config: Config) {
     }
     const source = ast.addSourceFileFromStructure(config.outPath, {});
 
+    let sobConfigs = config.sObjects.map(item => {
+        if (typeof item === 'string') {
+            return {
+                apiName: item
+            };
+        }
+        return item;
+    });
+
     let gen = new SObjectGenerator(
         source,
-        config.sObjects
+        sobConfigs
     );
 
     gen.generateFile().then(() => {
