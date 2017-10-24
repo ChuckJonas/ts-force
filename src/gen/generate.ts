@@ -125,8 +125,12 @@ function generate (config: Config) {
     let sobConfigs = config.sObjects.map(item => {
         if (typeof item === 'string') {
             return {
-                apiName: item
+                apiName: item,
+                autoConvertNames: true
             };
+        }
+        if (item.autoConvertNames === undefined) {
+            item.autoConvertNames = true;
         }
         return item;
     });

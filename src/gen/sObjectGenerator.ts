@@ -83,6 +83,7 @@ export class SObjectGenerator {
         this.classInterfaceMap.set(className, interfaceName);
 
         this.generateInterface(className, props);
+
         let classDeclaration = this.generateClass(sobConfig, className, props);
 
         const qryMethod = classDeclaration.addMethod({
@@ -187,7 +188,7 @@ export class SObjectGenerator {
             return fieldMapping.propName;
         }else if (sobConfig.autoConvertNames) {
             let s = apiName.replace('__c', '').replace('__r', '').replace(/_/g, '');
-            return apiName.charAt(0).toLowerCase() + s.slice(1) + (reference ? 'Id' : '');
+            return apiName.charAt(0).toLowerCase() + s.slice(1) + (reference && !apiName.endsWith('Id') ? 'Id' : '');
         }else {
             return apiName;
         }
@@ -227,7 +228,6 @@ export class SObjectGenerator {
                     ]
                 });
             }catch (e) {
-                console.log(child);
                 throw e;
             }
         });
@@ -295,7 +295,6 @@ export class SObjectGenerator {
 
                 props.push(prop);
             }catch (e) {
-                console.log(field);
                 throw e;
             }
         });
