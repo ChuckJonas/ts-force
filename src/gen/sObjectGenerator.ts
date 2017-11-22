@@ -51,6 +51,12 @@ export class SObjectGenerator {
         });
 
         for (let i = 0; i < this.sObjectConfigs.length; i++) {
+            let className = this.sanatizeClassName(this.sObjectConfigs[i]);
+            let interfaceName = this.generatePropInterfaceName(className);
+            this.classInterfaceMap.set(className, interfaceName);
+        }
+
+        for (let i = 0; i < this.sObjectConfigs.length; i++) {
 
             await this.generateSObjectClass(this.sObjectConfigs[i]);
 
@@ -79,8 +85,6 @@ export class SObjectGenerator {
         props.push(...this.generateFieldProps(sobConfig, sobDescribe.fields));
 
         let className = this.sanatizeClassName(sobConfig);
-        let interfaceName = this.generatePropInterfaceName(className);
-        this.classInterfaceMap.set(className, interfaceName);
 
         this.generateInterface(className, props);
 
@@ -104,7 +108,7 @@ export class SObjectGenerator {
         const immutableMethod = classDeclaration.addMethod({
             name: 'toImmutable',
             scope: Scope.Public,
-            returnType: interfaceName
+            returnType: this.classInterfaceMap.get(className)
         });
 
         immutableMethod.setBodyText(
@@ -121,9 +125,17 @@ export class SObjectGenerator {
         });
 
         properties.forEach(prop => {
+            // this is quite hackish and should be refactored ASAP
+            let isArr = false;
+            let pType = prop.type;
+            if (prop.type.indexOf('[]') > -1) {
+                isArr = true;
+                pType = pType.replace('[]','');
+            }
+            let interfaceType = this.classInterfaceMap.get(pType);
             let ip = propsInterface.addProperty({
                 name: prop.name,
-                type: prop.type,
+                type: interfaceType ? (isArr ? `${interfaceType}[]` : interfaceType) : prop.type,
                 isReadonly: true
             });
             ip.setIsOptional(true);
