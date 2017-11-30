@@ -6,7 +6,6 @@ import { Spinner } from 'cli-spinner';
 import { SObjectConfig, FieldMapping } from './sObjectConfig';
 
 const superClass = 'RestObject';
-
 export class SObjectGenerator {
 
     public sObjectConfigs: SObjectConfig[];
@@ -70,6 +69,7 @@ export class SObjectGenerator {
 
     // class generation
     public async generateSObjectClass (sobConfig: SObjectConfig): Promise<void> {
+
         this.spinner.setSpinnerTitle(`Generating: ${sobConfig.apiName}`);
         let sobDescribe: SObjectDescribe;
         try {
@@ -114,6 +114,7 @@ export class SObjectGenerator {
         immutableMethod.setBodyText(
             `return this.clone();`
         );
+        classDeclaration.forget();
 
     }
 
@@ -140,6 +141,7 @@ export class SObjectGenerator {
             });
             ip.setIsOptional(true);
         });
+        propsInterface.forget();
     }
 
     private generateClass (sobConfig: SObjectConfig, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
@@ -189,6 +191,7 @@ export class SObjectGenerator {
     }
 
     private sanatizeProperty (sobConfig: SObjectConfig, apiName: string, reference: boolean): string {
+
         let fieldMapping;
         if (sobConfig.fieldMappings) {
             fieldMapping = sobConfig.fieldMappings.find(mapping => {
@@ -211,7 +214,7 @@ export class SObjectGenerator {
         children.forEach(child => {
             try {
                 let relatedSobIndex = this.sObjectConfigs.findIndex(config => {
-                    return config.apiName === child.childSObject;
+                    return config.apiName.toLowerCase() === child.childSObject.toLowerCase();
                 });
                 // don't generate if not in the list of types or ??
                 if (relatedSobIndex === -1
@@ -232,7 +235,7 @@ export class SObjectGenerator {
                 };
 
                 props.push({
-                    name: this.sanatizeProperty(this.sObjectConfigs[relatedSobIndex], child.relationshipName, false),
+                    name: this.sanatizeProperty(sobConfig, child.relationshipName, false),
                     type: `${referenceClass}[]`,
                     scope: Scope.Public,
                     decorators: [
