@@ -207,6 +207,19 @@ parentObj.account = records[0].Id;
 await parentObj.update();
 ```
 
+#### Non-Mapped Queries
+
+You can easily run queries that can't neccaraly be mapped back to an SObject.  This is useful for aggregated queries or even if you just want to query an object without having it included in your generated code.
+
+```
+import { Rest } from "ts-force";
+
+const sfdcClient = Rest.Instance;
+let results = await sfdcClient.query('SELECT Count(Id) FROM Account');
+console.log(results);
+```
+
+
 ### Composite API
 
 The [Composite API](https://developer.salesforce.com/blogs/tech-pubs/2017/01/simplify-your-api-code-with-new-composite-resources.html) is a powerful way to bundle API calls into a single request
@@ -279,7 +292,11 @@ handleCompositeResult = (result: CompositeResponse) => {
 
 ```
 
-## Running Unit Tests
+## Contributing
+
+Contributions are encouraged! 
+
+### Running Tests
 
 In order to run unit test you must first create a .env.test file with the following credentals that link to a valid salesforce account
 
