@@ -4,3 +4,4 @@ export * from './auth/baseConfig';
 export * from './auth/oauth';
 export * from './main/lib/sObjectDecorators';
 export * from './main/lib/composite';
+export * from './main/lib/bulk';

@@ -1,4 +1,4 @@
-import { RestObject, SObject, sField } from '../../src/index';
+import { RestObject, SObject, sField, BulkClient, BulkResult, Job } from '../../src/index';
 /**
  * Property Interface for Account
  */
@@ -560,10 +560,20 @@ export class Contact extends RestObject  implements ContactFields {
         this.languages = void 0;
         Object.assign(this, fields);
     }
+
+    static API_NAME = 'Contact';
+
+    static async executeBulk (operation: Job.OPERATION, records: Contact[]): Promise<BulkResult<Contact>[]> {
+        let bc = new BulkClient();
+        return await bc.executeBulk(Contact.API_NAME, operation, records);
+    }
+
     static async retrieve (qry: string): Promise<Contact[]> {
         return await RestObject.query<Contact>(Contact, qry);
     }
+
     toImmutable (): ContactFields {
         return this.clone();
     }
+
 }

@@ -17,8 +17,9 @@ export class Rest {
             baseURL: `${Rest.config.instanceUrl}`,
             headers: {
                 'Authorization': 'Bearer ' + Rest.config.accessToken,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'text/plain',
+                'Accept': 'application/json',
+                'X-SFDC-Session': Rest.config.accessToken
             }
         });
     }
