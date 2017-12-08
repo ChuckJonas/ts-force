@@ -1,5 +1,5 @@
 import { Scope, SourceFile, PropertyDeclarationStructure, ParameterDeclaration, DecoratorStructure, JSDocStructure, ClassDeclaration } from 'ts-simple-ast';
-import { Rest, RestObject } from '../index';
+import { Rest, RestObject, SalesforceFieldType } from '../index';
 import { Field, SObjectDescribe, ChildRelationship } from '../main/lib/sObjectDescribe';
 import { SFieldProperties } from '../main/lib/sObjectDecorators';
 import { Spinner } from 'cli-spinner';
@@ -266,7 +266,7 @@ export class SObjectGenerator {
 
                 // only include reference types if we are also generating the referenced class
                 if (
-                    field.type === 'reference'
+                    field.type === SalesforceFieldType.REFERENCE
                     && (
                         relatedSobIndex > -1
                     )
@@ -301,7 +301,7 @@ export class SObjectGenerator {
                 }
 
                 let prop: PropertyDeclarationStructure = {
-                    name: this.sanatizeProperty(sobConfig, field.name, field.type === 'reference'),
+                    name: this.sanatizeProperty(sobConfig, field.name, field.type === SalesforceFieldType.REFERENCE),
                     type: this.mapSObjectType(field.type),
                     scope: Scope.Public,
                     decorators: [this.getDecorator(field)],
@@ -318,19 +318,19 @@ export class SObjectGenerator {
 
     private mapSObjectType (sfType: string): string {
         switch (sfType) {
-            case 'datetime':
-            case 'date':
+            case SalesforceFieldType.DATETIME:
+            case SalesforceFieldType.DATE:
             return 'Date';
-            case 'boolean':
+            case SalesforceFieldType.BOOLEAN:
             return 'boolean';
-            case 'double':
-            case 'integer':
-            case 'currency':
+            case SalesforceFieldType.DOUBLE:
+            case SalesforceFieldType.INTEGER:
+            case SalesforceFieldType.CURRENCY:
             return 'number';
-            case 'reference':
-            case 'string':
-            case 'picklist':
-            case 'id':
+            case SalesforceFieldType.REFERENCE:
+            case SalesforceFieldType.STRING:
+            case SalesforceFieldType.PICKLIST:
+            case SalesforceFieldType.ID:
             default:
             return 'string';
         }

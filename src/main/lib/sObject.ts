@@ -1,7 +1,7 @@
 import { Rest, QueryResponse } from './rest';
 import { Composite, CompositeResult, CompositeResponse, CompositeBatch, BatchResponse, CompositeBatchResult } from './composite';
 import { AxiosResponse } from 'axios';
-import { sField, getSFieldProps, SFieldProperties } from './sObjectDecorators';
+import { getSFieldProps, SalesforceFieldType, sField, SFieldProperties } from './sObjectDecorators';
 import * as _ from 'lodash';
 
 export class SObjectAttributes {
@@ -12,7 +12,7 @@ export class SObjectAttributes {
 /* Base SObject */
 export abstract class SObject {
 
-    @sField({apiName: 'Id', readOnly: true, required: false, reference: null, childRelationship: false, salesforceType: 'id'})
+    @sField({apiName: 'Id', readOnly: true, required: false, reference: null, childRelationship: false, salesforceType: SalesforceFieldType.ID})
     public id: string | undefined;
     public attributes: SObjectAttributes;
 
@@ -198,7 +198,11 @@ export abstract class RestObject extends SObject {
                     if (data[i] === null) {
                         this[sobPropName] = void 0;
                     }else {
-                        this[sobPropName] = data[i];
+                        let val = data[i];
+                        if (sFieldProps.salesforceType === SalesforceFieldType.DATETIME || sFieldProps.salesforceType === SalesforceFieldType.DATE) {
+                            val = new Date(val);
+                        }
+                        this[sobPropName] = val;
                     }
 
                 } else {

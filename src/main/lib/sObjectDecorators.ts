@@ -2,6 +2,19 @@ import { ChildRelationship } from './sObjectDescribe';
 import 'reflect-metadata';
 import { RestObject } from './sObject';
 
+export enum SalesforceFieldType {
+    DATE = 'date',
+    DATETIME = 'datetime',
+    BOOLEAN = 'boolean',
+    DOUBLE = 'double',
+    INTEGER = 'integer',
+    CURRENCY = 'currency',
+    REFERENCE= 'reference',
+    STRING = 'string',
+    PICKLIST = 'picklist',
+    ID = 'id'
+}
+
 const sFieldMetadataKey = Symbol('sField');
 
 export class SFieldProperties {
@@ -10,7 +23,7 @@ export class SFieldProperties {
     public reference: () => { new(): RestObject; };
     public required: boolean;
     public childRelationship: boolean;
-    public salesforceType: string;
+    public salesforceType: SalesforceFieldType;
     public salesforceLabel?: string;
 }
 
