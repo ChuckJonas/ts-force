@@ -45,7 +45,8 @@ export class SObjectGenerator {
             namedImports: [
                 { name: 'RestObject' },
                 { name: 'SObject' },
-                { name: 'sField' }
+                { name: 'sField' },
+                { name: 'SalesforceFieldType' }
             ]
         });
 
@@ -326,6 +327,8 @@ export class SObjectGenerator {
             case SalesforceFieldType.DOUBLE:
             case SalesforceFieldType.INTEGER:
             case SalesforceFieldType.CURRENCY:
+            case SalesforceFieldType.INT:
+            case SalesforceFieldType.PERCENT:
             return 'number';
             case SalesforceFieldType.REFERENCE:
             case SalesforceFieldType.STRING:
@@ -334,6 +337,10 @@ export class SObjectGenerator {
             default:
             return 'string';
         }
+    }
+
+    private mapTypeToEnum (sfType: string): string {
+        return `SalesforceFieldType.${sfType.toUpperCase()}`;
     }
 
     private getDecorator (field: Field): DecoratorStructure {
@@ -352,10 +359,11 @@ export class SObjectGenerator {
 
     private generateDecorator (decoratorProps: any) {
         let ref = decoratorProps.reference != null ? `()=>{return ${decoratorProps.reference}}` : 'undefined';
+        let sfType = decoratorProps.salesforceType ? `${this.mapTypeToEnum(decoratorProps.salesforceType)}` : 'undefined';
         return {
             name: `sField`,
             arguments: [
-                `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}, salesforceType: '${decoratorProps.salesforceType}'}`
+                `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}, salesforceType: ${sfType}}`
             ]
         };
     }

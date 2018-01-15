@@ -1,4 +1,4 @@
-
+import { SalesforceFieldType } from './sObjectDecorators';
 export interface ChildRelationship {
     cascadeDelete: boolean;
     childSObject: string;
@@ -70,7 +70,7 @@ export interface Field {
     searchPrefilterable: boolean;
     soapType: string;
     sortable: boolean;
-    type: string;
+    type: SalesforceFieldType;
     unique: boolean;
     updateable: boolean;
     writeRequiresMasterRead: boolean;

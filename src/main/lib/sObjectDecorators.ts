@@ -1,20 +1,28 @@
-import { ChildRelationship } from './sObjectDescribe';
 import 'reflect-metadata';
+
 import { RestObject } from './sObject';
 
 export enum SalesforceFieldType {
-    DATE = 'date',
-    DATETIME = 'datetime',
-    BOOLEAN = 'boolean',
-    DOUBLE = 'double',
-    INTEGER = 'integer',
-    CURRENCY = 'currency',
-    REFERENCE= 'reference',
-    STRING = 'string',
-    PICKLIST = 'picklist',
-    ID = 'id'
+    DATE          = 'date',
+    DATETIME      = 'datetime',
+    BOOLEAN       = 'boolean',
+    DOUBLE        = 'double',
+    INTEGER       = 'integer',
+    CURRENCY      = 'currency',
+    REFERENCE     = 'reference',
+    STRING        = 'string',
+    PICKLIST      = 'picklist',
+    TEXTAREA      = 'textarea',
+    ADDRESS       = 'address',
+    PHONE         = 'phone',
+    URL           = 'url',
+    MULTIPICKLIST = 'multipicklist',
+    PERCENT       = 'percent',
+    EMAIL         = 'email',
+    INT           = 'int',
+    LOCATION      = 'location',
+    ID            = 'id'
 }
-
 const sFieldMetadataKey = Symbol('sField');
 
 export class SFieldProperties {
