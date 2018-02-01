@@ -271,5 +271,9 @@ export abstract class RestObject extends SObject {
             throw new Error(JSON.stringify(errors));
         }
     }
+}
 
+export class SFLocation {
+    public latitude: number; // sf apex name
+    public longitude: number; // sf rest API url for record
 }

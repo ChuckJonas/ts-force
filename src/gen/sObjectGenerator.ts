@@ -46,7 +46,8 @@ export class SObjectGenerator {
                 { name: 'RestObject' },
                 { name: 'SObject' },
                 { name: 'sField' },
-                { name: 'SalesforceFieldType' }
+                { name: 'SalesforceFieldType' },
+                { name: 'SFLocation' }
             ]
         });
 
@@ -321,21 +322,23 @@ export class SObjectGenerator {
         switch (sfType) {
             case SalesforceFieldType.DATETIME:
             case SalesforceFieldType.DATE:
-            return 'Date';
+                return 'Date';
             case SalesforceFieldType.BOOLEAN:
-            return 'boolean';
+                return 'boolean';
             case SalesforceFieldType.DOUBLE:
             case SalesforceFieldType.INTEGER:
             case SalesforceFieldType.CURRENCY:
             case SalesforceFieldType.INT:
             case SalesforceFieldType.PERCENT:
-            return 'number';
+                return 'number';
+            case SalesforceFieldType.LOCATION:
+                return 'SFLocation';
             case SalesforceFieldType.REFERENCE:
             case SalesforceFieldType.STRING:
             case SalesforceFieldType.PICKLIST:
             case SalesforceFieldType.ID:
             default:
-            return 'string';
+                return 'string';
         }
     }
 
