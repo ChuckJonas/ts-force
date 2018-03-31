@@ -38,7 +38,7 @@ export class Rest {
             return resp.data;
         } catch (error) {
             console.log(error.response.data);
-            return error;
+            throw new Error(error + ' Details: ' + JSON.stringify(error.response));
         }
     }
 
