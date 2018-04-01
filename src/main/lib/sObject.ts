@@ -162,7 +162,9 @@ export abstract class RestObject extends SObject {
         for (let i in this) {
             // clean properties
             if (this.hasOwnProperty(i)) {
-
+                if ((i === 'attributes') && this[i]) {
+                    data[i.toString()] = this[i];
+                }
                 let sFieldProps = getSFieldProps(this, i);
                 if (sFieldProps) {
                     if (sFieldProps.readOnly || sFieldProps.reference != null) {

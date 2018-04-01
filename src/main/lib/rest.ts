@@ -12,7 +12,7 @@ export class Rest {
     public version: string;
     constructor () {
 
-        this.version = `v${Rest.config.version ? Rest.config.version.toFixed(1) : '40.0'}`;
+        this.version = `v${Rest.config.version ? Rest.config.version.toFixed(1) : '42.0'}`;
         this.request = axios.create({
             baseURL: `${Rest.config.instanceUrl}`,
             headers: {
