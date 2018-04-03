@@ -46,7 +46,7 @@ export abstract class RestObject extends SObject {
     }
 
     protected static async query < T extends RestObject > (type: { new(): T }, qry: string): Promise < T[] > {
-        const response = await Rest.Instance.query(qry);
+        const response = await Rest.Instance.query<T>(qry);
         let sobs: Array<T> = [];
         for (let i = 0; i < response.records.length; i++) {
             let sob = new type();
@@ -78,8 +78,13 @@ export abstract class RestObject extends SObject {
             throw new Error('Must have Id to refresh!');
         }
 
-        const response = await Rest.Instance.request.get(`${this.attributes.url}/${this.id}`);
-        this.mapFromQuery(response.data);
+        let response = await Rest.Instance.handleRequest<this>(
+            () => {
+                return Rest.Instance.request.get(`${this.attributes.url}/${this.id}`);
+            }
+        );
+
+        this.mapFromQuery(response);
         return this;
     }
     /**
@@ -146,8 +151,12 @@ export abstract class RestObject extends SObject {
         if (this.id == null) {
             throw new Error('Must have Id to Delete!');
         }
-        const response = await Rest.Instance.request.delete(`${this.attributes.url}/${this.id}`);
-        return response.data;
+        let response = await Rest.Instance.handleRequest<DMLResponse>(
+            () => {
+                return Rest.Instance.request.delete(`${this.attributes.url}/${this.id}`);
+            }
+        );
+        return response;
     }
 
     /**

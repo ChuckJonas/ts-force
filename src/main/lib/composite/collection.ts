@@ -32,8 +32,7 @@ export class CompositeCollection {
         this.endpoint = `/services/data/${Rest.Instance.version}/composite/sobjects`;
     }
 
-    public insert = async (sobs: RestObject[], allOrNothing?: boolean): Promise<SaveResult[]> => {
-        allOrNothing = allOrNothing ? allOrNothing : true;
+    public insert = async (sobs: RestObject[], allOrNothing?: boolean, setId?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
             console.log(sob);
             const dmlSob = sob.prepareForDML();
@@ -44,16 +43,25 @@ export class CompositeCollection {
         });
         let payload: InsertRequest = {
             records: dmlSobs,
-            allOrNone: allOrNothing
+            allOrNone: allOrNothing !== false
         };
-        return (await Rest.Instance.request.post(
-            this.endpoint,
-            payload
-        )).data;
+        let saveResults =  await this.client.handleRequest<SaveResult[]>(
+            () => {
+                return Rest.Instance.request.post(
+                    this.endpoint,
+                    payload
+                );
+            }
+        );
+        if (setId !== false) {
+            for (let i = 0; i < saveResults.length; i++) {
+                sobs[i].id = saveResults[i].id;
+            }
+        }
+        return saveResults;
     }
 
     public update = async (sobs: RestObject[], allOrNothing?: boolean): Promise<SaveResult[]> => {
-        allOrNothing = allOrNothing ? allOrNothing : true;
         const dmlSobs = sobs.map((sob) => {
             const dmlSob = sob.prepareForDML();
             dmlSob['id'] = sob.id;
@@ -61,16 +69,24 @@ export class CompositeCollection {
         });
         let payload: InsertRequest = {
             records: dmlSobs,
-            allOrNone: allOrNothing
+            allOrNone: allOrNothing !== false
         };
-        return (await Rest.Instance.request.patch(
-            this.endpoint,
-            payload
-        )).data;
+        return await this.client.handleRequest<SaveResult[]>(
+            () => {
+                return this.client.request.patch(
+                    this.endpoint,
+                    payload
+                );
+            }
+        );
     }
 
     public delete = async (sobs: RestObject[], allOrNothing?: boolean): Promise<BaseResult[]> => {
         allOrNothing = allOrNothing ? allOrNothing : true;
-        return (await Rest.Instance.request.delete(`${this.endpoint}?ids=${sobs.map(s => s.id).join(',')}&allOrNone=${allOrNothing}`)).data;
+        return await this.client.handleRequest<BaseResult[]>(
+            () => {
+                return this.client.request.delete(`${this.endpoint}?ids=${sobs.map(s => s.id).join(',')}&allOrNone=${allOrNothing !== false}`);
+            }
+        );
     }
 }

@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios';
 import { SObject } from './sObject';
 import { SObjectDescribe } from './sObjectDescribe';
 import { BaseConfig } from '../../auth/baseConfig';
@@ -24,21 +24,42 @@ export class Rest {
     }
 
     public async getSObjectDescribe (apiName: string): Promise<SObjectDescribe> {
-
-        let resp = await this.request.get(`/services/data/${this.version}/sobjects/${apiName}/describe/`);
-        return resp.data;
+        return await this.handleRequest<SObjectDescribe>(
+            () => {
+              return this.request.get(`/services/data/${this.version}/sobjects/${apiName}/describe/`);
+            }
+        );
     }
 
     // get records of type T.  Do magic to cast plain json to T
-    public async query (query: string): Promise<QueryResponse<any>> {
+    public async query <T> (query: string): Promise<QueryResponse<T>> {
         let qryString = encodeURIComponent(query);
+        return await this.handleRequest<QueryResponse<T>>(
+            () => {
+                return this.request.get<QueryResponse<T>>(`/services/data/${this.version}/query?q=${qryString}`);
+            }
+        );
+    }
 
+    public handleRequest = async <T> (request: () => AxiosPromise<T>) => {
         try {
-            let resp = await this.request.get(`/services/data/${this.version}/query?q=${qryString}`);
-            return resp.data;
+            return (await request()).data;
         } catch (error) {
-            console.log(error.response.data);
-            throw new Error(error + ' Details: ' + JSON.stringify(error.response));
+            let details;
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                details = error.response;
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                details = error.request;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                throw error;
+            }
+            throw new Error(`${error} \n Details: ${JSON.stringify(details)}`);
         }
     }
 

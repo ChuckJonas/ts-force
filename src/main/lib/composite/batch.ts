@@ -22,7 +22,6 @@ export interface CompositeBatchPayload {
     batchRequests: BatchRequest[];
 }
 
-
 export class CompositeBatch {
     public batchRequests: BatchRequest[];
 
@@ -38,8 +37,12 @@ export class CompositeBatch {
     public async send (): Promise<BatchResponse> {
         let batchResponses: BatchResponse[] = [];
         for (let payload of this.createPayloads()) {
-            let resp = await this.client.request.post(`/services/data/${Rest.Instance.version}/composite/batch`, payload);
-            let batchResponse: BatchResponse = resp.data;
+            let batchResponse = await this.client.handleRequest<BatchResponse>(
+                () => {
+                    return this.client.request.post(`/services/data/${Rest.Instance.version}/composite/batch`, payload);
+                }
+            );
+
             batchResponses.push(batchResponse);
             for (let i = 0; i < this.callbacks.length; i++) {
                 let callback = this.callbacks[i];

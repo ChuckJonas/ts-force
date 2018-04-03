@@ -19,6 +19,8 @@ This library is intended to use with code generation.  Files can be generated us
 
 `ts-force-gen`
 
+***NOTE: Because these generated files control seralization of readonly properties, you should generated the classes using a user that as the same permissions as the end user.***
+
 #### Configuartions file
 
 A json configuration file can be passed in via the `--config|c` arg:
@@ -211,11 +213,11 @@ await parentObj.update();
 
 You can easily run queries that can't neccaraly be mapped back to an SObject.  This is useful for aggregated queries or even if you just want to query an object without having it included in your generated code.
 
-```
+```typescript
 import { Rest } from "ts-force";
 
 const sfdcClient = Rest.Instance;
-let results = await sfdcClient.query('SELECT Count(Id) FROM Account');
+let results = await sfdcClient.query<{c: number}>('SELECT Count(Id) c FROM Account');
 console.log(results);
 ```
 
@@ -224,15 +226,40 @@ console.log(results);
 
 The [Composite API](https://developer.salesforce.com/blogs/tech-pubs/2017/01/simplify-your-api-code-with-new-composite-resources.html) is a powerful way to bundle API calls into a single request
 
+#### Collection
+
+As of API v42.0 you can now send a DML request containing a collection of up to 200 records.  Unlike Batch & Composite, this request will be processed in a single execution transiton (making it much faster, but also more likely to exceed platform limits).
+
+
+```typescript
+
+let bulk = new CompositeCollection();
+
+let accounts: List<Account> = [];
+for(let i = 0; i < 200; i++){
+    accounts.push(new Account({
+        name: 'I need to be inserted!'
+    }));
+}
+
+let saveResults = await bulk.insert(accounts, false);
+accounts.forEach(acc => {
+    acc.type = 'about to be deleted'
+});
+
+saveResults = await bulk.update(accounts);
+
+await bulk.delete(accounts);
+
+```
+
 #### Batch
 
 Composite Batch allows you to bundle multiple requests into a single API call.  Here's what a custom `upsert` implementaion would look like:
 
 ```typescript
-
-let accounts = Account.retrieve('SELECT Id FROM Account');
-let newAcc = new Account();
-newAcc.name = 'I need to be inserted!';
+let accounts = Account.retrieve(`SELECT Id FROM Account LIMIT 5`);
+let newAcc = new Account({name: 'I need to be inserted!'});
 accounts.add(newAcc);
 
 let batchRequest = new CompositeBatch()
@@ -294,7 +321,7 @@ handleCompositeResult = (result: CompositeResponse) => {
 
 ## Contributing
 
-Contributions are encouraged! 
+Contributions are encouraged!
 
 ### Running Tests
 
