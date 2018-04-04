@@ -64,6 +64,9 @@ export class Rest {
     }
 
     public static get Instance () {
+        if (!Rest.config) {
+            return null;
+        }
         return this._instance || (this._instance = new this());
     }
 

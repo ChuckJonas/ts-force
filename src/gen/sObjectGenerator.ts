@@ -47,7 +47,8 @@ export class SObjectGenerator {
                 { name: 'SObject' },
                 { name: 'sField' },
                 { name: 'SalesforceFieldType' },
-                { name: 'SFLocation' }
+                { name: 'SFLocation' },
+                { name: 'SFieldProperties' }
             ]
         });
 
@@ -91,7 +92,13 @@ export class SObjectGenerator {
         this.generateInterface(className, props);
 
         let classDeclaration = this.generateClass(sobConfig, className, props);
-
+        classDeclaration.addProperty({
+            name: 'FIELDS',
+            scope: Scope.Public,
+            isStatic: true,
+            initializer: `new ${className}().getPropertiesMeta()`,
+            type: `{[P in keyof ${this.classInterfaceMap.get(className)}]: SFieldProperties}`
+        });
         const qryMethod = classDeclaration.addMethod({
             name: 'retrieve',
             isStatic: true,

@@ -20,7 +20,9 @@ export abstract class SObject {
 
         this.attributes = new SObjectAttributes();
         this.attributes.type = type;
-        this.attributes.url = `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}`;
+        if(Rest.Instance){
+            this.attributes.url = `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}`;
+        }
     }
 }
 
@@ -186,6 +188,20 @@ export abstract class RestObject extends SObject {
             }
         }
         return data;
+    }
+
+    protected getPropertiesMeta (): {[P in keyof this]: SFieldProperties;} {
+        let properties: any = {};
+        for (let i in this) {
+            // clean properties
+            if (this.hasOwnProperty(i)) {
+                let sFieldProps = getSFieldProps(this, i);
+                if (sFieldProps) {
+                    properties[i] = sFieldProps;
+                }
+            }
+        }
+        return properties;
     }
 
      // copies data from a json object to restobject
