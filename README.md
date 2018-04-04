@@ -198,7 +198,10 @@ Both Parent & Child relationships are supported.  Returned objects are instances
 ```typescript
 
 let accs: Account[] = await Account.retrieve(
-  `SELECT Id, Name, Website, Active__c, (SELECT Id, Name, Email, Parent_Object__r.Id, Parent_Object__r.Name FROM Contacts) FROM Account WHERE Id = '0010m000006vmwJ'`
+  `SELECT Id, Active__c,
+    (SELECT Name, Email, Parent_Object__c, Parent_Object__r.Type__c FROM Contacts)
+   FROM Account
+   WHERE Type__c = 'industry'`
 );
 
 let contact = records[0].Contacts[0];
@@ -208,6 +211,29 @@ let parentObj = contact.parentObject;
 parentObj.account = records[0].Id;
 await parentObj.update();
 ```
+
+#### Using mapped property names for queries
+
+Each SObject class contains field API information that can be helpful for buiding queries. For example, the above query can be rewritten as such:
+
+```typescript
+let aFields = Account.FIELDS;
+let cfields = Contact.FIELDS;
+let pFields = ParentObject.FIELDS;
+let qry =   `SELECT ${aFields.id.apiName},
+                    ${aFields.active.apiName},
+                    (
+                        SELECT ${cFields.name.apiName},
+                            ${cFields.email.apiName},
+                            ${cFields.parentObjectId},
+                            ${cFields.parentObject.apiName}.${pFields.type.apiName}
+                        FROM ${aFields.contacts.apiName}
+                    )
+                FROM ${Account.API_NAME}
+                WHERE ${aFields.type.apiName} = 'industry'`
+```
+
+Other than `apiName` you can also access other property meta information like `readOnly`, `required`, `salesforceLabel`, etc.  This can be helpful for building dynamic user forms.
 
 #### Non-Mapped Queries
 

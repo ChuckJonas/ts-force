@@ -92,6 +92,15 @@ export class SObjectGenerator {
         this.generateInterface(className, props);
 
         let classDeclaration = this.generateClass(sobConfig, className, props);
+
+        classDeclaration.addProperty({
+            name: 'API_NAME',
+            scope: Scope.Public,
+            isStatic: true,
+            type: `'${sobConfig.apiName}'`,
+            initializer: `'${sobConfig.apiName}'`
+        });
+
         classDeclaration.addProperty({
             name: '_fields',
             scope: Scope.Private,

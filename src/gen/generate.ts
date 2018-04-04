@@ -32,7 +32,6 @@ function run () {
         generate(config);
     }).catch(e => {
         console.log('Failed to Authinicate.  Check config or cmd params!');
-        console.log(e);
     });
 
 }
