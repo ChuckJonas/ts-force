@@ -20,7 +20,7 @@ export abstract class SObject {
 
         this.attributes = new SObjectAttributes();
         this.attributes.type = type;
-        if(Rest.Instance){
+        if (Rest.Instance) {
             this.attributes.url = `/services/data/${Rest.Instance.version}/sobjects/${this.attributes.type}`;
         }
     }
@@ -57,6 +57,21 @@ export abstract class RestObject extends SObject {
             sobs.push(sob);
         }
         return sobs;
+    }
+
+    protected static getPropertiesMeta <S, T extends RestObject > (type: { new(): T }): {[P in keyof S]: SFieldProperties;} {
+        let properties: any = {};
+        let sob = new type();
+        for (let i in sob) {
+            // clean properties
+            if (sob.hasOwnProperty(i)) {
+                let sFieldProps = getSFieldProps(sob, i);
+                if (sFieldProps) {
+                    properties[i] = sFieldProps;
+                }
+            }
+        }
+        return properties;
     }
 
     handleCompositeUpdateResult = (result: CompositeResponse) => {
@@ -188,20 +203,6 @@ export abstract class RestObject extends SObject {
             }
         }
         return data;
-    }
-
-    protected getPropertiesMeta (): {[P in keyof this]: SFieldProperties;} {
-        let properties: any = {};
-        for (let i in this) {
-            // clean properties
-            if (this.hasOwnProperty(i)) {
-                let sFieldProps = getSFieldProps(this, i);
-                if (sFieldProps) {
-                    properties[i] = sFieldProps;
-                }
-            }
-        }
-        return properties;
     }
 
      // copies data from a json object to restobject

@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+/// <reference types="node" />
 import { BaseConfig } from '../';
 import Ast from 'ts-simple-ast';
 import { SObjectGenerator } from './sObjectGenerator';
@@ -120,7 +121,8 @@ function generate (config: Config) {
         config.outPath = './tmp.ts';
         save = false;
     }
-    const source = ast.addSourceFileFromStructure(config.outPath, {});
+    fs.unlinkSync(config.outPath);
+    const source = ast.createSourceFile(config.outPath);
 
     let sobConfigs = config.sObjects.map(item => {
         if (typeof item === 'string') {

@@ -34,18 +34,14 @@ export class CompositeCollection {
 
     public insert = async (sobs: RestObject[], allOrNothing?: boolean, setId?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
-            console.log(sob);
             const dmlSob = sob.prepareForDML();
-            console.log(dmlSob);
-            // dmlSob["Id"] = sob.id;
-            // dmlSob["attributes"] = sob.attributes;
             return dmlSob;
         });
         let payload: InsertRequest = {
             records: dmlSobs,
             allOrNone: allOrNothing !== false
         };
-        let saveResults =  await this.client.handleRequest<SaveResult[]>(
+        let saveResults = await this.client.handleRequest<SaveResult[]>(
             () => {
                 return Rest.Instance.request.post(
                     this.endpoint,

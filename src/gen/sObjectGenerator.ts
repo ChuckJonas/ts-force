@@ -40,7 +40,7 @@ export class SObjectGenerator {
 
         try {
         // add imports
-        this.sourceFile.addImport({
+        this.sourceFile.addImportDeclaration({
             moduleSpecifier: 'ts-force',
             namedImports: [
                 { name: 'RestObject' },
@@ -93,12 +93,19 @@ export class SObjectGenerator {
 
         let classDeclaration = this.generateClass(sobConfig, className, props);
         classDeclaration.addProperty({
+            name: '_fields',
+            scope: Scope.Private,
+            isStatic: true,
+            type: `{[P in keyof ${this.classInterfaceMap.get(className)}]: SFieldProperties;}`
+        });
+
+        let abc = classDeclaration.addGetAccessor({
             name: 'FIELDS',
             scope: Scope.Public,
             isStatic: true,
-            initializer: `new ${className}().getPropertiesMeta()`,
-            type: `{[P in keyof ${this.classInterfaceMap.get(className)}]: SFieldProperties}`
+            bodyText: `return this._fields = this._fields ? this._fields : ${className}.getPropertiesMeta<${this.classInterfaceMap.get(className)},${className}>(${className})`
         });
+
         const qryMethod = classDeclaration.addMethod({
             name: 'retrieve',
             isStatic: true,
@@ -146,9 +153,9 @@ export class SObjectGenerator {
             let ip = propsInterface.addProperty({
                 name: prop.name,
                 type: interfaceType ? (isArr ? `${interfaceType}[]` : interfaceType) : prop.type,
-                isReadonly: true
+                isReadonly: true,
+                hasQuestionToken: true
             });
-            ip.setIsOptional(true);
         });
         propsInterface.forget();
     }
@@ -169,9 +176,9 @@ export class SObjectGenerator {
         const constr = classDeclaration.addConstructor();
         const param = constr.addParameter({
             name: interfaceParamName,
-            type: propInterfaceName
+            type: propInterfaceName,
+            hasQuestionToken: true
         });
-        param.setIsOptional(true);
 
         const propsInit = props.map(prop => {
             return `this.${prop.name} = void 0;`;
