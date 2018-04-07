@@ -1,7 +1,7 @@
 import { RestObject } from '../sObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
-import { BatchRequest } from 'src/main/lib/composite/batch';
+import { BatchRequest } from './batch';
 
 export interface CompositeRequest extends BatchRequest {
     referenceId: string;

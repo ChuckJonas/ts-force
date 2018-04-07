@@ -1,6 +1,7 @@
-import { SFieldProperties } from 'src/main/lib/sObjectDecorators';
+import { SFieldProperties } from './sObjectDecorators';
 
 export const generateSelect = (fields: (string|SFieldProperties)[], relationships?: (string|SFieldProperties)|(string|SFieldProperties)[]): string => {
+    fields = fields.filter(f => typeof f === 'string' ? true : !f.reference); // get rid of any relationship fields as they are not valid
     let fieldNames = fields.map(f => typeof f === 'string' ? f : f.apiName);
     if (relationships) {
       let relationshipName;

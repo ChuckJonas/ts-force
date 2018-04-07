@@ -345,6 +345,34 @@ handleCompositeResult = (result: CompositeResponse) => {
 
 ```
 
+### Custom Endpoints
+
+You can leverage the generated SObjects in your custom endpoints.  For example, if you had the following `@HttpPost` method that takes an Account and returns a list of Contacts:
+
+```apex
+@RestResource(urlMapping='/myservice/*')
+global with sharing class MyRestResource {
+    @HttpPost
+    global static Contact[] doPost(Account acc) {
+        return [SELECT Id, Name FROM Contact WHERE AccountId = :acc.id];
+    }
+}
+```
+
+You can use `prepareForDML(true)` to map to a salesforce & then `Contact.fromSFObject(sfContact);` to map the response back to the ts-force class.
+
+```typescript
+const acc = (await Account.retrieve('SELECT Id, Name FROM Account LIMIT 1'))[0];
+const sfSob = acc.prepareForDML(true);
+const contacts = (await Rest.Instance.request.post<SObject[]>(
+    '/services/apexrest/myservice',
+    {acc: sfSob},
+)).data.map((sfContact) => {
+    return Contact.fromSFObject(sfContact);
+});
+
+```
+
 ## Contributing
 
 Contributions are encouraged!

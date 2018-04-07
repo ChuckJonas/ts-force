@@ -123,12 +123,20 @@ export class SObjectGenerator {
                 { name: 'qry', type: 'string' }
             ],
             returnType: `Promise<${className}[]>`,
-            isAsync: true
+            isAsync: true,
+            bodyText: `return await ${superClass}.query<${className}>(${className}, qry);`
         });
 
-        qryMethod.setBodyText(
-            `return await ${superClass}.query<${className}>(${className}, qry);`
-        );
+        const fromSfMethod = classDeclaration.addMethod({
+            name: 'fromSFObject',
+            isStatic: true,
+            scope: Scope.Public,
+            parameters: [
+                { name: 'sob', type: 'SObject' }
+            ],
+            returnType: `${className}`,
+            bodyText: `return new ${className}().mapFromQuery(sob);`
+        });
 
         const immutableMethod = classDeclaration.addMethod({
             name: 'toImmutable',

@@ -181,14 +181,14 @@ export abstract class RestObject extends SObject {
     * @returns {*} JSON represenation of SObject (mapped using decorators)
     * @memberof RestObject
     */
-    public prepareForDML (): any {
+    public prepareForDML (forCustomService?: boolean): any {
         let data = {};
 
         // loop each property
         for (let i in this) {
             // clean properties
             if (this.hasOwnProperty(i)) {
-                if ((i === 'attributes') && this[i]) {
+                if (i.toLowerCase() === 'attributes' && this[i]) {
                     data[i.toString()] = this[i];
                 }
                 let sFieldProps = getSFieldProps(this, i);
@@ -202,11 +202,16 @@ export abstract class RestObject extends SObject {
                 }
             }
         }
+
+        if (forCustomService) {
+            data['id'] = this['id'];   // rest doesn't allow for Id to be include, so add it back
+        }
+
         return data;
     }
 
      // copies data from a json object to restobject
-    protected mapFromQuery (data: SObject): RestObject {
+    protected mapFromQuery (data: SObject): this {
 
         // create a map of lowercase API names -> sob property names
         let apiNameMap = this.getNameMapping(); // should be cached properly

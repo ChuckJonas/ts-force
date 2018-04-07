@@ -59,8 +59,7 @@ export class CompositeCollection {
 
     public update = async (sobs: RestObject[], allOrNothing?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
-            const dmlSob = sob.prepareForDML();
-            dmlSob['id'] = sob.id;
+            const dmlSob = sob.prepareForDML(true);
             return dmlSob;
         });
         let payload: InsertRequest = {
