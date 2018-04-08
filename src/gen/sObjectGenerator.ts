@@ -397,7 +397,7 @@ export class SObjectGenerator {
         return {
             name: `sField`,
             arguments: [
-                `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}, salesforceType: ${sfType}, salesforceLabel: '${decoratorProps.salesforceLabel}'}`
+                `{apiName: '${decoratorProps.apiName}', readOnly: ${decoratorProps.readOnly}, required: ${decoratorProps.required}, reference:${ref}, childRelationship: ${decoratorProps.childRelationship}, salesforceType: ${sfType}, salesforceLabel: '${escape(decoratorProps.salesforceLabel)}'}`
             ]
         };
     }

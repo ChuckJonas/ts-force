@@ -1,3 +1,7 @@
 language: node_js
 node_js:
   - "stable"
+install:
+  - bundle install
+  - npm run build
+  - npm run generate-test-code

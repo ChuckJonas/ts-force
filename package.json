@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -29,7 +29,8 @@
     "test": "mocha -r dotenv/config dotenv_config_path=.env.test",
     "build": "tsc -p tsconfig.build.json",
     "watch": "mocha-typescript-watch",
-    "prepublishOnly": "npm run clean-build"
+    "prepublishOnly": "npm run clean-build",
+    "generate-test-code": "node -r dotenv/config ./build/gen/generate.js dotenv_config_path=.env.test  -e -o ./test/lib/generatedSobs.ts -s Account,Contact"
   },
   "engines": {
     "node": ">=4.5"

@@ -31,7 +31,8 @@ function run () {
     generateLoadConfig().then(config => {
         generate(config);
     }).catch(e => {
-        console.log('Failed to Authinicate.  Check config or cmd params!');
+        console.log('Failed to Generate!  Check config or cmd params!');
+        console.log(e);
     });
 
 }
@@ -41,12 +42,21 @@ async function generateLoadConfig (): Promise<Config> {
     let args = minimist(process.argv.slice(2));
 
     let config: Config = {};
+    config.auth = {};
     let configPath = args.config || args.j;
     if (configPath) {
         config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     }
 
     // setup commandline args
+
+    if (args.e) {
+        config.auth.clientId = process.env.CLIENT_ID;
+        config.auth.clientSecret = process.env.CLIENT_SECRET;
+        config.auth.username = process.env.USERNAME;
+        config.auth.password = process.env.PASSWORD;
+        config.auth.oAuthHost = process.env.HOST;
+    }
 
     if (args.c || args.clientId) {
         config.auth.clientId = args.c || args.clientId;
@@ -120,7 +130,10 @@ function generate (config: Config) {
         config.outPath = './tmp.ts';
         save = false;
     }
-    fs.unlinkSync(config.outPath);
+    try {
+        fs.unlinkSync(config.outPath);
+    }catch (e) {}
+
     const source = ast.createSourceFile(config.outPath);
 
     let sobConfigs = config.sObjects.map(item => {

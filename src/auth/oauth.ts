@@ -70,6 +70,7 @@ export class OAuth implements BaseConfig {
 
   private config: AuthTypes;
   private request: AxiosInstance;
+
   constructor (config: AuthTypes) {
     this.config = config;
     this.request = axios.create({
@@ -79,11 +80,15 @@ export class OAuth implements BaseConfig {
       }
     });
   }
+
   public async initialize (): Promise<OAuth> {
-    const res = await this.request.post('', qs.stringify(this.config.reqBody())
-  );
-    this.accessToken = res.data.access_token;
-    this.instanceUrl = res.data.instance_url;
-    return this;
+    try {
+        const res = await this.request.post('', qs.stringify(this.config.reqBody()));
+        this.accessToken = res.data.access_token;
+        this.instanceUrl = res.data.instance_url;
+        return this;
+    }catch (e) {
+        throw e;
+    }
   }
 }
