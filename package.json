@@ -1,12 +1,9 @@
 {
   "name": "ts-force",
-  "version": "1.0.44",
+  "version": "1.0.46",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
-  "bin": {
-    "ts-force-gen": "build/gen/generate.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ChuckJonas/ts-force.git"
@@ -20,7 +17,7 @@
     "Charlie Jonas",
     "David Staley"
   ],
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "scripts": {
     "clean": "rm -r -f ./build",
     "clean-build": "npm run clean && npm run build",
@@ -29,8 +26,7 @@
     "test": "mocha -r dotenv/config dotenv_config_path=.env.test",
     "build": "tsc -p tsconfig.build.json",
     "watch": "mocha-typescript-watch",
-    "prepublishOnly": "npm run clean-build",
-    "generate-test-code": "node -r dotenv/config ./build/gen/generate.js dotenv_config_path=.env.test  -e -o ./test/lib/generatedSobs.ts -s Account,Contact"
+    "prepublishOnly": "npm run clean-build"
   },
   "engines": {
     "node": ">=4.5"
@@ -48,13 +44,10 @@
     "source-map-support": "^0.4.18",
     "tslint": "^5.4.3",
     "tslint-config-standard": "^6.0.1",
-    "typescript": "^2.8.1"
+    "typescript": "^2.8.1",
+    "dotenv": "^4.0.0"
   },
   "dependencies": {
-    "cli-spinner": "^0.2.6",
-    "dotenv": "^4.0.0",
-    "minimist": "^1.2.0",
-    "ts-simple-ast": "^10.1.0",
     "axios": "^0.18.0",
     "lodash.clonedeep": "^4.5.0",
     "qs": "^6.5.1",

@@ -9,97 +9,14 @@ a typescript client for connecting with salesforce APIs.  Currently meant to run
 
 `npm install ts-force`
 
-***NOTE: ts-force is still very young and will likely under-go breaking refactors for some time***
 
 ## Usage
 
 ### Generate code
 
-This library is intended to use with code generation.  Files can be generated using the following command:
+This library is intended to be used with code generation.  Each Salesforce SObject you need to work with will get it's own class to handle mapping and DML.
 
-`ts-force-gen`
-
-***NOTE: Because these generated files control seralization of readonly properties, you should generated the classes using a user that as the same permissions as the end user.***
-
-#### Configuartions file
-
-A json configuration file can be passed in via the `--config|c` arg:
-
-`ts-force-gen -j ./config/ts-force-config.json`
-
-*Username/Pass configuration:*
-
-```json
-{
-  "auth": {
-    "username": "john@example.com",
-    "password": "password1",
-    "clientId": "asdgasdg",
-    "clientSecret": "12314515",
-    "oAuthHost": "https://na31.salesforce.com"
-  },
-  "sObjects": [
-      "Account",
-      {
-        "apiName": "Contact",
-        "fieldMappings": [
-          {
-            "apiName" : "Name__c",
-            "propName": "nameCustom"
-          }
-        ]
-      }
-    ],
-  "outPath": "./src/generated/sobs.ts"
-}
-```
-
-*sfdx configuration:*
-
-If you only pass the `username`, the code generator will attempt to auth using `sfdx force:org:display -u [username]` (this means you can also pass the org alias).
-
-```json
-"auth": {
-    "username": "john@example.com",
-  },
-```
-
-*access token configuration:*
-
-You can also pass the access token and instance url in directly
-
-```json
-"auth": {
-    "accessToken": "12312321",
-    "instanceUrl": "https://na31.salesforce.com",
-  },
-```
-
-#### Commandline Args
-
-Most args can also be passed in directly via the command line.  Config File & args will be merged with args taking presidence.
-
-- `--username|-u`: If specified with password, generation will attempt to use username/password flow.  If specified without password, will attempt to retrieve token and instance url using `sfdx force:org:display` (Requires that [sfdx cli](https://developer.salesforce.com/tools/sfdxcli) is installed).
-- `--password|-p`: password to use in auth flow
-- `--clientId|-c`: client Id of connected app for username/password auth flow
-- `--clientSecret|-s`: client Secret of connected app for username/password auth flow
-- `--accessToken|-a`: access token to connect to tooling API with.  Not required if using the user/pass or dx flows
-- `--instanceUrl|-i`: instance of the org your connecting with.  Not required if using the user/pass or dx flows
-- `--sobs|-s`: list of comma seperated sobs to generate classes for
-- `--outputFile|-o`: where to save the output
-- `--config|-j`: path to config JSON file.  If specified, all above args will pull from file instead
-
-#### generated classes
-
-Decorators are used to determine how to map query responses and which fields we can send to which methods.
-
-Properties will be transformed from api names to the standard javascript convention: `My_Object__c -> myObject`.
-
-#### extending generated classes
-
-Obviously don't change the generated classes if possible unless you want to deal with "merge hell" when you need to regenerate.
-
-Will add details on how to extend once I figure it out myself (mix-ins?).
+The code generation has been split out into a seperate package so it can easily be exclude from your build. Start by installing the generation package: `npm install -D ts-force-gen` and reviewing the [ts-force-gen readme](https://github.com/ChuckJonas/ts-force-gen).
 
 ### Configuring Client
 
