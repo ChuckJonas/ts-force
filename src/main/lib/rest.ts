@@ -22,7 +22,10 @@ export class Rest {
             }
         });
     }
-
+    /**
+     * @param  {string} apiName the object to get the describe for
+     * @returns Promise<SObjectDescribe>
+     */
     public async getSObjectDescribe (apiName: string): Promise<SObjectDescribe> {
         return await this.handleRequest<SObjectDescribe>(
             () => {
@@ -31,7 +34,11 @@ export class Rest {
         );
     }
 
-    // get records of type T.  Do magic to cast plain json to T
+    /**
+     * Executes any SOQL query
+     * @param  {string} query SOQL Query to execute
+     * @returns Promise<QueryResponse<T>>
+     */
     public async query <T> (query: string): Promise<QueryResponse<T>> {
         let qryString = encodeURIComponent(query);
         return await this.handleRequest<QueryResponse<T>>(
@@ -41,6 +48,9 @@ export class Rest {
         );
     }
 
+    /** axois error handler
+     * @param  {()=>AxiosPromise<T>} request
+     */
     public handleRequest = async <T> (request: () => AxiosPromise<T>) => {
         try {
             return (await request()).data;
@@ -63,6 +73,9 @@ export class Rest {
         }
     }
 
+    /**
+     * Singleton retrive
+     */
     public static get Instance () {
         if (!Rest.config) {
             return null;

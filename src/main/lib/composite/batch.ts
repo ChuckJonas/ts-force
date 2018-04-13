@@ -1,4 +1,4 @@
-import { RestObject } from '../sObject';
+import { RestObject } from '../restObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
 
@@ -28,12 +28,19 @@ export class CompositeBatch {
     public callbacks: Array<(n: CompositeBatchResult) => void>;
 
     private client: Rest;
+
+    /**
+     * Creates a composite batch to allow multiple requests to be sent in one round-trip
+     */
     constructor () {
         this.batchRequests = [];
         this.callbacks = [];
         this.client = Rest.Instance;
     }
-
+    /**
+     * Sends all added requests
+     * @returns Promise<BatchResponse> the completed response data.  Should be returned in order added
+     */
     public async send (): Promise<BatchResponse> {
         let batchResponses: BatchResponse[] = [];
         for (let payload of this.createPayloads()) {
@@ -63,6 +70,12 @@ export class CompositeBatch {
         return { hasErrors, results };
     }
 
+    /**
+     * Adds request to retrieve an SObject
+     * @param  {RestObject} obj sObject to retrieve
+     * @param  {(n:CompositeBatchResult)=>void} callback? optional callback to pass results to once operation is complete
+     * @returns this instance is returned for easy chaining
+     */
     public addGet (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
         let request: BatchRequest = {
             method: 'GET',
@@ -72,6 +85,12 @@ export class CompositeBatch {
         return this;
     }
 
+    /**
+     * Adds request to update an SObject
+     * @param  {RestObject} obj sObject to update
+     * @param  {(n:CompositeBatchResult)=>void} callback? optional callback to pass results to once operation is complete
+     * @returns this instance is returned for easy chaining
+     */
     public addUpdate (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
         let request: BatchRequest = {
             method: 'PATCH',
@@ -82,6 +101,12 @@ export class CompositeBatch {
         return this;
     }
 
+    /**
+     * Adds request to insert an SObject
+     * @param  {RestObject} obj sObject to insert
+     * @param  {(n:CompositeBatchResult)=>void} callback? optional callback to pass results to once operation is complete
+     * @returns this instance is returned for easy chaining
+     */
     public addInsert (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
         let request: BatchRequest = {
             method: 'POST',
@@ -93,6 +118,12 @@ export class CompositeBatch {
         return this;
     }
 
+    /**
+     * Adds request to delete an SObject
+     * @param  {RestObject} obj sObject to insert
+     * @param  {(n:CompositeBatchResult)=>void} callback? optional callback to pass results to once operation is complete
+     * @returns this instance is returned for easy chaining
+     */
     public addDelete (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
         let request: BatchRequest = {
             method: 'DELETE',
@@ -103,6 +134,12 @@ export class CompositeBatch {
         return this;
     }
 
+    /**
+     * Adds a query request
+     * @param  {string} query the SOQL query to execute
+     * @param  {(n:CompositeBatchResult)=>void} callback? optional callback to pass results to once operation is complete
+     * @returns this instance is returned for easy chaining
+     */
     public addQuery (query: string, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
         let qryString = encodeURIComponent(query);
         let request: BatchRequest = {

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { RestObject } from './sObject';
+import { RestObject } from './restObject';
 
 export enum SalesforceFieldType {
     DATE          = 'date',

@@ -1,4 +1,4 @@
-import { RestObject } from '../sObject';
+import { RestObject } from '../restObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
 
@@ -23,15 +23,28 @@ export interface Error {
     statusCode: string;
 }
 
-// requires at least version v42
+/* requires at least version v42 */
 export class CompositeCollection {
     private endpoint: string;
     private client: Rest;
+
+    /**
+     * Creates a client that can send "Collection" requests to salesforce.
+     * Collections request run in a single execution context
+     * API version must be >= v42.0
+     */
     constructor () {
         this.client = Rest.Instance;
         this.endpoint = `/services/data/${Rest.Instance.version}/composite/sobjects`;
     }
 
+    /**
+     * Inserts up to 200 SObjects.
+     * @param  {RestObject[]} sobs SObjects to Insert
+     * @param  {boolean} allOrNothing? if set true, salesforce will rollback on failures
+     * @param  {boolean} setId? if set to true, the passed SObject Id's will be updated when request if completed
+     * @returns Promise<SaveResult[]> in order of pass SObjects
+     */
     public insert = async (sobs: RestObject[], allOrNothing?: boolean, setId?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
             const dmlSob = sob.prepareForDML();
@@ -57,6 +70,12 @@ export class CompositeCollection {
         return saveResults;
     }
 
+    /**
+     * Updates up to 200 SObjects.
+     * @param  {RestObject[]} sobs SObjects to Update
+     * @param  {boolean} allOrNothing? if set true, salesforce will rollback on failures
+     * @returns Promise<SaveResult[]> in order of pass SObjects
+     */
     public update = async (sobs: RestObject[], allOrNothing?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
             const dmlSob = sob.prepareForDML(true);
@@ -76,6 +95,12 @@ export class CompositeCollection {
         );
     }
 
+    /**
+     * Deletes up to 200 SObjects.
+     * @param  {RestObject[]} sobs SObjects to Delete
+     * @param  {boolean} allOrNothing? if set true, salesforce will rollback on failures
+     * @returns Promise<BaseResult[]> in order of pass SObjects
+     */
     public delete = async (sobs: RestObject[], allOrNothing?: boolean): Promise<BaseResult[]> => {
         allOrNothing = allOrNothing ? allOrNothing : true;
         return await this.client.handleRequest<BaseResult[]>(

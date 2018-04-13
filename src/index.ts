@@ -6,3 +6,4 @@ export * from './main/lib/sObjectDecorators';
 export * from './main/lib/sObjectDescribe';
 export * from './main/lib/composite';
 export * from './main/lib/queryHelper';
+export * from './main/lib/compositeFieldTypes';
