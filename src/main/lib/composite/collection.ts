@@ -1,6 +1,7 @@
 import { RestObject } from '../restObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
+import { BaseConfig } from 'type-force';
 
 export interface InsertRequest {
     allOrNone: boolean;
@@ -32,10 +33,11 @@ export class CompositeCollection {
      * Creates a client that can send "Collection" requests to salesforce.
      * Collections request run in a single execution context
      * API version must be >= v42.0
+     * @param  {BaseConfig} config? Optional.  If not set, will use Rest.DEFAULT_CONFIG
      */
-    constructor () {
-        this.client = Rest.Instance;
-        this.endpoint = `/services/data/${Rest.Instance.version}/composite/sobjects`;
+    constructor (config?: BaseConfig) {
+        this.client = new Rest(config);
+        this.endpoint = `/services/data/${this.client.version}/composite/sobjects`;
     }
 
     /**
@@ -56,7 +58,7 @@ export class CompositeCollection {
         };
         let saveResults = await this.client.handleRequest<SaveResult[]>(
             () => {
-                return Rest.Instance.request.post(
+                return this.client.request.post(
                     this.endpoint,
                     payload
                 );

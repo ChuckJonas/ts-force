@@ -9,7 +9,6 @@ a typescript client for connecting with salesforce APIs.  Currently meant to run
 
 `npm install ts-force`
 
-
 ## Usage
 
 ### Generate code
@@ -20,7 +19,8 @@ The code generation has been split out into a seperate package so it can easily 
 
 ### Configuring Client
 
-To connect with salesforce, and `accessToken` and `instanceUrl` must be passed into `Rest.config`
+To connect with salesforce, and `accessToken` and `instanceUrl` must be passed into `Rest()`.  However, if you're only need a single configuration, you can instead set the `DEFAULT_CONFIG`
+
 
 #### hosted on salesforce (visualforce)
 
@@ -38,26 +38,28 @@ This will need to be injected in the visualforce page:
 Then, in our app, we just need to setup `RestClient`.
 
 ```typescript
-import {Rest, BaseConfig} from 'type-force';
+import {setDefaultConfig, Rest} from 'ts-force';
 
 //let typescript know we expect these on global scope
 declare var __RESTHOST__ : string;
 declare var __ACCESSTOKEN__ : string;
 
-//set configurations
-let config = {
-  instanceUrl: __RESTHOST__,
-  accessToken: __ACCESSTOKEN__
-};
-//set static config on Rest
-Rest.config = config;
+//setup default configurations
+setDefaultConfig({
+    instanceUrl = __RESTHOST__,
+    accessToken = __ACCESSTOKEN__
+});
+
+let defaultClient = new Rest(); // uses default configuration
+let otherClient = new Rest({accessToken: 'abc'}); // uses passed in config
 ```
 
 #### hosted elsewhere
 
-If you don't already have a accessToken, you can use the username & password flow in the `OAuth` module:
+If you don't already have a accessToken, you can use the "username & password flow" in the `OAuth` module:
 
 ```typescript
+import {setDefaultConfig, Rest} from 'ts-force';
 let config = new UsernamePasswordConfig(
     'client-id9012fjasiojfajflfa.adjfgojasjdf',
     'client-secert12131312',
@@ -66,7 +68,8 @@ let config = new UsernamePasswordConfig(
     'password1');
 
   let oAuth = new OAuth(config);
-  Rest.config = await oAuth.initialize()
+  let config = await oAuth.initialize();
+  setDefaultConfig(config);
   ```
 
 ### DML

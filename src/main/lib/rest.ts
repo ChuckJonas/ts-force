@@ -1,22 +1,23 @@
 import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios';
 import { SObject } from './sObject';
 import { SObjectDescribe } from './sObjectDescribe';
-import { BaseConfig } from '../../auth/baseConfig';
+import { BaseConfig, DEFAULT_CONFIG } from '../../auth/baseConfig';
 
 export class Rest {
-    public static config: BaseConfig;
-
-    private static _instance: Rest;
+    public config: BaseConfig;
 
     public request: AxiosInstance;
     public version: string;
-    constructor () {
+    constructor (config?: BaseConfig) {
+        if (!config) {
+            this.config = DEFAULT_CONFIG;
+        }
 
-        this.version = `v${Rest.config.version ? Rest.config.version.toFixed(1) : '42.0'}`;
+        this.version = `v${(this.config.version ? this.config.version : DEFAULT_CONFIG.version).toFixed(1)}`;
         this.request = axios.create({
-            baseURL: `${Rest.config.instanceUrl}`,
+            baseURL: `${this.config.instanceUrl}`,
             headers: {
-                'Authorization': 'Bearer ' + Rest.config.accessToken,
+                'Authorization': 'Bearer ' + this.config.accessToken,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
@@ -72,18 +73,8 @@ export class Rest {
             throw new Error(`${error} \n Details: ${JSON.stringify(details)}`);
         }
     }
-
-    /**
-     * Singleton retrive
-     */
-    public static get Instance () {
-        if (!Rest.config) {
-            return null;
-        }
-        return this._instance || (this._instance = new this());
-    }
-
 }
+
 export interface QueryResponse<T> {
     totalSize: number;
     records: T[];

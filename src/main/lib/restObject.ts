@@ -14,7 +14,7 @@ export interface DMLResponse {
 
 /**
 * Abstract Base class which provides DML to Generated SObjects
-*
+* TODO: Need some way to support multiple configurations
 * @export
 * @abstract
 * @class RestObject
@@ -27,7 +27,7 @@ export abstract class RestObject extends SObject {
     }
 
     protected static async query < T extends RestObject > (type: { new(): T }, qry: string): Promise < T[] > {
-        const response = await Rest.Instance.query<T>(qry);
+        const response = await new Rest().query<T>(qry);
         let sobs: Array<T> = [];
         for (let i = 0; i < response.records.length; i++) {
             let sob = new type();
@@ -70,13 +70,14 @@ export abstract class RestObject extends SObject {
     }
 
     public async refresh (): Promise < this > {
+        let client = new Rest();
         if (this.id == null) {
             throw new Error('Must have Id to refresh!');
         }
 
-        let response = await Rest.Instance.handleRequest<this>(
+        let response = await client.handleRequest<this>(
             () => {
-                return Rest.Instance.request.get(`${this.attributes.url}/${this.id}`);
+                return client.request.get(`${this.attributes.url}/${this.id}`);
             }
         );
 
@@ -145,12 +146,13 @@ export abstract class RestObject extends SObject {
     * @memberof RestObject
     */
     public async delete (): Promise < DMLResponse > {
+        let client = new Rest();
         if (this.id == null) {
             throw new Error('Must have Id to Delete!');
         }
-        let response = await Rest.Instance.handleRequest<DMLResponse>(
+        let response = await client.handleRequest<DMLResponse>(
             () => {
-                return Rest.Instance.request.delete(`${this.attributes.url}/${this.id}`);
+                return client.request.delete(`${this.attributes.url}/${this.id}`);
             }
         );
         return response;

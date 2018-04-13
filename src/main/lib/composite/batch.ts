@@ -1,6 +1,7 @@
 import { RestObject } from '../restObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
+import { BaseConfig } from 'type-force';
 
 export interface BatchResponse {
     hasErrors: boolean;
@@ -31,11 +32,12 @@ export class CompositeBatch {
 
     /**
      * Creates a composite batch to allow multiple requests to be sent in one round-trip
+     * @param  {BaseConfig} config? Optional.  If not set, will use Rest.DEFAULT_CONFIG
      */
-    constructor () {
+    constructor (config?: BaseConfig) {
         this.batchRequests = [];
         this.callbacks = [];
-        this.client = Rest.Instance;
+        this.client = new Rest(config);
     }
     /**
      * Sends all added requests
@@ -46,7 +48,7 @@ export class CompositeBatch {
         for (let payload of this.createPayloads()) {
             let batchResponse = await this.client.handleRequest<BatchResponse>(
                 () => {
-                    return this.client.request.post(`/services/data/${Rest.Instance.version}/composite/batch`, payload);
+                    return this.client.request.post(`/services/data/${this.client.version}/composite/batch`, payload);
                 }
             );
 
