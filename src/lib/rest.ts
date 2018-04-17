@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios';
 import { SObject } from './sObject';
 import { SObjectDescribe } from './sObjectDescribe';
-import { BaseConfig, DEFAULT_CONFIG } from '../../auth/baseConfig';
+import { BaseConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
 
 export class Rest {
     public config: BaseConfig;
@@ -70,7 +70,10 @@ export class Rest {
                 // Something happened in setting up the request that triggered an Error
                 throw error;
             }
-            throw new Error(`${error} \n Details: ${JSON.stringify(details)}`);
+            try {
+                throw new Error(`${error} \n Details: ${JSON.stringify(details)}`);
+            }catch(ee) { console.log(error); throw error; }
+
         }
     }
 }

@@ -1,9 +1,9 @@
 import { suite, test, slow, timeout } from 'mocha-typescript';
 import { should, assert } from 'chai';
 import * as nock from 'nock';
-import { RestObject, BaseConfig, Rest } from '../src/index';
+import { RestObject, BaseConfig, Rest, setDefaultConfig } from '../src/index';
 import { Account, Contact } from './lib/generatedSobs';
-import { getSFieldProps, SFieldProperties } from '../src/main/lib/sObjectDecorators';
+import { getSFieldProps, SFieldProperties } from '../src/lib/sObjectDecorators';
 // set up should
 should();
 
@@ -58,16 +58,22 @@ should();
       version: 40
     };
 
-    Rest.config = config;
+    setDefaultConfig(config);
     let nockObj = nock(mockHost).get(/query/).reply(200, mockSfQueryResult);
+
+
   }
 
+
+
   @test 'Should Have Vaules in the base config' () {
-    Rest.config.accessToken.should.eql('123abc');
+    const client = new Rest();
+    client.config.accessToken.should.eql('123abc');
   }
 
   @test async 'Should Allow for a query' () {
-    const response = await Rest.Instance.query('Select id from MockSObj');
+    const client = new Rest();
+    const response = await client.query('Select id from MockSObj');
     response.totalSize.should.be.above(0);
     response.records.should.be.an('array');
   }
@@ -111,10 +117,9 @@ should();
       assert.isFunction(contact.delete, 'Child Objects Should have DML functions!');
     });
   }
-
 }
 
-@suite class RestObjectTest extends Account{
+@suite class RestObjectTest extends Account {
 
   @test async 'Readonly & Relationships should be removed' () {
     this.accountNumber = 'abc';

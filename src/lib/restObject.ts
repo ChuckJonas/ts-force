@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { BatchResponse, Composite, CompositeBatch, CompositeBatchResult, CompositeResponse, CompositeResult } from './composite';
 import { Rest } from './rest';
 import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObjectDecorators';
-import { SObject } from 'src/main/lib/sObject';
+import { SObject } from './sObject';
 
 export interface DMLResponse {
     id: string;

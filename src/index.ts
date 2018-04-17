@@ -7,3 +7,4 @@ export * from './lib/sObjectDescribe';
 export * from './lib/composite';
 export * from './lib/queryHelper';
 export * from './lib/compositeFieldTypes';
+export * from './lib/restObject';

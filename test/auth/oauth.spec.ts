@@ -2,7 +2,8 @@ import { suite, test, slow, timeout } from 'mocha-typescript';
 import { should, assert } from 'chai';
 import * as nock from 'nock';
 import { OAuth, UsernamePasswordConfig } from '../../src/auth/oauth';
-import { Rest } from '../../src/main/lib/rest';
+import { Rest } from '../../src/lib/rest';
+import { setDefaultConfig } from '../../src/auth/baseConfig';
 // set up should
 should();
 
@@ -27,10 +28,10 @@ const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process
     this.instanceUrl.should.not.eql('');
   }
   @test async 'Valid Passthrough to Rest Configs and Query Call' () {
-    Rest.config = await this.initialize();
+    setDefaultConfig(await this.initialize());
     // start a new REST instance to see if proplery filled out
     const rest = new Rest();
-    const response = await rest.query('SELECT id FROM Account');
+    const response = await rest.query('SELECT Id FROM Account');
     // assume we have at least one account to play with
     response.totalSize.should.be.above(0);
   }

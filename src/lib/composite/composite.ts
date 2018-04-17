@@ -2,7 +2,7 @@ import { RestObject } from '../restObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
 import { BatchRequest } from './batch';
-import { BaseConfig } from 'type-force';
+import { BaseConfig } from '../../auth/baseConfig';
 
 export interface CompositeRequest extends BatchRequest {
     referenceId: string;
@@ -36,15 +36,22 @@ export class Composite {
         this.callbacks = [];
         this.client = new Rest(config);
     }
-
+    /**
+     * @param  {CompositeRequest} request A request to add.
+     * @param  {(n:CompositeResponse)=>void} callback? Optional callback that gets passed the response
+     * @returns `this` instance for chaining
+     */
     public addRequest (request: CompositeRequest, callback?: (n: CompositeResponse) => void): Composite {
         this.compositeRequest.push(request);
         this.callbacks.push(callback);
         return this;
     }
 
+    /**
+     * Sends the composite requests
+     * @returns Promise<CompositeResult>
+     */
     public async send (): Promise<CompositeResult> {
-        console.log(this.compositeRequest);
         let payload: CompositePayload = {
             compositeRequest: this.compositeRequest
         };

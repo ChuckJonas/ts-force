@@ -1,4 +1,4 @@
-import { DEFAULT_CONFIG } from '../../auth/baseConfig';
+import { DEFAULT_CONFIG } from '../auth/baseConfig';
 import { SalesforceFieldType, sField } from './sObjectDecorators';
 
 export class SObjectAttributes {
@@ -18,7 +18,7 @@ export abstract class SObject {
         this.attributes = new SObjectAttributes();
         this.attributes.type = type;
         if (DEFAULT_CONFIG.version) {
-            this.attributes.url = `/services/data/${DEFAULT_CONFIG.version}/sobjects/${this.attributes.type}`;
+            this.attributes.url = `/services/data/v${DEFAULT_CONFIG.version.toFixed(1)}/sobjects/${this.attributes.type}`;
         }
     }
 }

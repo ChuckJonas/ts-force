@@ -1,7 +1,7 @@
 import { RestObject } from '../restObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
-import { BaseConfig } from 'type-force';
+import { BaseConfig } from '../../auth/baseConfig';
 
 export interface BatchResponse {
     hasErrors: boolean;
@@ -14,7 +14,7 @@ export interface CompositeBatchResult {
 }
 
 export interface BatchRequest {
-    method: string;
+    method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
     url: string;
     richInput?: any;
 }

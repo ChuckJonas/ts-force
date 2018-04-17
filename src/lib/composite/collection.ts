@@ -1,7 +1,7 @@
 import { RestObject } from '../restObject';
 import { Rest } from '../rest';
 import { AxiosResponse } from 'axios';
-import { BaseConfig } from 'type-force';
+import { BaseConfig } from '../../auth/baseConfig';
 
 export interface InsertRequest {
     allOrNone: boolean;
