@@ -5,7 +5,7 @@
 [![alt text](https://img.shields.io/npm/v/ts-force.svg)](https://www.npmjs.com/package/ts-force)
 [![alt text](https://img.shields.io/badge/license-BSD--3--CLAUSE-blue.svg)](https://github.com/ChuckJonas/ts-force/blob/master/LICENSE)
 
-a typescript client for connecting with salesforce APIs.  Currently meant to run on Visualforce and have "Access Token" passed in via global scope.
+A client for connecting with salesforce APIs written in typescript, which also provides types & mappings for your salesforce `sObjects`.
 
 `npm install ts-force`
 
@@ -13,7 +13,7 @@ a typescript client for connecting with salesforce APIs.  Currently meant to run
 
 ### Generate code
 
-This library is intended to be used with code generation.  Each Salesforce SObject you need to work with will get it's own class to handle mapping and DML.
+This library is intended to be used with code generation. Each Salesforce SObject you need to work with will get it's own class to handle mapping and DML.
 
 The code generation has been split out into a seperate package so it can easily be exclude from your build. Start by installing the generation package: `npm install -D ts-force-gen` and reviewing the [ts-force-gen readme](https://github.com/ChuckJonas/ts-force-gen).
 
@@ -21,6 +21,7 @@ The code generation has been split out into a seperate package so it can easily 
 
 To connect with salesforce, and `accessToken` and `instanceUrl` must be passed into `Rest()`.  However, if you're only need a single configuration, you can instead set the `DEFAULT_CONFIG`
 
+*** NOTE: Client Configuration has changed in `v1.1.0` in order to better support multiple configurations.  See details below to upgrade ***
 
 #### hosted on salesforce (visualforce)
 
@@ -92,7 +93,7 @@ await acc.delete();
 
 #### insert/update refresh
 
-`insert` and `update` have an optional `refresh` parameter.  Setting this to true will, use the composite API to `GET` the object properties after DML is performed.  This is extremely helpful for getting changes to formulas and from workflow rules and DOES NOT consume and additional API call!
+`insert` and `update` have an optional `refresh` parameter.  Setting this to true will, use the composite API to `GET` the object properties after DML is performed.  This is extremely helpful for getting changes to formulas and from workflow rules and DOES NOT consume any additional API calls!
 
 ``` typescript
 
@@ -103,7 +104,7 @@ await acc.insert(true); //object properties updated from GET result
 
 ### Quering Records
 
-Query record via a static method on each generated class.
+You can Query records via a static method on each generated class.
 
 ```typescript
 
@@ -113,7 +114,7 @@ let accs: Account[] = Account.retrieve('SELECT Id FROM Account');
 
 #### Relationships
 
-Both Parent & Child relationships are supported.  Returned objects are instances of `RestObject` and you can permform DML.
+Both Parent & Child relationships are supported.  Relational objects are also instances of `RestObject` which you can normal DML on.
 
 ```typescript
 
@@ -132,7 +133,7 @@ parentObj.account = records[0].Id;
 await parentObj.update();
 ```
 
-#### Using mapped property names for queries
+#### Using mapped properties to build queires
 
 Each SObject class contains field API information that can be helpful for buiding queries. For example, the above query can be rewritten as such:
 
@@ -145,7 +146,7 @@ let qry =   `SELECT ${aFields.id.apiName},
                     (
                         SELECT ${cFields.name.apiName},
                             ${cFields.email.apiName},
-                            ${cFields.parentObjectId},
+                            ${cFields.parentObjectId.apiName},
                             ${cFields.parentObject.apiName}.${pFields.type.apiName}
                         FROM ${aFields.contacts.apiName}
                     )
@@ -154,6 +155,17 @@ let qry =   `SELECT ${aFields.id.apiName},
 ```
 
 Other than `apiName` you can also access other property meta information like `readOnly`, `required`, `salesforceLabel`, etc.  This can be helpful for building dynamic user forms.
+
+To help make these queries more concise, there are currently 2 "Query Helpers": `generateSelect` & `generateInValues`.
+
+``` typescript
+let contactIds = ['2312321','2312312']
+
+//get all related account fields from a contact
+qry = `SELECT ${generateSelect(Object.values(Account.FIELDS), Contact.FIELDS.Account)}
+       FROM ${Contact.API_NAME}
+       WHERE Id IN (${generateInValues(contactIds)})`
+```
 
 #### Non-Mapped Queries
 
@@ -170,12 +182,11 @@ console.log(results);
 
 ### Composite API
 
-The [Composite API](https://developer.salesforce.com/blogs/tech-pubs/2017/01/simplify-your-api-code-with-new-composite-resources.html) is a powerful way to bundle API calls into a single request
+The [Composite API](https://developer.salesforce.com/blogs/tech-pubs/2017/01/simplify-your-api-code-with-new-composite-resources.html) is a powerful way to bundle API calls into a single request.
 
 #### Collection
 
 As of API v42.0 you can now send a DML request containing a collection of up to 200 records.  Unlike Batch & Composite, this request will be processed in a single execution transiton (making it much faster, but also more likely to exceed platform limits).
-
 
 ```typescript
 
@@ -236,16 +247,19 @@ const compositeRef = 'myAccount';
 
 let composite = new Composite()
 .addRequest(
-  'POST',
-  `sobjects/${this.attributes.type}`,
-  compositeRef,
+  {
+    method: 'POST',
+    url: `sobjects/${acc.attributes.type}`,
+    referenceId: compositeRef
+  },
   acc.prepareForDML()
-);
-
-composite.addRequest(
-    'GET',
-    `sobjects/${this.attributes.type}/@{${compositeRef}.id}`,
-    'getObject',
+)
+.addRequest(
+    {
+        method: 'GET',
+        url: `sobjects/${this.attributes.type}/@{${compositeRef}.id}`,
+        referenceId: 'getObject'
+    },
     acc.handleCompositeResult
 );
 
@@ -269,7 +283,7 @@ handleCompositeResult = (result: CompositeResponse) => {
 
 You can leverage the generated SObjects in your custom endpoints.  For example, if you had the following `@HttpPost` method that takes an Account and returns a list of Contacts:
 
-```apex
+```java
 @RestResource(urlMapping='/myservice/*')
 global with sharing class MyRestResource {
     @HttpPost
