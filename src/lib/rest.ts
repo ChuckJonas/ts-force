@@ -49,6 +49,14 @@ export class Rest {
         );
     }
 
+    public async queryMore <T> (resp: QueryResponse<T>): Promise<QueryResponse<T>> {
+        return await this.handleRequest<QueryResponse<T>>(
+            () => {
+                return this.request.get<QueryResponse<T>>(resp.nextRecordsUrl);
+            }
+        );
+    }
+
     /** axois error handler
      * @param  {()=>AxiosPromise<T>} request
      */
@@ -72,7 +80,7 @@ export class Rest {
             }
             try {
                 throw new Error(`${error} \n Details: ${JSON.stringify(details)}`);
-            }catch(ee) { console.log(error); throw error; }
+            }catch (ee) { console.log(error); throw error; }
 
         }
     }
@@ -81,4 +89,6 @@ export class Rest {
 export interface QueryResponse<T> {
     totalSize: number;
     records: T[];
+    done: boolean;
+    nextRecordsUrl?: string;
 }

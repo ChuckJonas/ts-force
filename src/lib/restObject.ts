@@ -26,15 +26,23 @@ export abstract class RestObject extends SObject {
         super(type);
     }
 
+    // returns ALL records of a query
     protected static async query < T extends RestObject > (type: { new(): T }, qry: string): Promise < T[] > {
-        const response = await new Rest().query<T>(qry);
-        let sobs: Array<T> = [];
-        for (let i = 0; i < response.records.length; i++) {
+        let client = new Rest();
+        let response = await client.query<T>(qry);
+        let records = response.records;
+
+        while (!response.done && response.nextRecordsUrl) {
+            response = await client.queryMore<T>(response);
+            records = records.concat(response.records);
+        }
+        let sobs: Array<T> = records.map(rec => {
             let sob = new type();
             // recursivly build up concrete restobjects
-            sob.mapFromQuery(response.records[i]);
-            sobs.push(sob);
-        }
+            sob.mapFromQuery(rec);
+            return sob;
+        });
+
         return sobs;
     }
 
