@@ -57,6 +57,15 @@ export class Rest {
         );
     }
 
+    public async search <T> (query: string): Promise<SearchResponse<T>> {
+        let qryString = encodeURIComponent(query);
+        return await this.handleRequest<SearchResponse<T>>(
+            () => {
+                return this.request.get<SearchResponse<T>>(`/services/data/${this.version}/search?q=${qryString}`);
+            }
+        );
+    }
+
     /** axois error handler
      * @param  {()=>AxiosPromise<T>} request
      */
@@ -91,4 +100,8 @@ export interface QueryResponse<T> {
     records: T[];
     done: boolean;
     nextRecordsUrl?: string;
+}
+
+export interface SearchResponse<T> {
+    searchRecords: T[];
 }
