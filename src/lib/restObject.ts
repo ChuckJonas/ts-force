@@ -222,8 +222,11 @@ export abstract class RestObject extends SObject {
                         this[sobPropName] = void 0;
                     }else {
                         let val = data[i];
-                        if (sFieldProps.salesforceType === SalesforceFieldType.DATETIME || sFieldProps.salesforceType === SalesforceFieldType.DATE) {
+                        if (sFieldProps.salesforceType === SalesforceFieldType.DATETIME) {
                             val = new Date(val);
+                        }else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
+                            let parts = val.split('-'); // reformat date to return correct tz
+                            val = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
                         }
                         this[sobPropName] = val;
                     }
