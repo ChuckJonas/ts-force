@@ -165,7 +165,7 @@ qry = `SELECT ${generateSelect(Object.values(Account.FIELDS), Contact.FIELDS.Acc
 
 #### Non-Mapped Queries
 
-You can easily run queries that can't neccaraly be mapped back to an SObject.  This is useful for aggregated queries or even if you just want to query an object without having it included in your generated code.
+You can easily run queries that can't necessarily be mapped back to an SObject.  This is useful for aggregated queries or even if you just want to query an object without having it included in your generated code.
 
 ```typescript
 import { Rest } from "ts-force";
@@ -182,7 +182,7 @@ The [Composite API](https://developer.salesforce.com/blogs/tech-pubs/2017/01/sim
 
 #### Collection
 
-As of API v42.0 you can now send a DML request containing a collection of up to 200 records.  Unlike Batch & Composite, this request will be processed in a single execution transiton (making it much faster, but also more likely to exceed platform limits).
+As of API v42.0 you can now send a DML request containing a collection of up to 200 records.  Unlike Batch & Composite, this request will be processed in a single execution transition (making it much faster, but also more likely to exceed platform limits).
 
 ```typescript
 
