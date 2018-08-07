@@ -30,7 +30,7 @@ This will need to be injected in the visualforce page:
  <script type="text/javascript">
         //rest details
         const __ACCESSTOKEN__ = '{!$Api.Session_ID}';
-        //leave blank to use realitive path
+        //leave blank to use relative path
         const __RESTHOST__ = '';
     </script>
 ```
@@ -74,7 +74,7 @@ let config = new UsernamePasswordConfig(
 
 ### DML
 
-Each DML opporation is provided through the `RestObject` base class that each generated class implements.
+Each DML operation is provided through the `RestObject` base class that each generated class implements.
 
 ```typescript
 
@@ -132,28 +132,25 @@ parentObj.account = records[0].Id;
 await parentObj.update();
 ```
 
-#### Using mapped properties to build queires
+#### Using mapped properties to build queries
 
-Each SObject class contains field API information that can be helpful for buiding queries. For example, the above query can be rewritten as such:
+Each SObject class contains field API information that can be helpful for building queries. For example, the above query can be rewritten as such:
 
 ```typescript
-let aFields = Account.FIELDS;
-let cfields = Contact.FIELDS;
-let pFields = ParentObject.FIELDS;
-let qry =   `SELECT ${aFields.id.apiName},
-                    ${aFields.active.apiName},
+let qry =   `SELECT ${Account.id},
+                    ${Account.active},
                     (
-                        SELECT ${cFields.name.apiName},
-                            ${cFields.email.apiName},
-                            ${cFields.parentObjectId.apiName},
-                            ${cFields.parentObject.apiName}.${pFields.type.apiName}
-                        FROM ${aFields.contacts.apiName}
+                        SELECT ${Contact.name},
+                            ${Contact.email},
+                            ${Contact.parentObjectId},
+                            ${Contact.parentObject}.${ParentObject.type}
+                        FROM ${Account.contacts}
                     )
                 FROM ${Account.API_NAME}
-                WHERE ${aFields.type.apiName} = 'industry'`
+                WHERE ${Account.type} = 'industry'`
 ```
 
-Other than `apiName` you can also access other property meta information like `readOnly`, `required`, `salesforceLabel`, etc.  This can be helpful for building dynamic user forms.
+Each field actually contains more than just the API name (`toString()` is just overridden for convince).  Other than `apiName` you can also access other property meta information like `readOnly`, `required`, `salesforceLabel`, etc.  This can be helpful for building dynamic user forms.
 
 To help make these queries more concise, there are currently 2 "Query Helpers": `generateSelect` & `generateInValues`.
 

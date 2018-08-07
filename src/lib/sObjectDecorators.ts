@@ -33,6 +33,11 @@ export class SFieldProperties {
     public childRelationship: boolean;
     public salesforceType: SalesforceFieldType;
     public salesforceLabel?: string;
+
+    // override to string to make it easy to use with query building
+    public toString = (): string => {
+        return this.apiName;
+    }
 }
 
 export function sField (props: SFieldProperties) {
@@ -40,5 +45,9 @@ export function sField (props: SFieldProperties) {
 }
 
 export function getSFieldProps (target: any, propertyKey: string): SFieldProperties {
-    return Reflect.getMetadata(sFieldMetadataKey, target, propertyKey);
+    let prop = Reflect.getMetadata(sFieldMetadataKey, target, propertyKey);
+    if (prop) {
+        prop = Object.assign(new SFieldProperties(), prop);
+    }
+    return prop;
 }
