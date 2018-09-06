@@ -183,8 +183,14 @@ export abstract class RestObject extends SObject {
                 }
                 let sFieldProps = getSFieldProps(this, i);
                 if (sFieldProps) {
-                    if (sFieldProps.readOnly || sFieldProps.reference != null) {
+                    if ((sFieldProps.readOnly && sFieldProps.reference == null) || sFieldProps.childRelationship === true) {
                         // remove readonly && reference types
+                        continue;
+                    }else if (sFieldProps.reference != null) {
+                        if (this[i] && this[i + 'Id'] === void 0) {
+                            let relatedSob = this[i] as any as RestObject;
+                            data[sFieldProps.apiName] = relatedSob.prepareAsRelationRecord();
+                        }
                         continue;
                     }
                     // copy with mapping
@@ -196,8 +202,23 @@ export abstract class RestObject extends SObject {
         if (forCustomService) {
             data['id'] = this['id'];   // rest doesn't allow for Id to be include, so add it back
         }
-
         return data;
+    }
+
+    protected prepareAsRelationRecord () {
+        let data = {};
+        // otherwise, find first external Id field
+        for (let i in this) {
+            // clean properties
+            if (this.hasOwnProperty(i)) {
+                let sFieldProps = getSFieldProps(this, i);
+                if (sFieldProps && sFieldProps.externalId) {
+                    data[sFieldProps.apiName] = this[i];
+                    return data;
+                }
+            }
+        }
+        return undefined;
     }
 
      // copies data from a json object to restobject

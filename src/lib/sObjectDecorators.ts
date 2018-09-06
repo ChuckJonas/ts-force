@@ -30,6 +30,7 @@ export class SFieldProperties {
     public readOnly: boolean;
     public reference: () => { new(): RestObject; };
     public required: boolean;
+    public externalId: boolean;
     public childRelationship: boolean;
     public salesforceType: SalesforceFieldType;
     public salesforceLabel?: string;
