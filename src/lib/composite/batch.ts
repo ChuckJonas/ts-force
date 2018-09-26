@@ -97,7 +97,7 @@ export class CompositeBatch {
         let request: BatchRequest = {
             method: 'PATCH',
             url: `${this.client.version}/sobjects/${obj.attributes.type}/${obj.id}`,
-            richInput: obj.prepareForDML()
+            richInput: obj.prepareForDML('update')
         };
         this.addBatchRequest(request, callback);
         return this;
@@ -113,7 +113,7 @@ export class CompositeBatch {
         let request: BatchRequest = {
             method: 'POST',
             url: `${this.client.version}/sobjects/${obj.attributes.type}/`,
-            richInput: obj.prepareForDML()
+            richInput: obj.prepareForDML('insert')
         };
         this.addBatchRequest(request, callback);
 

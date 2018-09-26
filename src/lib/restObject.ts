@@ -107,7 +107,7 @@ export abstract class RestObject extends SObject {
                 method: 'POST',
                 url: this.attributes.url,
                 referenceId: insertCompositeRef,
-                body: this.prepareForDML()
+                body: this.prepareForDML('insert')
         }, this.handleCompositeUpdateResult);
 
         if (refresh === true) {
@@ -168,10 +168,12 @@ export abstract class RestObject extends SObject {
 
     /**
     * Gets JSON Object from RestObject
-    * @returns {*} JSON represenation of SObject (mapped using decorators)
+    * @param type 'insert' | 'update'.  Determines if "createable" & "updatable" fields are included in payload
+    * @param forCustomService optional param which has special handling for custom service
+    * @returns {*} JSON representation of SObject (mapped using decorators)
     * @memberof RestObject
     */
-    public prepareForDML (forCustomService?: boolean): any {
+    public prepareForDML (type: 'insert' | 'update', forCustomService?: boolean): any {
         let data = {};
 
         // loop each property
@@ -183,7 +185,8 @@ export abstract class RestObject extends SObject {
                 }
                 let sFieldProps = getSFieldProps(this, i);
                 if (sFieldProps) {
-                    if ((sFieldProps.readOnly && sFieldProps.reference == null) || sFieldProps.childRelationship === true) {
+                    let canChange = type === 'insert' ? sFieldProps.createable : sFieldProps.updateable;
+                    if ((!canChange && sFieldProps.reference == null) || sFieldProps.childRelationship === true) {
                         // remove readonly && reference types
                         continue;
                     }else if (sFieldProps.reference != null) {

@@ -61,10 +61,7 @@ should();
     setDefaultConfig(config);
     let nockObj = nock(mockHost).get(/query/).reply(200, mockSfQueryResult);
 
-
   }
-
-
 
   @test 'Should Have Vaules in the base config' () {
     const client = new Rest();
@@ -128,13 +125,13 @@ should();
     this.parent = parent;
     this.isDeleted = true;
 
-    let data: Account = this.prepareForDML();
+    let data: Account = this.prepareForDML('insert');
 
     let accountNumberMeta = getSFieldProps(this, 'accountNumber');
     let parentMeta = getSFieldProps(this, 'parent');
     let isDeletedMeta = getSFieldProps(this, 'isDeleted');
     assert(data[accountNumberMeta.apiName] === this.accountNumber, 'Updatable Property should be mapped to data');
-    assert(data[parentMeta.apiName] === undefined, 'relational propery should not be copied');
+    assert(data[parentMeta.apiName] === undefined, 'relational property should not be copied');
     assert(data[isDeletedMeta.apiName] === undefined, 'readonly');
 
   }

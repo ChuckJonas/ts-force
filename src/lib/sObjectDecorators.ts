@@ -27,7 +27,8 @@ const sFieldMetadataKey = Symbol('sField');
 
 export class SFieldProperties {
     public apiName: string;
-    public readOnly: boolean;
+    public updateable: boolean;
+    public createable: boolean;
     public reference: () => { new(): RestObject; };
     public required: boolean;
     public externalId: boolean;

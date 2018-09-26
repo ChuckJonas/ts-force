@@ -49,7 +49,7 @@ export class CompositeCollection {
      */
     public insert = async (sobs: RestObject[], allOrNothing?: boolean, setId?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
-            const dmlSob = sob.prepareForDML();
+            const dmlSob = sob.prepareForDML('insert');
             return dmlSob;
         });
         let payload: InsertRequest = {
@@ -80,7 +80,7 @@ export class CompositeCollection {
      */
     public update = async (sobs: RestObject[], allOrNothing?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
-            const dmlSob = sob.prepareForDML(true);
+            const dmlSob = sob.prepareForDML('update', true);
             return dmlSob;
         });
         let payload: InsertRequest = {

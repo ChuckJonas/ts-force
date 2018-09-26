@@ -248,7 +248,7 @@ let composite = new Composite()
     url: `sobjects/${acc.attributes.type}`,
     referenceId: compositeRef
   },
-  acc.prepareForDML()
+  acc.prepareForDML('update')
 )
 .addRequest(
     {
@@ -289,7 +289,7 @@ global with sharing class MyRestResource {
 }
 ```
 
-You can use `prepareForDML(true)` to map to a salesforce & then `Contact.fromSFObject(sfContact);` to map the response back to the ts-force class.
+You can use `prepareForDML('insert', true)` to map to a salesforce & then `Contact.fromSFObject(sfContact);` to map the response back to the ts-force class.
 
 ```typescript
 const acc = (await Account.retrieve('SELECT Id, Name FROM Account LIMIT 1'))[0];
