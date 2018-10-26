@@ -10,11 +10,13 @@ A client for connecting with salesforce APIs written in typescript, which also p
 
 ## Usage
 
+After skimming the content below, this [tutorial](https://gist.github.com/ChuckJonas/723c1e4f7ab9de67c88f48e2a627043f) will walk you through the most common use-case.
+
 ### Generate code
 
 This library is intended to be used with code generation. Each Salesforce SObject you need to work with will get it's own class to handle mapping and DML.
 
-The code generation has been split out into a seperate package so it can easily be exclude from your build. Start by installing the generation package: `npm install -D ts-force-gen` and reviewing the [ts-force-gen readme](https://github.com/ChuckJonas/ts-force-gen).
+The code generation has been split out into a separate package so it can easily be exclude from your build. Start by installing the generation package: `npm install -D ts-force-gen` and reviewing the [ts-force-gen readme](https://github.com/ChuckJonas/ts-force-gen).
 
 ### Configuring Client
 
@@ -101,7 +103,7 @@ await acc.insert(true); //object properties updated from GET result
 
 ```
 
-### Quering Records
+### Querying Records
 
 You can Query records via a static method on each generated class.
 
@@ -208,7 +210,7 @@ await bulk.delete(accounts);
 
 #### Batch
 
-Composite Batch allows you to bundle multiple requests into a single API call.  Here's what a custom `upsert` implementaion would look like:
+Composite Batch allows you to bundle multiple requests into a single API call.  Here's what a custom `upsert` implementation would look like:
 
 ```typescript
 let accounts = Account.retrieve(`SELECT Id FROM Account LIMIT 5`);
@@ -309,7 +311,7 @@ Contributions are encouraged!
 
 ### Running Tests
 
-In order to run unit test you must first create a .env.test file with the following credentals that link to a valid salesforce account
+In order to run unit test you must first create a .env.test file with the following credentials that link to a valid salesforce account
 
 ```bat
 
