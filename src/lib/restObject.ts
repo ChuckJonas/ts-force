@@ -215,7 +215,7 @@ export abstract class RestObject extends SObject {
             // clean properties
             if (this.hasOwnProperty(i)) {
                 let sFieldProps = getSFieldProps(this, i);
-                if (sFieldProps && sFieldProps.externalId) {
+                if (sFieldProps && sFieldProps.externalId && this[i]) {
                     data[sFieldProps.apiName] = this[i];
                     return data;
                 }
