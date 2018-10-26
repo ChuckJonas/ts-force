@@ -10,7 +10,7 @@ A client for connecting with salesforce APIs written in typescript, which also p
 
 ## Usage
 
-After skimming the content below, this [tutorial](https://gist.github.com/ChuckJonas/723c1e4f7ab9de67c88f48e2a627043f) will walk you through the most common use-case.
+After skimming the content below, I recommend checking out this step-by-step ["getting started" tutorial](https://gist.github.com/ChuckJonas/723c1e4f7ab9de67c88f48e2a627043f), which will walk you through the most common use-case.
 
 ### Generate code
 
