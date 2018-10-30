@@ -1,6 +1,5 @@
 import { RestObject } from '../restObject';
 import { Rest } from '../rest';
-import { AxiosResponse } from 'axios';
 import { BaseConfig } from '../../auth/baseConfig';
 
 export interface BatchResponse {
