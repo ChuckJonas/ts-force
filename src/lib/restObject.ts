@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import { BatchResponse, Composite, CompositeBatch, CompositeBatchResult, CompositeResponse, CompositeResult } from './composite';
 import { Rest } from './rest';
 import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObjectDecorators';
@@ -71,10 +69,6 @@ export abstract class RestObject extends SObject {
 
     handleCompositeBatchGetResult = (result: CompositeBatchResult) => {
         this.mapFromQuery(result.result);
-    }
-
-    public clone (): this {
-        return _.cloneDeep(this);
     }
 
     public async refresh (): Promise < this > {
