@@ -1,35 +1,11 @@
 {
-  "extends": "./config/tsconfig.flexible", // also available: "./config/tsconfig.strict"
-  "compilerOptions": {
-    "target": "es5",
-    "outDir": "build",
-    "moduleResolution": "node",
-    "module": "commonjs",
-    "declaration": true,
-    "importHelpers": true,
-    "inlineSourceMap": true,
-    "listFiles": false,
-    "traceResolution": false,
-    "experimentalDecorators": true,
-    "pretty": true,
-    "lib" : [
-      "es6"
+    "extends": "./tsconfig.base.json",
+    "include": [
+        "src/**/*",
+        "test/**/*.spec.ts"
     ],
-    "types" : [
-      "node"
-    ],
-    "baseUrl": ".", // required for "paths"
-    "paths": {
-      "type-force": ["src/index.ts"] // write tests without relative paths
-    }
-  },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts",
-    "test/**/*.spec.ts"
-  ],
-  "exclude": [
-    "node_modules/**"
-  ],
-  "compileOnSave": false
+    "exclude": [
+        "node_modules",
+        "build"
+    ]
 }

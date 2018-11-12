@@ -31,12 +31,12 @@ export class CompositeBatch {
 
     /**
      * Creates a composite batch to allow multiple requests to be sent in one round-trip
-     * @param  {BaseConfig} config? Optional.  If not set, will use Rest.DEFAULT_CONFIG
+     * @param  {Rest} client? Optional.  If not set, will use Rest.DEFAULT_CONFIG
      */
-    constructor (config?: BaseConfig) {
+    constructor (client?: Rest) {
         this.batchRequests = [];
         this.callbacks = [];
-        this.client = new Rest(config);
+        this.client = client || new Rest();
     }
     /**
      * Sends all added requests
@@ -92,13 +92,14 @@ export class CompositeBatch {
      * @param  {(n:CompositeBatchResult)=>void} callback? optional callback to pass results to once operation is complete
      * @returns this instance is returned for easy chaining
      */
-    public addUpdate (obj: RestObject, callback?: (n: CompositeBatchResult) => void): CompositeBatch {
+    public addUpdate (obj: RestObject, opts?: {callback?: ((n: CompositeBatchResult) => void), sendAllFields?: boolean}): CompositeBatch {
+        opts = opts || {};
         let request: BatchRequest = {
             method: 'PATCH',
             url: `${this.client.version}/sobjects/${obj.attributes.type}/${obj.id}`,
-            richInput: obj.prepareForDML('update')
+            richInput: obj.prepareFor(opts.sendAllFields ? 'update_all' : 'update')
         };
-        this.addBatchRequest(request, callback);
+        this.addBatchRequest(request, opts.callback);
         return this;
     }
 
@@ -112,7 +113,7 @@ export class CompositeBatch {
         let request: BatchRequest = {
             method: 'POST',
             url: `${this.client.version}/sobjects/${obj.attributes.type}/`,
-            richInput: obj.prepareForDML('insert')
+            richInput: obj.prepareFor('insert')
         };
         this.addBatchRequest(request, callback);
 

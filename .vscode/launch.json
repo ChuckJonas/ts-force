@@ -7,15 +7,21 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/build/gen/generate.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ],
-            "envFile": "${workspaceFolder}/.env.test",
+            "name": "Mocha All",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
-                "-e", "-o", "${workspaceFolder}/tmps.cs", "-s", "Account,Contact"
+                "-r",
+                "dotenv/config",
+                "-r",
+                "ts-node/register",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/src/test/**/*spec.ts",
             ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "protocol": "inspector"
         }
     ]
 }

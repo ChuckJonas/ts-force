@@ -20,13 +20,32 @@ export interface DMLResponse {
 */
 export abstract class RestObject extends SObject {
 
-    constructor (type: string) {
+    private _client: Rest;
+
+    public _modified = new Set<string>();
+
+    // handler used when proxied
+    protected safeUpdateProxyHandler = {
+        set: (obj, key, value) => {
+            obj[key] = value;
+            if (typeof key === 'string') {
+                let decorator = getSFieldProps(obj, key);
+                if (decorator) {
+                    obj._modified.add(decorator.apiName);
+                }
+            }
+            return true;
+        }
+    };
+
+    constructor (type: string, client?: Rest) {
         super(type);
+        this._client = client || new Rest();
     }
 
     // returns ALL records of a query
-    protected static async query < T extends RestObject > (type: { new(): T }, qry: string): Promise < T[] > {
-        let client = new Rest();
+    protected static async query<T extends RestObject> (type: { new(): T }, qry: string, restInstance?: Rest): Promise<T[]> {
+        let client = restInstance || new Rest();
         let response = await client.query<T>(qry);
         let records = response.records;
 
@@ -36,7 +55,8 @@ export abstract class RestObject extends SObject {
         }
         let sobs: Array<T> = records.map(rec => {
             let sob = new type();
-            // recursivly build up concrete restobjects
+            sob._client = client;
+            // recursively build up concrete restobjects
             sob.mapFromQuery(rec);
             return sob;
         });
@@ -44,7 +64,7 @@ export abstract class RestObject extends SObject {
         return sobs;
     }
 
-    protected static getPropertiesMeta <S, T extends RestObject > (type: { new(): T }): {[P in keyof S]: SFieldProperties;} {
+    protected static getPropertiesMeta<S, T extends RestObject> (type: { new(): T }): { [P in keyof S]: SFieldProperties; } {
         let properties: any = {};
         let sob = new type();
         for (let i in sob) {
@@ -60,7 +80,8 @@ export abstract class RestObject extends SObject {
     }
 
     handleCompositeUpdateResult = (result: CompositeResponse) => {
-         this.id = result.body.id;
+        this.id = result.body.id;
+        this._modified.clear();
     }
 
     handleCompositeGetResult = (result: CompositeResponse) => {
@@ -71,15 +92,14 @@ export abstract class RestObject extends SObject {
         this.mapFromQuery(result.result);
     }
 
-    public async refresh (): Promise < this > {
-        let client = new Rest();
+    public async refresh (): Promise<this> {
         if (this.id == null) {
             throw new Error('Must have Id to refresh!');
         }
 
-        let response = await client.handleRequest<this>(
+        let response = await this._client.handleRequest<this>(
             () => {
-                return client.request.get(`${this.attributes.url}/${this.id}`);
+                return this._client.request.get(`${this.attributes.url}/${this.id}`);
             }
         );
 
@@ -94,14 +114,14 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<void>}
     * @memberof RestObject
     */
-    public async insert (refresh ?: boolean): Promise < this > {
+    public async insert (refresh?: boolean): Promise<this> {
         let insertCompositeRef = 'newObject';
 
-        let composite = new Composite().addRequest({
-                method: 'POST',
-                url: this.attributes.url,
-                referenceId: insertCompositeRef,
-                body: this.prepareForDML('insert')
+        let composite = new Composite(this._client).addRequest({
+            method: 'POST',
+            url: this.attributes.url,
+            referenceId: insertCompositeRef,
+            body: this.prepareFor('insert')
         }, this.handleCompositeUpdateResult);
 
         if (refresh === true) {
@@ -123,16 +143,15 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<void>}
     * @memberof RestObject
     */
-    public async update (refresh ?: boolean): Promise < this > {
-
+    public async update (opts?: { refresh?: boolean, sendAllFields?: boolean }): Promise<this> {
+        opts = opts || {};
         if (this.id == null) {
             throw new Error('Must have Id to update!');
         }
 
-        let batchRequest = new CompositeBatch()
-        .addUpdate(this);
+        let batchRequest = new CompositeBatch(this._client).addUpdate(this, { sendAllFields: opts.sendAllFields });
 
-        if (refresh === true) {
+        if (opts.refresh === true) {
             batchRequest.addGet(this, this.handleCompositeBatchGetResult);
         }
         const batchResponse = await batchRequest.send();
@@ -147,14 +166,13 @@ export abstract class RestObject extends SObject {
     * @returns {Promise<DMLResponse>}
     * @memberof RestObject
     */
-    public async delete (): Promise < DMLResponse > {
-        let client = new Rest();
+    public async delete (): Promise<DMLResponse> {
         if (this.id == null) {
             throw new Error('Must have Id to Delete!');
         }
-        let response = await client.handleRequest<DMLResponse>(
+        let response = await this._client.handleRequest<DMLResponse>(
             () => {
-                return client.request.delete(`${this.attributes.url}/${this.id}`);
+                return this._client.request.delete(`${this.attributes.url}/${this.id}`);
             }
         );
         return response;
@@ -162,43 +180,68 @@ export abstract class RestObject extends SObject {
 
     /**
     * Gets JSON Object from RestObject
-    * @param type 'insert' | 'update'.  Determines if "createable" & "updatable" fields are included in payload
-    * @param forCustomService optional param which has special handling for custom service
+    * @param type 'insert' | 'update' | 'update_all' | 'apex'  Determines which fields to include in payload and how to format them.
     * @returns {*} JSON representation of SObject (mapped using decorators)
     * @memberof RestObject
     */
-    public prepareForDML (type: 'insert' | 'update', forCustomService?: boolean): any {
+    public prepareFor (type: 'insert' | 'update' | 'update_all' | 'apex'): any {
         let data = {};
 
         // loop each property
         for (let i in this) {
             // clean properties
             if (this.hasOwnProperty(i)) {
-                if (i.toLowerCase() === 'attributes' && this[i]) {
+                if (i.toLowerCase() === 'attributes' && type !== 'apex' && this[i]) {
                     data[i.toString()] = this[i];
                 }
                 let sFieldProps = getSFieldProps(this, i);
                 if (sFieldProps) {
-                    let canChange = type === 'insert' ? sFieldProps.createable : sFieldProps.updateable;
-                    if ((!canChange && sFieldProps.reference == null) || sFieldProps.childRelationship === true) {
-                        // remove readonly && reference types
-                        continue;
-                    }else if (sFieldProps.reference != null) {
-                        if (this[i] && this[i + 'Id'] === void 0) {
-                            let relatedSob = this[i] as any as RestObject;
-                            data[sFieldProps.apiName] = relatedSob.prepareAsRelationRecord();
+                    if (this[i] === void 0) { continue; }
+
+                    let isReference = sFieldProps.reference != null;
+                    let isChildArr = sFieldProps.childRelationship === true;
+                    if (type === 'apex') {
+                        if (isReference && !isChildArr) {
+                            data[sFieldProps.apiName] = (this[i] as any as RestObject).prepareFor('apex');
+                        }else if (isChildArr) {
+                            data[sFieldProps.apiName] = {
+                                records: (this[i] as any as RestObject[]).map(obj => obj.prepareFor('apex'))
+                            };
+                        }else {
+                            data[sFieldProps.apiName] = this[i];
                         }
-                        continue;
+                    } else { // standard rest handling
+                        let canSend: boolean;
+                        switch (type) {
+                            case 'update_all':
+                                canSend = true;
+                                break;
+                            case 'insert':
+                                canSend = sFieldProps.createable || isReference;
+                                break;
+                            case 'update':
+                                canSend = (sFieldProps.updateable && this._modified.has(sFieldProps.apiName)) || isReference;
+                                break;
+                        }
+
+                        if (!canSend || isChildArr) {
+                            // remove readonly && reference types
+                            continue;
+                        } else if (isReference) {
+                            // handle external ID references
+                            if (this[i] && this[i + 'Id'] === void 0) {
+                                let relatedSob = this[i] as any as RestObject;
+                                data[sFieldProps.apiName] = relatedSob.prepareAsRelationRecord();
+                            }
+                            continue;
+                        }
+                        // copy with mapping
+                        data[sFieldProps.apiName] = this[i];
                     }
-                    // copy with mapping
-                    data[sFieldProps.apiName] = this[i];
                 }
             }
         }
 
-        if (forCustomService) {
-            data['id'] = this['id'];   // rest doesn't allow for Id to be include, so add it back
-        }
         return data;
     }
 
@@ -218,7 +261,7 @@ export abstract class RestObject extends SObject {
         return undefined;
     }
 
-     // copies data from a json object to restobject
+    // copies data from a json object to restobject
     protected mapFromQuery (data: SObject): this {
 
         // create a map of lowercase API names -> sob property names
@@ -238,11 +281,11 @@ export abstract class RestObject extends SObject {
                 if (!sFieldProps.reference) {
                     if (data[i] === null) {
                         this[sobPropName] = void 0;
-                    }else {
+                    } else {
                         let val = data[i];
                         if (sFieldProps.salesforceType === SalesforceFieldType.DATETIME) {
                             val = new Date(val);
-                        }else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
+                        } else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
                             // no timezone information... date will always be whatever was stored
                             let parts = val.split('-');
                             val = new Date(parts[0], parts[1] - 1, parts[2]);
@@ -260,23 +303,26 @@ export abstract class RestObject extends SObject {
                         if (data[i]) {
                             data[i].records.forEach(record => {
                                 let typeInstance = new type();
+                                typeInstance._client = this._client;
                                 this[sobPropName].push(typeInstance.mapFromQuery(record));
                             });
                         }
 
                     } else {
                         let typeInstance = new type();
+                        typeInstance._client = this._client;
                         // parent type.  Map data
                         this[sobPropName] = typeInstance.mapFromQuery(data[i]);
                     }
                 }
             }
         }
+        this._modified.clear();
         return this;
     }
 
     // returns a mapping of API Name (lower case) -> Property Name
-    private getNameMapping (): Map < string, string > {
+    private getNameMapping (): Map<string, string> {
         let apiNameMap = new Map<string, string>();
         for (let i in this) {
             // clean properties
@@ -284,8 +330,8 @@ export abstract class RestObject extends SObject {
                 let sFieldProps = getSFieldProps(this, i);
                 if (sFieldProps) {
                     apiNameMap.set(sFieldProps.apiName.toLowerCase(), i);
-                }else {
-                    apiNameMap.set(i,i);
+                } else {
+                    apiNameMap.set(i, i);
                 }
             }
         }

@@ -8,3 +8,4 @@ export * from './lib/composite';
 export * from './lib/queryHelper';
 export * from './lib/compositeFieldTypes';
 export * from './lib/restObject';
+export * from './qry/index';

@@ -1,6 +1,0 @@
-{
-  "auth": {
-    "username": "scratch"
-  },
-  "sObjects": ["Account", "Contact"]
-}

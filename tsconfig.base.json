@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./", // enables relative imports to root
+        "paths": {
+            "@src/*": [
+                "src/*"
+            ]
+        },
+        "outDir": "./build",
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "declaration": true,
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": false,
+        "noResolve": false,
+        "noUnusedParameters": false,
+        "noUnusedLocals": false,
+        "strictNullChecks": false,
+        "strict": true,
+        "allowSyntheticDefaultImports": true
+    }
+}

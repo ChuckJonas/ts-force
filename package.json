@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -11,6 +11,7 @@
   "keywords": [
     "salesforce",
     "typescript",
+    "orm",
     "rest"
   ],
   "contributors": [
@@ -22,33 +23,36 @@
     "clean": "rm -r -f ./build",
     "clean-build": "npm run clean && npm run build",
     "link": "npm run clean-build && npm link",
-    "pretest": "npm run clean && tsc",
-    "test": "mocha -r dotenv/config dotenv_config_path=.env.test",
-    "build": "tsc -p tsconfig.build.json",
-    "watch": "mocha-typescript-watch",
+    "test": "mocha --timeout 10000 -r dotenv/config -r ts-node/register 'src/test/**/*.spec.ts'",
+    "build": "npx tsc -p tsconfig.build.json",
+    "ci": "npm install -g ts-force-gen@next && npm run generate-test-classes",
+    "generate-test-classes": "npx ts-node ./src/test/setup",
     "prepublishOnly": "npm run clean-build"
   },
   "engines": {
     "node": ">=4.5"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "5.2.0",
+    "@types/chai": "^4.1.7",
+    "@types/dateformat": "^1.0.1",
+    "@types/mocha": "^5.2.5",
     "@types/nock": "^8.2.1",
     "@types/node": "^8.0.4",
     "@types/qs": "^6.5.0",
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "dotenv": "^4.0.0",
     "mocha": "^5.2.0",
-    "mocha-typescript": "^1.1.8",
     "nock": "^9.3.3",
+    "node-env-run": "^3.0.2",
     "source-map-support": "^0.4.18",
+    "ts-node": "^7.0.1",
     "tslint": "^5.4.3",
     "tslint-config-standard": "^6.0.1",
-    "typescript": "^2.8.1"
+    "typescript": "^3.0.3"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "dateformat": "^3.0.3",
     "lodash": "^4.17.11",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",

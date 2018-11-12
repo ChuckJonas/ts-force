@@ -29,12 +29,12 @@ export class Composite {
     private client: Rest;
 
     /**
-     * @param  {BaseConfig} config? Optional.  If not set, will use Rest.DEFAULT_CONFIG
+     * @param  {Rest} client? Optional.  If not set, will use Rest.DEFAULT_CONFIG
      */
-    constructor (config?: BaseConfig) {
+    constructor (client?: Rest) {
+        this.client = client || new Rest();
         this.compositeRequest = [];
         this.callbacks = [];
-        this.client = new Rest(config);
     }
     /**
      * @param  {CompositeRequest} request A request to add.

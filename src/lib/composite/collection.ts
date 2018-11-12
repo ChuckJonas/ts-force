@@ -33,10 +33,10 @@ export class CompositeCollection {
      * Creates a client that can send "Collection" requests to salesforce.
      * Collections request run in a single execution context
      * API version must be >= v42.0
-     * @param  {BaseConfig} config? Optional.  If not set, will use Rest.DEFAULT_CONFIG
+     * @param  {Rest} client? Optional.  If not set, will use Rest.DEFAULT_CONFIG
      */
-    constructor (config?: BaseConfig) {
-        this.client = new Rest(config);
+    constructor (client?: Rest) {
+        this.client = client || new Rest();
         this.endpoint = `/services/data/${this.client.version}/composite/sobjects`;
     }
 
@@ -49,7 +49,7 @@ export class CompositeCollection {
      */
     public insert = async (sobs: RestObject[], allOrNothing?: boolean, setId?: boolean): Promise<SaveResult[]> => {
         const dmlSobs = sobs.map((sob) => {
-            const dmlSob = sob.prepareForDML('insert');
+            const dmlSob = sob.prepareFor('insert');
             return dmlSob;
         });
         let payload: InsertRequest = {
@@ -78,14 +78,16 @@ export class CompositeCollection {
      * @param  {boolean} allOrNothing? if set true, salesforce will rollback on failures
      * @returns Promise<SaveResult[]> in order of pass SObjects
      */
-    public update = async (sobs: RestObject[], allOrNothing?: boolean): Promise<SaveResult[]> => {
+    public update = async (sobs: RestObject[], opts?: {allOrNothing?: boolean, sendAllFields?: boolean}): Promise<SaveResult[]> => {
+        opts = opts || {};
         const dmlSobs = sobs.map((sob) => {
-            const dmlSob = sob.prepareForDML('update', true);
+            const dmlSob = sob.prepareFor(opts.sendAllFields ? 'update_all' : 'update');
+            dmlSob['Id'] = sob.id;
             return dmlSob;
         });
         let payload: InsertRequest = {
             records: dmlSobs,
-            allOrNone: allOrNothing !== false
+            allOrNone: opts.allOrNothing !== false
         };
         return await this.client.handleRequest<SaveResult[]>(
             () => {
