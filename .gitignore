@@ -6,3 +6,6 @@ coverage
 ts-force-config.json
 .sfdx
 settings.json
+.nyc_output
+.env
+.vim-force*

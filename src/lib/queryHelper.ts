@@ -1,5 +1,7 @@
 import { SFieldProperties } from './sObjectDecorators';
+
 /**
+ * @deprecated: Use buildQuery() instead
  * Helper for generating field strings for SELECT clauses
  * @param  {(string|SFieldProperties)[]} fields 1 or more fields to add to select
  * @param  {(string|SFieldProperties)|(string|SFieldProperties} relationships? 0 or more relationships to append to each field.
@@ -21,6 +23,7 @@ export const generateSelect = (fields: (string|SFieldProperties)[], relationship
   };
 
   /**
+   * @deprecated: Use buildQuery() instead
    * Helper for generating the value portion of an IN (value) SOQL clause
    * @param  {T[]} objs Objects with values to operation on
    * @param  {(obj:T)=>string} valueSelector? optional function that will select the value.  If blank the object itself will be use

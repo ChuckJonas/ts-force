@@ -21,7 +21,8 @@ export enum SalesforceFieldType {
     EMAIL         = 'email',
     INT           = 'int',
     LOCATION      = 'location',
-    ID            = 'id'
+    ID            = 'id',
+    ANYTYPE       = 'anytype'
 }
 const sFieldMetadataKey = Symbol('sField');
 

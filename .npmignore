@@ -7,7 +7,12 @@ tslint.json
 .travis.yml
 .github
 build/test
-.env.test
+*.env
 coverage
 .nyc_output
 *.log
+.vscode
+.sfdx
+tsconfig.*
+tslint.json
+.vim-force*

@@ -4,59 +4,73 @@
 [![alt text](https://img.shields.io/npm/v/ts-force.svg)](https://www.npmjs.com/package/ts-force)
 [![alt text](https://img.shields.io/badge/license-BSD--3--CLAUSE-blue.svg)](https://github.com/ChuckJonas/ts-force/blob/master/LICENSE)
 
-A client for connecting with salesforce APIs written in typescript, which also provides types & mappings for your salesforce `sObjects`.
+A client/ORM for connecting with salesforce APIs written in typescript, which also provides types & field mappings for your salesforce `sObjects`.
 
-`npm install ts-force`
+## Install/Setup
+
+1. `npm install ts-force -S`
+2. `npm install ts-force-gen -D`
+3. This library uses ES6 `Proxy`.  If you need to support browsers which do not handle es6 (<IE11), then you must install and setup [polyfill-proxy](https://www.npmjs.com/package/proxy-polyfill)
+4. [configure ts-force-gen](https://github.com/ChuckJonas/ts-force-gen)
+5. generate classes: `npx ts-force-gen ...`
+
+After skimming the content below, I recommend checking out this step-by-step ["getting started" walk-through](https://gist.github.com/ChuckJonas/723c1e4f7ab9de67c88f48e2a627043f), which will walk you through the most common use-cases.
+
+### Code Generation
+
+This library is primarily intended to be used with code generation. Each Salesforce SObject you need to work with will get it's own class to handle mapping and DML.
+
+The [code generation command](https://github.com/ChuckJonas/ts-force-gen) has been split out into a separate package so it can easily be excluded from your production build.
+
+**NOTE:** Your installed version of `ts-force-gen` should ALWAYS match your `ts-force` Major and Minor version (EG: `1.5.x`).
 
 ## Usage
 
-After skimming the content below, I recommend checking out this step-by-step ["getting started" tutorial](https://gist.github.com/ChuckJonas/723c1e4f7ab9de67c88f48e2a627043f), which will walk you through the most common use-case.
+### Managing Connections
 
-### Generate code
+#### Global/Default Configuration
 
-This library is intended to be used with code generation. Each Salesforce SObject you need to work with will get it's own class to handle mapping and DML.
+For projects where you only need a single salesforce connection, this is the most convenient approach. Simply pass `accessToken` and `instanceUrl` into `setDefaultConfig()` and every action you take will automatically be authenticated to that connection
 
-The code generation has been split out into a separate package so it can easily be exclude from your build. Start by installing the generation package: `npm install -D ts-force-gen` and reviewing the [ts-force-gen readme](https://github.com/ChuckJonas/ts-force-gen).
+#### Multiple Connections
 
-### Configuring Client
+If needed, you can override the default configuration by explicitly passing a `Rest` client into any "entry point". Any `RestObjects` returned will inherit the connection of their initializer (see example below).
 
-To connect with salesforce, and `accessToken` and `instanceUrl` must be passed into `Rest()`.  However, if you're only need a single configuration, you can instead set the `DEFAULT_CONFIG`
-
-*** NOTE: Client Configuration has changed in `v1.1.0` in order to better support multiple configurations.  See details below to upgrade ***
-
-#### hosted on salesforce (visualforce)
-
-This will need to be injected in the visualforce page:
-
-```html
- <script type="text/javascript">
-        //rest details
-        const __ACCESSTOKEN__ = '{!$Api.Session_ID}';
-        //leave blank to use relative path
-        const __RESTHOST__ = '';
-    </script>
-```
-
-Then, in our app, we just need to setup `RestClient`.
+#### Example
 
 ```typescript
 import {setDefaultConfig, Rest} from 'ts-force';
 
-//let typescript know we expect these on global scope
-declare var __RESTHOST__ : string;
-declare var __ACCESSTOKEN__ : string;
-
-//setup default configurations
+//setup default conn
 setDefaultConfig({
-    instanceUrl = __RESTHOST__,
-    accessToken = __ACCESSTOKEN__
+    instanceUrl = 'https://test.salesforce.com',
+    accessToken = 'abc1234'
 });
 
-let defaultClient = new Rest(); // uses default configuration
-let otherClient = new Rest({accessToken: 'abc'}); // uses passed in config
+let defaultClient = new Rest(); // uses default conn
+
+let otherClient = new Rest({accessToken: 'abc123', instanceUrl: 'https://salesforce.com'});
+
+let defaultConnAcc = new Account({name: 'foo'}); // uses default conn
+
+let otherConnAcc = new Account({name: 'foo'}, otherClient); //uses other conn
+
+let defaultConnSelect = await Account.retrieve('select Id from Account');
+
+//retrieved objects inherit their connection!!!
+let otherConnSelect = await Account.retrieve('select Id from Account', otherClient);
+otherConnAcc = otherConnSelect[0];
+otherConnAcc.name = 'foo bar';
+otherConnAcc.update();
+
+//rest collection client
+let defaultConnBulk = new CompositeCollection();
+let otherConnBulk = new CompositeCollection(otherClient);
 ```
 
-#### hosted elsewhere
+### Getting an Access Token
+
+#### OAuth
 
 If you don't already have a accessToken, you can use the "username & password flow" in the `OAuth` module:
 
@@ -72,11 +86,32 @@ let config = new UsernamePasswordConfig(
   let oAuth = new OAuth(config);
   let config = await oAuth.initialize();
   setDefaultConfig(config);
-  ```
+```
+
+#### hosted on salesforce (visualforce)
+
+If you're running on a visualforce page, the easiest way to authenticate is just by injecting your access token into the global scope:
+
+```html
+ <script type="text/javascript">
+        //rest details
+        const __ACCESSTOKEN__ = '{!$Api.Session_ID}';
+        //leave blank to use relative path
+        const __RESTHOST__ = '';
+    </script>
+```
+
+Before you use these variables, you'll just need to let typescript know they exist:
+
+```typescript
+//let typescript know we expect these on global scope
+declare var __RESTHOST__ : string;
+declare var __ACCESSTOKEN__ : string;
+```
 
 ### DML
 
-Each DML operation is provided through the `RestObject` base class that each generated class implements.
+Single object DML operations are provided through the `RestObject` base class that each generated class implements.
 
 ```typescript
 
@@ -99,8 +134,20 @@ await acc.delete();
 ``` typescript
 
 await acc.insert(); //object properties not updated
-await acc.insert(true); //object properties updated from GET result
+await acc.insert({refresh:true}); //object properties updated from GET result
 
+```
+
+#### update sendAllFields
+
+In order to prevent unintendedly overwriting data, update calls will ONLY send fields which have been explicitly set.  In other words, values which were queried via a retrieve call, will not be included in the update request.
+
+If you wish to override this behavior, you can use:
+
+``` typescript
+await acc.update({sendAllFields:true}); //forces all properties to be included
+let bulk = new CompositeCollection();
+await bulk.update(accs, {sendAllFields:true});
 ```
 
 ### Querying Records
@@ -108,10 +155,22 @@ await acc.insert(true); //object properties updated from GET result
 You can Query records via a static method on each generated class.
 
 ```typescript
-
 let accs: Account[] = Account.retrieve('SELECT Id FROM Account');
-
 ```
+
+Type-safe queries can be generated by instead passing a function which, accepts a `FieldResolver` and returns `SOQLQueryParams`:
+
+```typescript
+let accs: Account[] = Account.retrieve(fields => {
+    return {
+        select: [
+            fields.select('id')
+        ]
+    }
+});
+```
+
+For additional details on building typed queries, see the [dedicated readme](https://github.com/ChuckJonas/ts-force/master/docs/query-builder.md).
 
 #### Relationships
 
@@ -119,11 +178,29 @@ Both Parent & Child relationships are supported.  Relational objects are also in
 
 ```typescript
 
-let accs: Account[] = await Account.retrieve(
-  `SELECT Id, Active__c,
-    (SELECT Name, Email, Parent_Object__c, Parent_Object__r.Type__c FROM Contacts)
-   FROM Account
-   WHERE Type__c = 'industry'`
+// SOQL:
+//// SELECT Id, Active__c,
+//    (SELECT Name, Email, Parent_Object__c, Parent_Object__r.Type__c FROM Contacts)
+//   FROM Account
+//   WHERE Type__c = 'industry'
+let accs: Account[] = await Account.retrieve(fields => {
+    return {
+        select: [
+            fields.select('id', 'active'),
+            fields.subQuery('contacts', cFields => {
+                return {
+                    select: [
+                        ...cFields.select('name', 'email', 'parentObjectId'),
+                        cFields.parent('parentObject').select('type')
+                    ]
+                }
+            })
+        ],
+        where: [
+            {field: fields.select(type), op: '=', val: 'industry'}
+        ]
+    }
+ }
 );
 
 let contact = records[0].Contacts[0];
@@ -132,37 +209,6 @@ await contact.update();
 let parentObj = contact.parentObject;
 parentObj.account = records[0].Id;
 await parentObj.update();
-```
-
-#### Using mapped properties to build queries
-
-Each SObject class contains field API information that can be helpful for building queries. For example, the above query can be rewritten as such:
-
-```typescript
-let qry =   `SELECT ${Account.id},
-                    ${Account.active},
-                    (
-                        SELECT ${Contact.name},
-                            ${Contact.email},
-                            ${Contact.parentObjectId},
-                            ${Contact.parentObject}.${ParentObject.type}
-                        FROM ${Account.contacts}
-                    )
-                FROM ${Account.API_NAME}
-                WHERE ${Account.type} = 'industry'`
-```
-
-Each field actually contains more than just the API name (`toString()` is just overridden for convince).  Other than `apiName` you can also access other property meta information like `readOnly`, `required`, `salesforceLabel`, etc.  This can be helpful for building dynamic user forms.
-
-To help make these queries more concise, there are currently 2 "Query Helpers": `generateSelect` & `generateInValues`.
-
-``` typescript
-let contactIds = ['2312321','2312312']
-
-//get all related account fields from a contact
-qry = `SELECT ${generateSelect(Object.values(Account.FIELDS), Contact.FIELDS.Account)}
-       FROM ${Contact.API_NAME}
-       WHERE Id IN (${generateInValues(contactIds)})`
 ```
 
 #### Non-Mapped Queries
@@ -250,7 +296,7 @@ let composite = new Composite()
     url: `sobjects/${acc.attributes.type}`,
     referenceId: compositeRef
   },
-  acc.prepareForDML('update')
+  acc.prepareFor('update')
 )
 .addRequest(
     {
@@ -291,11 +337,11 @@ global with sharing class MyRestResource {
 }
 ```
 
-You can use `prepareForDML('insert', true)` to map to a salesforce & then `Contact.fromSFObject(sfContact);` to map the response back to the ts-force class.
+You can use `prepareFor('apex')` to map to a salesforce & then `Contact.fromSFObject(sfContact);` to map the response back to the ts-force class.
 
 ```typescript
 const acc = (await Account.retrieve('SELECT Id, Name FROM Account LIMIT 1'))[0];
-const sfSob = acc.prepareForDML(true);
+const sfSob = acc.prepareFor('apex');
 const contacts = (await Rest.Instance.request.post<SObject[]>(
     '/services/apexrest/myservice',
     {acc: sfSob},
@@ -311,7 +357,7 @@ Contributions are encouraged!
 
 ### Running Tests
 
-In order to run unit test you must first create a .env.test file with the following credentials that link to a valid salesforce account
+In order to run unit test you must first create a `.env` file with the following credentials that link to a valid salesforce account
 
 ```bat
 
