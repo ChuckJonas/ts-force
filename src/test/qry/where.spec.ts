@@ -162,6 +162,24 @@ describe('Where Logic Tests', () => {
         expect(qry).to.equal(`SELECT Id FROM Account WHERE Name = '123' AND (AnnualRevenue >= 123 OR Active__c = true)`);
     });
 
+    it('1 AND (2 OR 3) implicit', () => {
+        let qry = buildQuery(Account, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    { field: fields.select('name'), op: '=', val: '123' },
+                    [
+                        { field: fields.select('annualRevenue'), op: '>=', val: 123 },
+                        'OR',
+                        { field: fields.select('active'), op: '=', val: true }
+                    ]
+                ]
+            };
+        });
+
+        expect(qry).to.equal(`SELECT Id FROM Account WHERE Name = '123' AND (AnnualRevenue >= 123 OR Active__c = true)`);
+    });
+
     it('(1 OR 2) AND (3 OR 4)', () => {
         let qry = buildQuery(Account, fields => {
             return {

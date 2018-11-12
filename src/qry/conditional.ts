@@ -24,6 +24,9 @@ export function composeConditionalClause (where: ConditionalClause): string {
         } else if (typeof c === 'string') {
             ret += ` ${c} `;
         } else if (Array.isArray(c)) {
+            if (ret.length && !(ret.endsWith('AND ') || ret.endsWith('OR '))) {
+                ret += ' AND ';
+            }
             ret += `(${composeConditionalClause(c)})`;
         }
     });

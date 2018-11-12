@@ -6,9 +6,10 @@
                 "src/*"
             ]
         },
-        "outDir": "./build",
-        "target": "es6",
+        "target": "es5",
+        "lib": ["es6"],
         "module": "commonjs",
+        "outDir": "./build",
         "moduleResolution": "node",
         "declaration": true,
         "experimentalDecorators": true,
