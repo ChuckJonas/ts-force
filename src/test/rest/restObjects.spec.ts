@@ -254,20 +254,15 @@ describe('Generated Classes', () => {
         });
 
         const sfSob = acc.prepareFor('apex');
-        try {
-            let data = (await new Rest().request.post<SObject>(
-                '/services/apexrest/myservice',
-                { acc: sfSob }
-            )).data;
-            const retAcc = Account.fromSFObject(data);
-            expect(acc.id).to.deep.equal(retAcc.id);
-            expect(acc.contacts[0].firstName).to.deep.equal(retAcc.contacts[0].firstName);
-            expect(acc.contacts[0].lastName).to.deep.equal(retAcc.contacts[0].lastName);
-            expect(acc.owner.email).to.deep.equal(retAcc.owner.email);
-        }catch (e) {
-            // console.log(e.request);
-            throw e;
-        }
+        let data = (await new Rest().request.post<SObject>(
+            '/services/apexrest/myservice',
+            { acc: sfSob }
+        )).data;
+        const retAcc = Account.fromSFObject(data);
+        expect(acc.id).to.deep.equal(retAcc.id);
+        expect(acc.contacts[0].firstName).to.deep.equal(retAcc.contacts[0].firstName);
+        expect(acc.contacts[0].lastName).to.deep.equal(retAcc.contacts[0].lastName);
+        expect(acc.owner.email).to.deep.equal(retAcc.owner.email);
     });
 
 });
