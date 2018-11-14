@@ -4,8 +4,6 @@ import { SFieldProperties } from '..';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export type SOQLQueryParams = Omit<SOQLQuery,'from'>;
-
 export interface OrderBy {
     field?: string;
     order?: 'ASC' | 'DESC';
@@ -30,9 +28,12 @@ export type ForClause = 'VIEW' | 'UPDATE' | 'REFERENCE';
 //     parameters: string[];
 // }
 
+// remove 'from' because it will always be set by query builder
+export type SOQLQueryParams = Omit<SOQLQuery,'from'>;
+
 export interface SOQLQuery {
     select: string[];
-    from?: string;
+    from: string;
     where?: ConditionalClause;
     groupBy?: GroupByClause;
     orderBy?: OrderByClause;

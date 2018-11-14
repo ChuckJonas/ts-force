@@ -6,6 +6,10 @@
 
 A client/ORM for connecting with salesforce APIs written in typescript, which also provides types & field mappings for your salesforce `sObjects`.
 
+## Getting Started
+
+After skimming the content below, I recommend going through the ["getting started" walk-through](https://github.com/ChuckJonas/ts-force/blob/master/docs/getting-started.md).
+
 ## Install/Setup
 
 1. `npm install ts-force -S`
@@ -13,8 +17,6 @@ A client/ORM for connecting with salesforce APIs written in typescript, which al
 3. This library uses ES6 `Proxy`.  If you need to support browsers which do not handle es6 (<IE11), then you must install and setup [polyfill-proxy](https://www.npmjs.com/package/proxy-polyfill)
 4. [configure ts-force-gen](https://github.com/ChuckJonas/ts-force-gen)
 5. generate classes: `npx ts-force-gen ...`
-
-After skimming the content below, I recommend checking out this step-by-step ["getting started" walk-through](https://gist.github.com/ChuckJonas/723c1e4f7ab9de67c88f48e2a627043f), which will walk you through the most common use-cases.
 
 ### Code Generation
 
@@ -170,7 +172,7 @@ let accs: Account[] = Account.retrieve(fields => {
 });
 ```
 
-For additional details on building typed queries, see the [dedicated readme](https://github.com/ChuckJonas/ts-force/master/docs/query-builder.md).
+For additional details on building typed queries, see the [dedicated readme](https://github.com/ChuckJonas/ts-force/blob/master/docs/query-builder.md).
 
 #### Relationships
 
@@ -342,7 +344,7 @@ You can use `prepareFor('apex')` to map to a salesforce & then `Contact.fromSFOb
 ```typescript
 const acc = (await Account.retrieve('SELECT Id, Name FROM Account LIMIT 1'))[0];
 const sfSob = acc.prepareFor('apex');
-const contacts = (await Rest.Instance.request.post<SObject[]>(
+const contacts = (await new Rest().post<SObject[]>(
     '/services/apexrest/myservice',
     {acc: sfSob},
 )).data.map((sfContact) => {

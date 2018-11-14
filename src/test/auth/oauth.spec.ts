@@ -1,7 +1,7 @@
 import { should } from 'chai';
 import 'mocha';
 import { OAuth, UsernamePasswordConfig } from '../../auth/oauth';
-import { Rest } from '../../lib/rest';
+import { Rest } from '../../rest/rest';
 import { setDefaultConfig } from '../../auth/baseConfig';
 // set up should
 should();
