@@ -28,11 +28,7 @@ export class Rest {
      * @returns Promise<SObjectDescribe>
      */
     public async getSObjectDescribe (apiName: string): Promise<SObjectDescribe> {
-        return await this.handleRequest<SObjectDescribe>(
-            () => {
-              return this.request.get(`/services/data/${this.version}/sobjects/${apiName}/describe/`);
-            }
-        );
+        return (await this.request.get(`/services/data/${this.version}/sobjects/${apiName}/describe/`)).data;
     }
 
     /**
@@ -42,56 +38,16 @@ export class Rest {
      */
     public async query <T> (query: string): Promise<QueryResponse<T>> {
         let qryString = encodeURIComponent(query);
-        return await this.handleRequest<QueryResponse<T>>(
-            () => {
-                return this.request.get<QueryResponse<T>>(`/services/data/${this.version}/query?q=${qryString}`);
-            }
-        );
+        return (await this.request.get<QueryResponse<T>>(`/services/data/${this.version}/query?q=${qryString}`)).data;
     }
 
     public async queryMore <T> (resp: QueryResponse<T>): Promise<QueryResponse<T>> {
-        return await this.handleRequest<QueryResponse<T>>(
-            () => {
-                return this.request.get<QueryResponse<T>>(resp.nextRecordsUrl);
-            }
-        );
+        return (await this.request.get<QueryResponse<T>>(resp.nextRecordsUrl)).data;
     }
 
     public async search <T> (query: string): Promise<SearchResponse<T>> {
         let qryString = encodeURIComponent(query);
-        return await this.handleRequest<SearchResponse<T>>(
-            () => {
-                return this.request.get<SearchResponse<T>>(`/services/data/${this.version}/search?q=${qryString}`);
-            }
-        );
-    }
-
-    /** axois error handler
-     * @param  {()=>AxiosPromise<T>} request
-     */
-    public handleRequest = async <T> (request: () => AxiosPromise<T>) => {
-        try {
-            return (await request()).data;
-        } catch (error) {
-            let details;
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                details = error.response;
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                details = error.request;
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                throw error;
-            }
-            try {
-                throw new Error(`${error} \n Details: ${JSON.stringify(details)}`);
-            }catch (ee) { console.log(error); throw error; }
-
-        }
+        return (await this.request.get<SearchResponse<T>>(`/services/data/${this.version}/search?q=${qryString}`)).data;
     }
 }
 

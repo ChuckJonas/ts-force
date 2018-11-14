@@ -908,7 +908,7 @@ export class User extends RestObject implements UserFields {
     public employeeNumber: string;
     @sField({ apiName: 'DelegatedApproverId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Delegated Approver ID', externalId: false })
     public delegatedApproverId: string;
-    @sField({ apiName: 'Manager', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Manager ID', externalId: false })
+    @sField({ apiName: 'Manager', createable: false, updateable: false, required: false, reference: () => { return User; }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Manager ID', externalId: false })
     public manager: User;
     @sField({ apiName: 'ManagerId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Manager ID', externalId: false })
     public managerId: string;
@@ -918,13 +918,13 @@ export class User extends RestObject implements UserFields {
     public lastPasswordChangeDate: Date;
     @sField({ apiName: 'CreatedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Created Date', externalId: false })
     public createdDate: Date;
-    @sField({ apiName: 'CreatedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
+    @sField({ apiName: 'CreatedBy', createable: false, updateable: false, required: false, reference: () => { return User; }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
     public createdBy: User;
     @sField({ apiName: 'CreatedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
     public createdById: string;
     @sField({ apiName: 'LastModifiedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Modified Date', externalId: false })
     public lastModifiedDate: Date;
-    @sField({ apiName: 'LastModifiedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
+    @sField({ apiName: 'LastModifiedBy', createable: false, updateable: false, required: false, reference: () => { return User; }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
     public lastModifiedBy: User;
     @sField({ apiName: 'LastModifiedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
     public lastModifiedById: string;
@@ -1110,11 +1110,11 @@ export class User extends RestObject implements UserFields {
     public userPreferencesPreviewCustomTheme: boolean;
     @sField({ apiName: 'UserPreferencesHasCelebrationBadge', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HasCelebrationBadge', externalId: false })
     public userPreferencesHasCelebrationBadge: boolean;
-    @sField({ apiName: 'Contact', createable: false, updateable: false, required: false, reference: () => { return Contact }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
+    @sField({ apiName: 'Contact', createable: false, updateable: false, required: false, reference: () => { return Contact; }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
     public contact: Contact;
     @sField({ apiName: 'ContactId', createable: true, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
     public contactId: string;
-    @sField({ apiName: 'Account', createable: false, updateable: false, required: false, reference: () => { return Account }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
+    @sField({ apiName: 'Account', createable: false, updateable: false, required: false, reference: () => { return Account; }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
     public account: Account;
     @sField({ apiName: 'AccountId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
     public accountId: string;
@@ -1335,18 +1335,17 @@ export class User extends RestObject implements UserFields {
     private static _fields: { [P in keyof UserFields]: SFieldProperties; };
 
     public static get FIELDS() {
-        return this._fields = this._fields ? this._fields : User.getPropertiesMeta<UserFields, User>(User)
+        return this._fields = this._fields ? this._fields : User.getPropertiesMeta<UserFields, User>(User);
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string): Promise<User[]> {
+    public static async retrieve (qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string): Promise<User[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(User, qryParam) : qryParam;
         return await RestObject.query<User>(User, qry);
 
     }
 
-    public static fromSFObject(sob: SObject): User {
+    public static fromSFObject (sob: SObject): User {
         return new User().mapFromQuery(sob);
     }
 }
-

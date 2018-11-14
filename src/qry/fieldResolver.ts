@@ -1,5 +1,5 @@
 import { SFieldProperties, RestObject } from '..';
-import { composeSOQLQuery, SObjectStatic, SOQLQuery } from './queryBuilder';
+import { composeSOQLQuery, SObjectStatic, SOQLQuery, SOQLQueryParams } from './queryBuilder';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
@@ -82,7 +82,7 @@ export class FieldResolver<T>{
      * @param relationship The child relationships key to generate the subquery for
      * @param func a function, which accepts a FieldResolver and returns the a Subquery
      */
-    public subQuery<K extends RelationPropNames<T>, T2 extends T[K] extends (infer U)[] ? U : never> (relationship: K, func: (fields: FieldResolver<T2>) => SOQLQuery): string {
+    public subQuery<K extends RelationPropNames<T>, T2 extends T[K] extends (infer U)[] ? U : never> (relationship: K, func: (fields: FieldResolver<T2>) => SOQLQueryParams): string {
         let relationMeta = this._obj.FIELDS[relationship as string];
         let fields = new FieldResolver(relationMeta.reference() as any as SObjectStatic<T2>);
         let subQuery = func(fields);

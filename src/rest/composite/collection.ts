@@ -56,14 +56,8 @@ export class CompositeCollection {
             records: dmlSobs,
             allOrNone: allOrNothing !== false
         };
-        let saveResults = await this.client.handleRequest<SaveResult[]>(
-            () => {
-                return this.client.request.post(
-                    this.endpoint,
-                    payload
-                );
-            }
-        );
+        let saveResults = (await this.client.request.post(this.endpoint,payload)).data;
+
         if (setId !== false) {
             for (let i = 0; i < saveResults.length; i++) {
                 sobs[i].id = saveResults[i].id;
@@ -89,14 +83,7 @@ export class CompositeCollection {
             records: dmlSobs,
             allOrNone: opts.allOrNothing !== false
         };
-        return await this.client.handleRequest<SaveResult[]>(
-            () => {
-                return this.client.request.patch(
-                    this.endpoint,
-                    payload
-                );
-            }
-        );
+        return (await this.client.request.patch(this.endpoint, payload)).data;
     }
 
     /**
@@ -106,11 +93,7 @@ export class CompositeCollection {
      * @returns Promise<BaseResult[]> in order of pass SObjects
      */
     public delete = async (sobs: RestObject[], allOrNothing?: boolean): Promise<BaseResult[]> => {
-        allOrNothing = allOrNothing ? allOrNothing : true;
-        return await this.client.handleRequest<BaseResult[]>(
-            () => {
-                return this.client.request.delete(`${this.endpoint}?ids=${sobs.map(s => s.id).join(',')}&allOrNone=${allOrNothing !== false}`);
-            }
-        );
+        allOrNothing = allOrNothing !== false;
+        return (await this.client.request.delete(`${this.endpoint}?ids=${sobs.map(s => s.id).join(',')}&allOrNone=${allOrNothing !== false}`)).data;
     }
 }

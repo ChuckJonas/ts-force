@@ -6,9 +6,10 @@ This walk-through will cover the most common use cases for `ts-force`.
 
 Before starting, make sure you have the [sfdx-cli](https://developer.salesforce.com/tools/sfdxcli) installed and a "throw away" org authenticated.
 
-1. `git clone https://github.com/ChuckJonas/ts-scratch-paper.git ts-force-tutorial`. cd into dir
-2. `npm install`
-3. `npm install ts-force -S`
+1. create a new typescript project. (You can clone this if you want one already configured with vscode debugging `git clone https://github.com/ChuckJonas/ts-scratch-paper.git ts-force-tutorial`).
+2. cd into dir
+3. `npm install`
+4. `npm install ts-force -S`
 
 ## generation
 
@@ -38,7 +39,7 @@ For `username`, you will need to use a sfdx-cli authorized user of a developer o
 2. Look at `./src/generated/sobs.ts` and scan over what has been created.  You'll see an interface and class for each SObject. Notice that the properties have all been 'prettified' to [javascript standard naming conventions](https://www.w3schools.com/js/js_conventions.asp).
 3. Open your dev org.  On Account, create a new text field with API name of `Name` (EG: `Name__c` once created)
 4. run `ts-force-gen -j ts-force-config.json` again
-5. Open `./src/generated/sobs.ts`.  Note the error due to duplicate identifier
+5. Open `./src/generated/sobs.ts`.  Note the error: `Duplicate identifier 'name'.`
 
 In this case, the auto-mapping is in conflict with the standard name field.  You can override the auto-mapping by replacing 'Account' literal string with:
 
@@ -61,20 +62,23 @@ In this case, the auto-mapping is in conflict with the standard name field.  You
 
 Now let dive into some code...
 
-1. create a new file `./src/index.ts`
-2. add imports:
+1. create/open a new file `./src/index.ts`
+2. add these imports:
 
 ```typescript
 import * as child_process from 'child_process'
-import {setDefaultConfig, generateSelect} from 'ts-force'
-import { Account, Contact } from '@src/generated/sobs'
+import {setDefaultConfig} from 'ts-force'
+import { Account, Contact } from './generated/sobs'
 ```
 
 1. add the following code:
 
 ```typescript
 // MAKE SURE TO UPDATE 'SET_THIS' to your dev org user
-let orgInfo: {result: {accessToken: string, instanceUrl: string}} = JSON.parse(child_process.execSync("sfdx force:org:display -u 'SET_THIS' --json").toString('utf8'));
+let user = 'SET_THIS'
+let orgInfo: {result: {accessToken: string, instanceUrl: string}} = JSON.parse(
+    child_process.execSync(`sfdx force:org:display -u ${user} --json`
+).toString('utf8'));
 
 setDefaultConfig({
     accessToken: orgInfo.result.accessToken,
@@ -82,31 +86,47 @@ setDefaultConfig({
 });
 ```
 
-The above snippet uses `sfdx-cli` to get the user token & instanceUrl for your dev org user (something you'd typically never do in a production app).
+The above snippet uses `sfdx-cli` to get the `accessToken` & `instanceUrl` for your dev org user.  In a real app, you would typically get these values from [oAuth or Visualforce getSessionId](https://github.com/ChuckJonas/ts-force#getting-an-access-token).
 
-Then is passes it to `setDefaultConfig`, which authenticates ts-force in the global context, which will be used by default, unless otherwise specified (see [readme](https://github.com/ChuckJonas/ts-force/blob/master/readme.md#Multiple_Connections)).
-
-See the [Authentication section](https://github.com/ChuckJonas/ts-force/blob/master/readme.md) for more details on how to setup authentication for typical projects.
+The configuration is passes it to `setDefaultConfig`, which creates a connection which will be used by default. (see [readme for using with multiple connections](https://github.com/ChuckJonas/ts-force#multiple-connections)).
 
 ## Retrieving Data
 
-Each generated class contains a static `retrieve` method that makes it simple to execute SOQL commands against the object.
+Each generated class contains a static `retrieve` method that makes it simple to execute SOQL commands against the object. The `retrieve` method returns a Promise with an array of the results (EG: `Promise<Contact[]>`).
 
 ```typescript
 (async()=>{ //async anonymous self-invoking function so we can use async/await :)
+    //put all example code inside here
+
     let contacts = await Contact.retrieve(`SELECT Email, Account.Name, Account.Name__c FROM Contact LIMIT 10`);
+    console.log(contacts.length);
+
 })().then(()=>console.log('done!'))
 ```
 
-The `retrieve` method returns a Promise with an array of the results (EG: `Promise<Contact[]>`).
+Add and run the following code (if you don't have any contacts in your org, create some test data to work with).
 
 ### The Query Builder
 
-Building SOQL queries with es6 template strings isn't too bad (you can access API names via `Account.FIELDS`), but we can do better!  Instead of passing a `string` into `retrieve` we can pass a "query builder" function.
+Building SOQL queries with es6 template strings isn't too bad (you can even access API names via `Account.FIELDS`), but we can do better!  This library allows you to build "typed" queries:
 
-The function takes a [FieldResolver](https://github.com/ChuckJonas/ts-force/blob/master/src/qry/fieldResolver.ts) and must return a [SOQLQueryParams](https://github.com/ChuckJonas/ts-force/blob/master/src/qry/queryBuilder.ts#L32) obj.  The `FieldResolver` allows you to map the generated fields back to API names.
+1. Add import `buildQuery` to `ts-force`
+2. Add and run the following code:
 
-**WARNING:** While building queries with `FieldResolver` & `SOQLQueryParams` ensures fields and basic SOQL semantics are correct, it is still possible to generate an invalid query.
+```typescript
+let soqlQry = buildQuery(Account, fields => {
+    return {
+        select: [fields.select('id')]
+    }
+});
+console.log(soqlQry); //SELECT Id FROM Account
+```
+
+The first parameter of the `buildQuery` function is the type for the generated SObject that we want to query on.  The second, is a function that takes a [FieldResolver](https://github.com/ChuckJonas/ts-force/blob/master/src/qry/fieldResolver.ts) and must return a [SOQLQueryParams](https://github.com/ChuckJonas/ts-force/blob/master/src/qry/queryBuilder.ts#L32) obj.  You can use the injected `FieldResolver` to map the generated fields back to API names and handles relationships in the context of the root object.
+
+**WARNING:** While "built queries" ensures fields and basic SOQL semantics are correct, it is still possible to generate an invalid query.
+
+Even better, the `retrieve()` method makes this even easier by allowing us to pass JUST the "builder" function:
 
 ```typescript
 let contacts = await Contact.retrieve((fields)=>{
@@ -124,12 +144,14 @@ let contacts = await Contact.retrieve((fields)=>{
 
 In the above code, note how `fields` is being used in various places above.
 
-- `fields.select('email')`: returns `Email`
+1. `fields.select('email')`
+   - returns `Email`
+   - Change `select('email')` to `select('efails')` and see what happens...
 
-- `fields.parent('account').select('name', 'nameCustom')`: returns `[Account.Name, Account.Name__c]`.  Note how we use es6 `...` syntax to merge these values
-
-Change `select('email')` to `select('efails')` and note what happens...
-Change `parent('account')` to `parent('owner')` and note what happens...
+2. `fields.parent('account').select('name', 'nameCustom')`
+    - returns `['Account.Name', 'Account.Name__c']`.
+    - Change `parent('account')` to `parent('owner')` and see what happens...
+    - Note how we use es6 `...` syntax to merge these values
 
 #### Child SubQueries
 
@@ -147,72 +169,87 @@ like so:
 let accountsWithContacts = await Account.retrieve((aFields) => {
     return {
         select: [
-            accFields.select('Id'),
-            accFields.subQuery('contacts', cFields => {
+            aFields.select('id'),
+            aFields.subQuery('contacts', cFields => {
                 return {
-                    select: cFields.select('name','phone','email'),
+                    select: cFields.select('name', 'phone', 'email'),
                     limit: 10
                 }
-            });
+            })
         ],
         limit: 5
     }
 })
+console.log(accountsWithContacts.length);
 ```
 
-#### Where
+#### Where Clause
 
 To filter our data, we can add a `where` to our `SOQLQueryParams`:
+To generate the following query:
+
+```sql
+SELECT Id
+FROM Account
+WHERE AnnualRevenue > 100
+AND (
+    Type IN ('b2b', 'customer') OR CreatedDate > 2018-11-14T12:46:01z
+)
+AND Id NOT IN (SELECT AccountId FROM Contact)
+```
+
+We can do this:
 
 ```typescript
 let filteredAccounts = await Account.retrieve((fields) => {
     return {
         select: [
-            fields.select('Id'),
+            fields.select('id'),
         ],
         where: [
-            {field: fields.select('annualRevenue'), op: '>', val: 100}
-            {field: fields.select('type'), op: 'IN', val: ['b2b', 'customer']},
-            'OR',
+            { field: fields.select('annualRevenue'), op: '>', val: 100 },
+            'AND',
             [
-                {field: fields.select('createdDate'), op: '>', new Date()}
-                'AND'
-                {
-                    field: fields.select('createdDate'),
-                    op: 'NOT IN',
-                    subqry: buildQuery(Contact, cFields => {
-                        return {
-                            select: [cFields.select('Id')]
-                        }
-                    })
-                }
-            ]
+                { field: fields.select('type'), op: 'IN', val: ['b2b', 'customer'] },
+                'OR',
+                { field: fields.select('createdDate'), op: '>', val: new Date() },
+            ],
+            'AND',
+            {
+                field: fields.select('id'),
+                op: 'NOT IN',
+                subqry: buildQuery(Contact, cFields => {
+                    return {
+                        select: [cFields.select('accountId')]
+                    }
+                })
+            }
         ]
     }
 });
 ```
 
-**NOTICE**
+**Notice how...**
 
-1. `val` is are automatically parsed to the correct format based on the type of the param
+1. `val` is automatically parsed to the correct format based on the type of the param.  You can pass a `format` function, if you need to override the default formatting.
 
-2. Logical Operators can be added between conditions using 'AND' | 'OR'. 'AND' is inferred if no operator is present
+2. Logical Operators can be added between conditions using `'AND' | 'OR'`. `'AND'` is inferred if no operator is present
 
-3. Logic Groupings can be can made by creating a new array
+3. Logic Groupings can be created by starting a new array
 
-4. You add subQueries passing a new query into `subqry`.
+4. You can add subQueries by passing SOQL into `subqry`.
 
 **TIP:** You'll notice that you can only select relationship fields on objects that you have pulled down.  If you need to filter on something outside your generated models, you can always just pass a string!
 
+For more details on building queries, see [this readme](https://github.com/ChuckJonas/ts-force/blob/master/docs/query-builder.md).
 
 ### Working with ts-force instances
 
-The generated classes make accessing data very easy.  Our queried fields, parent objects and related children are available:
+Once queried, the generated classes make working with our data very easy:
 
 ``` typescript
-//add code to end of queryRecords()
 let firstContact = contacts[0];
-console.log(firstContact.email, firstContact.account.name, firstContact.account.customName);
+console.log(firstContact.email, firstContact.account.name, firstContact.account.nameCustom);
 
 for(let acc of accountsWithContacts){
     for(let contact of acc.contacts){
@@ -221,7 +258,7 @@ for(let acc of accountsWithContacts){
 }
 ```
 
-Any SObject can be created via the constructor.  The constructor takes a single param which allows you to initialize the fields:
+Any SObject can be created via the constructor.  The first param to the constructor is an object of fields:
 
 ```typescript
 let account = new Account({
@@ -240,7 +277,7 @@ account.name = 'abc123';
 await account.update();
 ```
 
-You can specify parent relationships via the corresponding `Id` field or via external id
+You can specify parent relationships via the corresponding `Id` field (eg: `accountId`) or via external id
 
 ```typescript
 let contact1 = new Contact({
@@ -251,32 +288,32 @@ let contact1 = new Contact({
 await contact1.insert();
 console.log('contact1:',contact1.id);
 
+//add an My_External_Id__c field to account and regenerate classes to test
 let contact2 = new Contact({
     firstName: 'jimmy',
     lastName: 'smalls',
-    account: new Account({myExternalId:'123'}) //add an My_External_Id__c field to account to test this
+    account: new Account({myExternalId:'123'})
 });
 await contact2.insert();
 console.log('contact2:',contact2.id);
 ```
 
-NOTE: When executing DML on a record which children, the children ARE NOT included in the request!
+NOTE: When executing DML on a record with children, the children ARE NOT included in the request!
 
 ### BULK
 
-A frequent use-case you will encounter is that you will want to insert/update/delete many records.  Obviously making each callout one at a time is extremely inefficient.  In these cases you will want to use the "CompositeCollection" api.
+A frequent use-case you will encounter is that you will want to insert/update/delete a collection of records.  Obviously, making each call-out one at a time is extremely inefficient.  In these cases you will want to use the `CompositeCollection` api.
 
 1. Add import `CompositeCollection` to `ts-force`
 2. Add the following code:
 
 ```typescript
 let bulk = new CompositeCollection();
-let contacts = await Contact.retrieve(qry1 + ' LIMIT 1');
 for(let c of contacts){
-    c.description = 'updated by ts-force';
+    c.description = 'updated by ts-force bulk';
 }
 
-let results = await bulk.update(contacts, false); //allow partial update
+let results = await bulk.update(contacts, {allOrNothing: false}); //allow partial update
 //results returned in same order as request
 for(let i = 0; i < results.length; i++){
     let result = results[i];
@@ -290,22 +327,35 @@ for(let i = 0; i < results.length; i++){
 }
 ```
 
-
 ## Error Handling
 
-If a request fails, an Axios error can be caught.  Typically you'll want to handle this error something like this:
+When a request fails, the resulting error could be of a few different shapes. To make it easier to handle, there is a method `getStandardError(e: Error)`.
+
+This method does two things:
+
+1. It parses the error details (`errorDetails`) to a `{message: string, errorCode?: string}[]`.
+2. It classifies the error (`e`) as one of three types: `any|axios|composite`, making it possible to type discriminate the raw exception details if needed.
 
 ```typescript
 try{
     //bad request
     await Account.retrieve('SELECT Id, Foo FROM Account');
 }catch(e){
-    if(e.response){
-        console.log(e.response.status);
-        console.log(JSON.stringify(e.response.data));
-    }else{
-        console.log(e.toString());
+    let stderr = getStandardError(e);
+    //draft message for user
+    let showUIError = stderr.errorDetails.map(eDet => `${eDet.errorCode}: ${eDet.message}`).join(',');
+    //thrown error can be type discriminated
+    switch(stderr.type){
+        case 'any':
+            console.log(stderr.e.message);
+            break;
+        case 'axios':
+            console.log(stderr.e.request);
+            console.log(stderr.e.response);
+            break;
+        case 'composite':
+            console.log(stderr.e.compositeResponses);
+            break;
     }
-    //do something meaningful
 }
 ```
