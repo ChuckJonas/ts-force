@@ -1,9 +1,9 @@
-import { NonFunctionPropertyNames, NonReferencePropNames, ReferencePropNames, RelationPropNames, withoutTypeProp } from '../types';
+import { NonFunctionPropertyNames, NonReferencePropNames, ReferencePropNames, RelationPropNames, ExcludeNonSelectable } from '../types';
 
 import { SFieldProperties } from '..';
 import { composeSOQLQuery, SObjectStatic, SOQLQueryParams } from './queryBuilder';
 
-type NonReferenceNonFunctionPropNames<T> = NonReferencePropNames<withoutTypeProp<T>> & NonFunctionPropertyNames<withoutTypeProp<T>>;
+type NonReferenceNonFunctionPropNames<T> = NonReferencePropNames<ExcludeNonSelectable<T>> & NonFunctionPropertyNames<ExcludeNonSelectable<T>>;
 
 export type AggregateFunctions = 'MIN' | 'MAX' | 'COUNT' | 'AVG' | 'COUNT_DISTINCT' | 'SUM';
 export type CalendarFunctions = 'CALENDAR_MONTH' | 'CALENDAR_QUARTER' | 'CALENDAR_YEAR' | 'DAY_IN_MONTH' | 'DAY_IN_WEEK' | 'DAY_IN_YEAR' | 'DAY_ONLY'; // todo: add rest
