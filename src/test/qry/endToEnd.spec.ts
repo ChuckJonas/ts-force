@@ -1,6 +1,6 @@
 import { buildQuery } from '../..';
 import { expect } from 'chai';
-import { Account } from '../testAssets/sobs';
+import { Account } from '../assets/sobs';
 import 'mocha';
 
 describe('Select Tests', () => {

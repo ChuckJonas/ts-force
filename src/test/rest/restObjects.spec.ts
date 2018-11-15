@@ -1,8 +1,10 @@
 // // tslint:disable:no-unused-expression
-import { UsernamePasswordConfig, setDefaultConfig, OAuth, CompositeCollection, SObject, Rest } from '../..';
-import { expect } from 'chai';
-import { Account, Contact, User } from '../testAssets/sobs';
 import 'mocha';
+
+import { expect } from 'chai';
+
+import { CompositeCollection, OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig } from '../..';
+import { Account, Contact, User } from '../assets/sobs';
 
 describe('Generated Classes', () => {
     before(async () => {
@@ -11,7 +13,7 @@ describe('Generated Classes', () => {
         setDefaultConfig(await oAuth.initialize());
     });
 
-    it('RestObject: Parent Relationship', async () => {
+    it('Parent Relationship', async () => {
         let acc = new Account({
             name: 'test account',
             website: 'example.com'
@@ -35,7 +37,7 @@ describe('Generated Classes', () => {
         await acc.delete();
     });
 
-    it('RestObject: DML End-to-End', async () => {
+    it('DML End-to-End', async () => {
         let acc = new Account({
             name: 'test account'
         });
@@ -55,7 +57,7 @@ describe('Generated Classes', () => {
         expect(accounts.length).to.equal(0);
     });
 
-    it('RestObject: Stale Memory', async () => {
+    it('Stale Memory', async () => {
 
         let acc = new Account({
             name: 'stale name'
@@ -79,7 +81,7 @@ describe('Generated Classes', () => {
         await acc.delete();
     });
 
-    it('RestObject: refresh', async () => {
+    it('refresh', async () => {
 
         let acc = new Account({
             name: 'test account',
@@ -96,7 +98,7 @@ describe('Generated Classes', () => {
         await acc.delete();
     });
 
-    it('RestObject: Collections End-to-End', async () => {
+    it('Collections End-to-End', async () => {
         let acc = new Account({
             name: 'test account'
         });
@@ -252,20 +254,15 @@ describe('Generated Classes', () => {
         });
 
         const sfSob = acc.prepareFor('apex');
-        try {
-            let data = (await new Rest().request.post<SObject>(
-                '/services/apexrest/myservice',
-                { acc: sfSob }
-            )).data;
-            const retAcc = Account.fromSFObject(data);
-            expect(acc.id).to.deep.equal(retAcc.id);
-            expect(acc.contacts[0].firstName).to.deep.equal(retAcc.contacts[0].firstName);
-            expect(acc.contacts[0].lastName).to.deep.equal(retAcc.contacts[0].lastName);
-            expect(acc.owner.email).to.deep.equal(retAcc.owner.email);
-        }catch (e) {
-            // console.log(e.request);
-            throw e;
-        }
+        let data = (await new Rest().request.post<SObject>(
+            '/services/apexrest/myservice',
+            { acc: sfSob }
+        )).data;
+        const retAcc = Account.fromSFObject(data);
+        expect(acc.id).to.deep.equal(retAcc.id);
+        expect(acc.contacts[0].firstName).to.deep.equal(retAcc.contacts[0].firstName);
+        expect(acc.contacts[0].lastName).to.deep.equal(retAcc.contacts[0].lastName);
+        expect(acc.owner.email).to.deep.equal(retAcc.owner.email);
     });
 
 });

@@ -55,11 +55,7 @@ export class Composite {
         let payload: CompositePayload = {
             compositeRequest: this.compositeRequest
         };
-        let result = await this.client.handleRequest<CompositeResult>(
-            () => {
-                return this.client.request.post(`/services/data/${this.client.version}/composite`, payload);
-            }
-        );
+        let result = (await this.client.request.post(`/services/data/${this.client.version}/composite`, payload)).data;
 
         for (let i = 0; i < this.callbacks.length; i++) {
 
