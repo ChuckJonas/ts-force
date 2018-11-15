@@ -11,7 +11,7 @@ function genClasses () {
             process.exit(1);
         }
         let result = data.replace(/from "ts-force"/g, `from '../..'`);
-        fs.writeFile('./src/test/testAssets/sobs.ts', result, (err) => {
+        fs.writeFile('./src/test/assets/sobs.ts', result, (err) => {
             if (err) {
                 console.log(err);
                 process.exit(1);
