@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios';
 import { CompositeBatchResult } from '..';
-import { stringify } from 'querystring';
 
 export interface AxiosErrorException{
     type: 'axios';

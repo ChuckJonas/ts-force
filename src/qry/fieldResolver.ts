@@ -1,19 +1,9 @@
-import { SFieldProperties, RestObject } from '..';
-import { composeSOQLQuery, SObjectStatic, SOQLQuery, SOQLQueryParams } from './queryBuilder';
+import { NonFunctionPropertyNames, NonReferencePropNames, ReferencePropNames, RelationPropNames, withoutTypeProp } from '../types';
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+import { SFieldProperties } from '..';
+import { composeSOQLQuery, SObjectStatic, SOQLQueryParams } from './queryBuilder';
 
-export type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
-
-export type ReferencePropNames<T> = { [K in keyof T]: T[K] extends RestObject ? K : never }[keyof T];
-
-export type NonReferencePropNames<T> = { [K in keyof T]: T[K] extends RestObject ? never : K }[keyof T];
-
-export type RelationPropNames<T> = { [K in keyof T]: T[K] extends RestObject[] ? K : never }[keyof T];
-
-type withoutTypeProp<T> = Omit<T, '_TYPE_' | 'attributes' | '_modified'>;
-
-export type NonReferenceNonFunctionPropNames<T> = NonReferencePropNames<withoutTypeProp<T>> & NonFunctionPropertyNames<withoutTypeProp<T>>;
+type NonReferenceNonFunctionPropNames<T> = NonReferencePropNames<withoutTypeProp<T>> & NonFunctionPropertyNames<withoutTypeProp<T>>;
 
 export type AggregateFunctions = 'MIN' | 'MAX' | 'COUNT' | 'AVG' | 'COUNT_DISTINCT' | 'SUM';
 export type CalendarFunctions = 'CALENDAR_MONTH' | 'CALENDAR_QUARTER' | 'CALENDAR_YEAR' | 'DAY_IN_MONTH' | 'DAY_IN_WEEK' | 'DAY_IN_YEAR' | 'DAY_ONLY'; // todo: add rest

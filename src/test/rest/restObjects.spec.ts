@@ -98,6 +98,23 @@ describe('Generated Classes', () => {
         await acc.delete();
     });
 
+    it('query readonly fields', async () => {
+        let acc = new Account({name: 'testing'});
+        await acc.insert();
+
+        let acc2 = (await Account.retrieve(fields => {
+            return {
+                select: fields.select('lastModifiedDate', 'createdById'),
+                where: [
+                    {field: fields.select('id'), op: '=', val: acc.id}
+                ]
+            };
+        }))[0];
+
+        expect(acc2.lastModifiedDate).not.null;
+        expect(acc2.createdById).not.null;
+    });
+
     it('Collections End-to-End', async () => {
         let acc = new Account({
             name: 'test account'
@@ -213,6 +230,7 @@ describe('Generated Classes', () => {
                 name: 'acme'
             })
         });
+
         expect(c.prepareFor('apex')).to.deep.equal(
             {
                 Id: '123',

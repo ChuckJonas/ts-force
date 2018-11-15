@@ -1,6 +1,21 @@
 #Changelog
 
-## 2.0.0
+
+## 2.1.0
+
+- major performance optimization on retrieve calls (+70% improvement!)
+
+### Generation
+
+- Added readonly to generated fields which cannot be written to salesforce
+- reduced generated classes.  Removed SObjectFields concrete interface in favor for mapped type
+- Allow generation to multiple files
+
+## 2.0.3
+
+- Added `getStandardError()` for better error handling
+
+## 2.0.2
 
 - Added `buildQuery()`
 - Made updates ONLY send fields that have been explicitly set by default.  MUST OVERRIDE to send queried fields

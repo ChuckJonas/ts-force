@@ -11,6 +11,8 @@ export interface DMLResponse {
     warnings: string[];
 }
 
+const NAME_MAP_CACHE = new Map<string, Map<string, string>>();
+
 /**
 * Abstract Base class which provides DML to Generated SObjects
 * TODO: Need some way to support multiple configurations
@@ -316,6 +318,10 @@ export abstract class RestObject extends SObject {
 
     // returns a mapping of API Name (lower case) -> Property Name
     private getNameMapping (): Map<string, string> {
+        if (NAME_MAP_CACHE.has(this.attributes.type)) {
+            return NAME_MAP_CACHE.get(this.attributes.type);
+        }
+
         let apiNameMap = new Map<string, string>();
         for (let i in this) {
             // clean properties
@@ -328,6 +334,7 @@ export abstract class RestObject extends SObject {
                 }
             }
         }
+        NAME_MAP_CACHE.set(this.attributes.type, apiNameMap);
         return apiNameMap;
     }
 

@@ -1,3 +1,4 @@
+
 export { setDefaultConfig, BaseConfig } from './auth/baseConfig';
 export * from './auth/oauth';
 export * from './rest/sObject';
@@ -10,3 +11,4 @@ export * from './rest/compositeFieldTypes';
 export * from './rest/restObject';
 export * from './rest/utils';
 export * from './qry/index';
+export {FieldProps} from './types';
