@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { buildQuery } from '../..';
-import { Account } from '../testAssets/sobs';
+import { Account } from '../assets/sobs';
 
 describe('SubQueries Tests', () => {
     it('select (select x from y)', () => {

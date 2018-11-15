@@ -1,6 +1,5 @@
 import { RestObject } from '../restObject';
 import { Rest } from '../rest';
-import { BaseConfig } from '../../auth/baseConfig';
 
 export interface BatchResponse {
     hasErrors: boolean;
@@ -45,11 +44,7 @@ export class CompositeBatch {
     public async send (): Promise<BatchResponse> {
         let batchResponses: BatchResponse[] = [];
         for (let payload of this.createPayloads()) {
-            let batchResponse = await this.client.handleRequest<BatchResponse>(
-                () => {
-                    return this.client.request.post(`/services/data/${this.client.version}/composite/batch`, payload);
-                }
-            );
+            let batchResponse = (await this.client.request.post(`/services/data/${this.client.version}/composite/batch`, payload)).data;
 
             batchResponses.push(batchResponse);
             for (let i = 0; i < this.callbacks.length; i++) {

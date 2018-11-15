@@ -2,6 +2,7 @@ import { BatchResponse, Composite, CompositeBatch, CompositeBatchResult, Composi
 import { Rest } from './rest';
 import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObjectDecorators';
 import { SObject } from './sObject';
+import { CompositeError } from './utils';
 
 export interface DMLResponse {
     id: string;
@@ -97,11 +98,7 @@ export abstract class RestObject extends SObject {
             throw new Error('Must have Id to refresh!');
         }
 
-        let response = await this._client.handleRequest<this>(
-            () => {
-                return this._client.request.get(`${this.attributes.url}/${this.id}`);
-            }
-        );
+        let response = (await this._client.request.get(`${this.attributes.url}/${this.id}`)).data;
 
         this.mapFromQuery(response);
         return this;
@@ -170,11 +167,7 @@ export abstract class RestObject extends SObject {
         if (this.id == null) {
             throw new Error('Must have Id to Delete!');
         }
-        let response = await this._client.handleRequest<DMLResponse>(
-            () => {
-                return this._client.request.delete(`${this.attributes.url}/${this.id}`);
-            }
-        );
+        let response = (await this._client.request.delete(`${this.attributes.url}/${this.id}`)).data;
         return response;
     }
 
@@ -339,27 +332,35 @@ export abstract class RestObject extends SObject {
     }
 
     private handleCompositeErrors (compositeResult: CompositeResult) {
-        let errors: string[] = [];
+        let errors: CompositeBatchResult[] = [];
         compositeResult.compositeResponse.forEach(batchResult => {
             if (batchResult.httpStatusCode < 200 || batchResult.httpStatusCode >= 300) {
-                errors.push(batchResult.body);
+                let {httpStatusCode: statusCode, body: result} = batchResult;
+                errors.push({
+                    statusCode,
+                    result
+                });
             }
         });
 
         if (errors.length) {
-            throw new Error(JSON.stringify(errors));
+            let e =  new CompositeError('Failed to execute all Composite Batch Requests');
+            e.compositeResponses = errors;
+            throw e;
         }
     }
 
     private handleCompositeBatchErrors (batchResponse: BatchResponse) {
         if (batchResponse.hasErrors) {
-            let errors: string[] = [];
+            let errors: CompositeBatchResult[] = [];
             batchResponse.results.forEach(batchResult => {
                 if (batchResult.statusCode < 200 || batchResult.statusCode >= 300) {
-                    errors.push(batchResult.result);
+                    errors.push(batchResult);
                 }
             });
-            throw new Error(JSON.stringify(errors));
+            let e =  new CompositeError('Failed to execute all Composite Batch Requests');
+            e.compositeResponses = errors;
+            throw e;
         }
     }
 }
