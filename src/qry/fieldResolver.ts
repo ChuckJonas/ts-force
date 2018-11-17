@@ -1,9 +1,9 @@
-import { NonFunctionPropertyNames, NonReferencePropNames, ReferencePropNames, RelationPropNames, ExcludeNonSelectable } from '../types';
+import { NonFunctionPropertyNames, NonReferencePropNames, RelationPropNames, ExcludeNonQueryFields, ParentReferencePropNames } from '../types';
 
 import { SFieldProperties } from '..';
 import { composeSOQLQuery, SObjectStatic, SOQLQueryParams } from './queryBuilder';
 
-type NonReferenceNonFunctionPropNames<T> = NonReferencePropNames<ExcludeNonSelectable<T>> & NonFunctionPropertyNames<ExcludeNonSelectable<T>>;
+type NonReferenceNonFunctionPropNames<T> = NonReferencePropNames<ExcludeNonQueryFields<T>> & NonFunctionPropertyNames<ExcludeNonQueryFields<T>>;
 
 export type AggregateFunctions = 'MIN' | 'MAX' | 'COUNT' | 'AVG' | 'COUNT_DISTINCT' | 'SUM';
 export type CalendarFunctions = 'CALENDAR_MONTH' | 'CALENDAR_QUARTER' | 'CALENDAR_YEAR' | 'DAY_IN_MONTH' | 'DAY_IN_WEEK' | 'DAY_IN_YEAR' | 'DAY_ONLY'; // todo: add rest
@@ -59,7 +59,7 @@ export class FieldResolver<T>{
      * @param relation: a parent SObject relation key of the current SObject
      * @returns a new FieldResolver for the selected parent relation, with information to track the traversed relationships
      */
-    public parent<K extends ReferencePropNames<T>> (relation: K) {
+    public parent<K extends ParentReferencePropNames<T>> (relation: K) {
         let rel1Meta = this._obj.FIELDS[relation as string];
         let rel1 = rel1Meta.reference() as any as SObjectStatic<T[K]>;
         return new FieldResolver(rel1, [...this._traversed, ...[rel1Meta]]);
