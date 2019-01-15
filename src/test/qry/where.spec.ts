@@ -2,6 +2,7 @@ import { buildQuery } from '../..';
 import { expect } from 'chai';
 import { Account, Contact } from '../assets/sobs';
 import 'mocha';
+import { SOQLQueryParams } from '@src/qry';
 
 describe('Where Value Tests', () => {
     it('where x = string', () => {
@@ -129,7 +130,7 @@ describe('Where Logic Tests', () => {
     });
 
     it('1 OR 2', () => {
-        let qry = buildQuery(Account, fields => {
+        let qry = buildQuery(Account, (fields): SOQLQueryParams => {
             return {
                 select: [fields.select('id')],
                 where: [

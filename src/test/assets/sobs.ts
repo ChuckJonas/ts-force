@@ -228,7 +228,8 @@ export class Account extends RestObject {
         this.sLASerialNumber = void 0;
         this.sLAExpirationDate = void 0;
         this.testExternalId = void 0;
-        Object.assign(this, fields);
+
+        this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
@@ -462,7 +463,8 @@ export class Contact extends RestObject {
         this.cleanStatus = void 0;
         this.level = void 0;
         this.languages = void 0;
-        Object.assign(this, fields);
+
+        this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 

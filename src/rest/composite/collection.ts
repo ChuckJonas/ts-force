@@ -63,6 +63,7 @@ export class CompositeCollection {
                 sobs[i].id = saveResults[i].id;
             }
         }
+        this.resetModified(sobs, saveResults);
         return saveResults;
     }
 
@@ -83,7 +84,12 @@ export class CompositeCollection {
             records: dmlSobs,
             allOrNone: opts.allOrNothing !== false
         };
-        return (await this.client.request.patch(this.endpoint, payload)).data;
+        let results: SaveResult[] = (await this.client.request.patch(this.endpoint, payload)).data;
+
+        // clear out modified
+        this.resetModified(sobs, results);
+
+        return results;
     }
 
     /**
@@ -95,5 +101,14 @@ export class CompositeCollection {
     public delete = async (sobs: RestObject[], allOrNothing?: boolean): Promise<BaseResult[]> => {
         allOrNothing = allOrNothing !== false;
         return (await this.client.request.delete(`${this.endpoint}?ids=${sobs.map(s => s.id).join(',')}&allOrNone=${allOrNothing !== false}`)).data;
+    }
+
+    private resetModified = (sobs: RestObject[], results: SaveResult[]) => {
+         // clear out modified
+         for(let i = 0; i < results.length; i++){
+            if(results[i].success){
+                sobs[i]._modified.clear();
+            }
+        }
     }
 }

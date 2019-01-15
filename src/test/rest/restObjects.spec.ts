@@ -66,6 +66,8 @@ describe('Generated Classes', () => {
         expect(acc.id).to.not.be.null;
 
         let acc2 = (await Account.retrieve(`SELECT Id, Name FROM Account WHERE Id = '${acc.id}'`))[0];
+        expect(acc2.name).to.equal('stale name');
+
         acc2.name = 'new name';
         await acc2.update();
 
@@ -78,8 +80,28 @@ describe('Generated Classes', () => {
         expect(acc3.website).to.equal(acc.website);
         expect(acc3.name).to.equal(acc2.name);
 
+        //test update
+        let acc4 = new Account({
+            name: 'new name 2',
+            id: acc.id
+        });
+
+        await acc4.update();
+        let acc5 = (await Account.retrieve(`SELECT Name, Website FROM Account WHERE Id = '${acc.id}'`))[0];
+
+        expect(acc5.name).to.equal(acc4.name);
+
+        // Test preserve object
+
+        console.log(acc4._modified);
+        expect(acc4._modified.size).to.equal(0, 'expected modified to be cleared after update');
+
+        let acc6 = new Account(acc4);
+        expect(acc5._modified.size).to.equal(0);
+
         await acc.delete();
     });
+
 
     it('refresh', async () => {
 
@@ -133,6 +155,8 @@ describe('Generated Classes', () => {
 
         let bulk = new CompositeCollection();
         let insertResults = await bulk.insert(contacts);
+        expect(contacts[0]._modified.size).to.equal(0);
+
         insertResults.forEach(r => {
             if (!r.success) {
                 throw r.errors.map(e => e.message).join(', ');
@@ -148,6 +172,7 @@ describe('Generated Classes', () => {
         });
 
         let updateResults = await bulk.update(contacts);
+        expect(contacts[0]._modified.size).to.equal(0);
         updateResults.forEach(r => {
             if (!r.success) {
                 throw r.errors.map(e => e.message).join(', ');
