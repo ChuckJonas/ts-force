@@ -228,13 +228,12 @@ export class Account extends RestObject {
         this.sLASerialNumber = void 0;
         this.sLAExpirationDate = void 0;
         this.testExternalId = void 0;
-
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'Account' = 'Account';
-    public _TYPE_: 'Account' = 'Account';
+    public readonly _TYPE_: 'Account' = 'Account';
     private static _fields: { [P in keyof AccountFields]: SFieldProperties; };
 
     public static get FIELDS() {
@@ -463,13 +462,12 @@ export class Contact extends RestObject {
         this.cleanStatus = void 0;
         this.level = void 0;
         this.languages = void 0;
-
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'Contact' = 'Contact';
-    public _TYPE_: 'Contact' = 'Contact';
+    public readonly _TYPE_: 'Contact' = 'Contact';
     private static _fields: { [P in keyof ContactFields]: SFieldProperties; };
 
     public static get FIELDS() {
@@ -1004,12 +1002,12 @@ export class User extends RestObject {
         this.smallBannerPhotoUrl = void 0;
         this.mediumBannerPhotoUrl = void 0;
         this.isProfilePhotoActive = void 0;
-        Object.assign(this, fields);
+        this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'User' = 'User';
-    public _TYPE_: 'User' = 'User';
+    public readonly _TYPE_: 'User' = 'User';
     private static _fields: { [P in keyof UserFields]: SFieldProperties; };
 
     public static get FIELDS() {
