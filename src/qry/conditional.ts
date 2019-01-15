@@ -1,12 +1,17 @@
 import * as dateformat from 'dateformat';
 
-export type Operator = '=' | '!=' | '<=' | '>=' | '>' | '<' | 'LIKE' | 'IN' | 'NOT IN' | 'INCLUDES' | 'EXCLUDES';
+export type Operator = '=' | '!=' | '<=' | '>=' | '>' | '<' | 'LIKE' | 'INCLUDES' | 'EXCLUDES';
+
+export type ListOperator = | 'IN' | 'NOT IN';
+
 export type LogicalOperator = 'AND' | 'OR';
-export type Value = string | number | boolean | Date | string[];
-export type BaseCondition = { field: string, op: Operator, not?: boolean, formatter?: (d: Value) => string | string[] };
-export type PrimitiveConditionParams = { val: Value } & BaseCondition;
-export type SubQueryConditionParams = { subqry: string } & BaseCondition;
-export type ConditionParams = PrimitiveConditionParams | SubQueryConditionParams;
+export type Value = string | number | boolean | Date;
+export type ListValue = string[];
+export type BaseCondition = { field: string, not?: boolean, formatter?: (d: Value | ListValue) => string | string[] };
+export type PrimitiveConditionParams = { op: Operator, val: Value } & BaseCondition;
+export type ListConditionParams = { op: ListOperator, val: ListValue } & BaseCondition;
+export type SubQueryConditionParams = { op: ListOperator, subqry: string } & BaseCondition;
+export type ConditionParams = PrimitiveConditionParams | SubQueryConditionParams | ListConditionParams;
 export interface ConditionsList extends Array<Conditions> { }
 export type Conditions = ConditionParams | LogicalOperator | ConditionsList;
 
