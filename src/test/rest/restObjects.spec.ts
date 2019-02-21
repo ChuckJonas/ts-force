@@ -103,6 +103,23 @@ describe('Generated Classes', () => {
     });
 
 
+    it('prepareFor Update all', async () => {
+
+        let acc = new Account({
+            name: 'account'
+        });
+        await acc.insert();
+
+        let acc2 = (await Account.retrieve(`SELECT Id, Name, CreatedDate FROM Account WHERE Id = '${acc.id}'`))[0];
+
+        let sob = acc2.prepareFor('update_all');
+
+        expect(sob.CreatedDate).to.equal(undefined);
+
+        await acc.delete();
+    });
+
+
     it('refresh', async () => {
 
         let acc = new Account({
