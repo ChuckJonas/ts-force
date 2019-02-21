@@ -221,7 +221,7 @@ export abstract class RestObject extends SObject {
                         let canSend: boolean;
                         switch (type) {
                             case 'update_all':
-                                canSend = true;
+                                canSend = sFieldProps.updateable || isReference;
                                 break;
                             case 'insert':
                                 canSend = sFieldProps.createable || isReference;

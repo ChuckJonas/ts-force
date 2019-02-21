@@ -89,10 +89,11 @@ export class CompositeBatch {
      */
     public addUpdate (obj: RestObject, opts?: {callback?: ((n: CompositeBatchResult) => void), sendAllFields?: boolean}): CompositeBatch {
         opts = opts || {};
+        let sobData = obj.prepareFor(opts.sendAllFields ? 'update_all' : 'update');
         let request: BatchRequest = {
             method: 'PATCH',
             url: `${this.client.version}/sobjects/${obj.attributes.type}/${obj.id}`,
-            richInput: obj.prepareFor(opts.sendAllFields ? 'update_all' : 'update')
+            richInput: sobData
         };
         this.addBatchRequest(request, opts.callback);
         return this;
