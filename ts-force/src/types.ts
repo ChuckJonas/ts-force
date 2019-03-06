@@ -3,6 +3,8 @@ import { RestObject } from './rest/restObject';
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
+export type QueryField<T> = NonReferencePropNames<ExcludeNonQueryFields<T>> & NonFunctionPropertyNames<ExcludeNonQueryFields<T>>;
+
 export type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 
 export type ParentReferencePropNames<T> = { [K in keyof T]: T[K] extends RestObject ? K : never }[keyof T];

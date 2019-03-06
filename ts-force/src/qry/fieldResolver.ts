@@ -1,9 +1,7 @@
-import { NonFunctionPropertyNames, NonReferencePropNames, RelationPropNames, ExcludeNonQueryFields, ParentReferencePropNames } from '../types';
+import { RelationPropNames, ParentReferencePropNames, QueryField } from '../types';
 
 import { SFieldProperties } from '..';
 import { composeSOQLQuery, SObjectStatic, SOQLQueryParams } from './queryBuilder';
-
-type NonReferenceNonFunctionPropNames<T> = NonReferencePropNames<ExcludeNonQueryFields<T>> & NonFunctionPropertyNames<ExcludeNonQueryFields<T>>;
 
 export type AggregateFunctions = 'MIN' | 'MAX' | 'COUNT' | 'AVG' | 'COUNT_DISTINCT' | 'SUM';
 export type CalendarFunctions = 'CALENDAR_MONTH' | 'CALENDAR_QUARTER' | 'CALENDAR_YEAR' | 'DAY_IN_MONTH' | 'DAY_IN_WEEK' | 'DAY_IN_YEAR' | 'DAY_ONLY'; // todo: add rest
@@ -11,7 +9,7 @@ export type SOQLFunction = AggregateFunctions | CalendarFunctions;
 export interface FunctionField<T> {
     fn: SOQLFunction;
     alias?: string;
-    field: NonReferenceNonFunctionPropNames<T>;
+    field: QueryField<T>;
 }
 
 /**
@@ -32,9 +30,9 @@ export class FieldResolver<T>{
      * @param ...args: One or more Field Key of T (SObject) or FunctionType<T>
      * @returns string|string[] of resolved API name(s) matching how many params where passed in
      */
-    public select<F extends FunctionField<T>, P extends NonReferenceNonFunctionPropNames<T>> (f: P | F ): string;
-    public select<F extends FunctionField<T>, P extends NonReferenceNonFunctionPropNames<T>> (...args: Array<P | F> ): string[];
-    public select<F extends FunctionField<T>, P extends NonReferenceNonFunctionPropNames<T>> (...args: Array<P | F>): string | string[] {
+    public select<F extends FunctionField<T>, P extends QueryField<T>> (f: P | F ): string;
+    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F> ): string[];
+    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F>): string | string[] {
         let relations = this._traversed.map(r => r.apiName);
         let fieldArr = args.map(field => {
             if (typeof field === 'string') {
