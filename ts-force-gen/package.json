@@ -53,7 +53,7 @@
     "cli-spinner": "^0.2.8",
     "dotenv": "^4.0.0",
     "minimist": "^1.2.0",
-    "ts-simple-ast": "^18.0.0",
+    "ts-simple-ast": "^21.0.4",
     "tslib": "^1.6.0"
   }
 }
