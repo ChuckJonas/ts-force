@@ -31,21 +31,34 @@ export class FieldResolver<T>{
      * @returns string|string[] of resolved API name(s) matching how many params where passed in
      */
     public select<F extends FunctionField<T>, P extends QueryField<T>> (f: P | F ): string;
-    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F> ): string[];
-    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F>): string | string[] {
+    public select<F extends FunctionField<T>, P extends QueryField<T>> (arr: Array<P | F>): string[];
+    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F>): string[];
+    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F> | [Array<P | F>]): string | string[] {
         let relations = this._traversed.map(r => r.apiName);
-        let fieldArr = args.map(field => {
-            if (typeof field === 'string') {
-                return this._obj.FIELDS[field as string].apiName;
+        let fieldArr = [];
+        let toResolve = args;
+        if (args.length === 1 && Array.isArray(args[0])) {
+            toResolve = args[0];
+        }
+        toResolve.forEach(field => {
+            if (Array.isArray(field)) {
+                field.forEach(arrField => {
+                    if (typeof arrField === 'string') {
+                        fieldArr.push(this._obj.FIELDS[arrField as string].apiName);
+                    }else if (typeof arrField === 'object') {
+                        fieldArr.push(renderComplexTypeText(this._obj.FIELDS[arrField.field as string].apiName, arrField.fn, arrField.alias));
+                    }
+                });
+            }else if (typeof field === 'string') {
+                fieldArr.push(this._obj.FIELDS[field as string].apiName);
             }else if (typeof field === 'object') {
-                return renderComplexTypeText(this._obj.FIELDS[field.field as string].apiName, field.fn, field.alias);
+                fieldArr.push(renderComplexTypeText(this._obj.FIELDS[field.field as string].apiName, field.fn, field.alias));
             }
-            return this._obj.FIELDS[field as string].apiName;
         });
         let fields = fieldArr.map(field => {
             return [...relations, ...[field]].join('.');
         });
-        if (fields.length === 1) {
+        if (fields.length === 1 && !Array.isArray(args[0])) {
             return fields[0];
         }
         return fields;

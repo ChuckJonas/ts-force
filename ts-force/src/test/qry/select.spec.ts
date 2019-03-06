@@ -25,6 +25,24 @@ describe('Select Tests', () => {
     expect(qry).to.equal('SELECT AccountNumber, Active__c, Website FROM Account');
   });
 
+  it('select x with arr arg', () => {
+    let qry = buildQuery(Account, fields => {
+        return {
+            select: fields.select(['accountNumber'])
+        };
+    });
+    expect(qry).to.equal('SELECT AccountNumber FROM Account');
+  });
+
+  it('select x, y with arr arg', () => {
+    let qry = buildQuery(Account, fields => {
+        return {
+            select: fields.select(['accountNumber', 'active', 'website'])
+        };
+    });
+    expect(qry).to.equal('SELECT AccountNumber, Active__c, Website FROM Account');
+  });
+
   it('select x.y', () => {
     let qry = buildQuery(Contact, fields => {
         return {
