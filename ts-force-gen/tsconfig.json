@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "outDir": "build",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "declaration": true,
+    "importHelpers": true,
+    "listFiles": false,
+    "traceResolution": false,
+    "experimentalDecorators": true,
+    "strictNullChecks": false,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "pretty": true,
+    "lib" : [
+      "es6"
+    ],
+    "types" : [
+      "node"
+    ],
+    "baseUrl": ".", // required for "paths"
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "test/**/*.spec.ts"
+  ],
+  "exclude": [
+    "node_modules/**"
+  ]
+}

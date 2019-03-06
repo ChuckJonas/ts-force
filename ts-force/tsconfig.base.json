@@ -21,6 +21,7 @@
         "noUnusedLocals": false,
         "strictNullChecks": false,
         "strict": true,
+        "downlevelIteration": true,
         "allowSyntheticDefaultImports": true
     }
 }

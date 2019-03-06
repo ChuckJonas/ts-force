@@ -2,7 +2,7 @@
   "extends": "tslint-config-standard",
   "rules": {
   "ter-indent": [
-      4,
+      2,
       {
         "SwitchCase": 1
       }

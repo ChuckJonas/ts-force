@@ -6,6 +6,8 @@
 
 A client/ORM for connecting with salesforce APIs written in typescript, which also provides types & field mappings for your salesforce `sObjects`.
 
+**NOTE:** This repository has been refactored to include both `ts-force` and `ts-force-gen`.
+
 ## Getting Started
 
 The fastest way to get up and going with this library is to follow the ["Getting Started" tutorial](https://github.com/ChuckJonas/ts-force/wiki).
@@ -16,13 +18,14 @@ The fastest way to get up and going with this library is to follow the ["Getting
 3. This library uses ES6 `Proxy`.  If you need to support browsers which do not handle es6 (<IE11), then you must install and setup [polyfill-proxy](https://www.npmjs.com/package/proxy-polyfill)
 4. [configure ts-force-gen](https://github.com/ChuckJonas/ts-force-gen)
 5. generate classes: `npx ts-force-gen ...`
+
 ### Code Generation
 
 This library is primarily intended to be used with code generation. Each Salesforce SObject you need to work with will get it's own class to handle mapping and DML.
 
-The [code generation command](https://github.com/ChuckJonas/ts-force-gen) has been split out into a separate package so it can easily be excluded from your production build.
+The [code generation command](./ts-force-gen) has been split out into a separate package so it can easily be excluded from your production build.
 
-**NOTE:** Your installed version of `ts-force-gen` should ALWAYS match your `ts-force` Major and Minor version (EG: `1.5.x`).
+**NOTE:** Your installed version of `ts-force-gen` should ALWAYS match your `ts-force` Major and Minor version (EG: `1.5.1`).
 
 ## Usage
 

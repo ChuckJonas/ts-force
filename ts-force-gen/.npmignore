@@ -1,0 +1,13 @@
+src
+config
+examples
+test
+tsconfig.json
+tslint.json
+.travis.yml
+.github
+build/test
+.env.test
+coverage
+.nyc_output
+*.log

@@ -1,61 +1,27 @@
 {
-  "name": "ts-force",
-  "version": "2.1.5",
-  "description": "a typescript client for connecting with salesforce APIs",
-  "main": "build/index.js",
-  "typings": "build/index.d.ts",
+  "name": "ts-force-project",
+  "version": "1.0.0",
+  "description": "",
+  "config": {
+    "version": "2.1.10"
+  },
+  "scripts": {
+    "postinstall": "cd ts-force && npm install && cd ../ts-force-gen && npm install",
+    "test": "cd ts-force && npm test && cd ../ts-force-gen && npm test",
+    "ci": "cd ts-force && npm run generate-test-classes",
+    "prepublishOnly": "echo 'Code should be published from individual directories' && exit 1",
+    "publishRuntime": "cd ts-force && npm version $npm_package_config_version && npm publish",
+    "publishGen": "cd ts-force-gen && npm version $npm_package_config_version && npm publish",
+    "publishBoth": "npm run publishRuntime && npm run publishGen"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ChuckJonas/ts-force.git"
   },
-  "keywords": [
-    "salesforce",
-    "typescript",
-    "orm",
-    "rest"
-  ],
-  "contributors": [
-    "Charlie Jonas",
-    "David Staley"
-  ],
-  "license": "BSD-3-Clause",
-  "scripts": {
-    "clean": "rm -r -f ./build",
-    "clean-build": "npm run clean && npm run build",
-    "link": "npm run clean-build && npm link",
-    "test": "mocha --timeout 10000 -r dotenv/config -r ts-node/register 'src/test/**/*.spec.ts'",
-    "build": "npx tsc -p tsconfig.build.json",
-    "ci": "npm install -g ts-force-gen@next && npm run generate-test-classes",
-    "generate-test-classes": "npx ts-node ./src/test/setup",
-    "prepublishOnly": "npm run clean-build"
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChuckJonas/ts-force/issues"
   },
-  "engines": {
-    "node": ">=4.5"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/dateformat": "^1.0.1",
-    "@types/mocha": "^5.2.5",
-    "@types/nock": "^8.2.1",
-    "@types/node": "^8.0.4",
-    "@types/qs": "^6.5.0",
-    "chai": "^4.2.0",
-    "dotenv": "^4.0.0",
-    "mocha": "^5.2.0",
-    "nock": "^9.3.3",
-    "node-env-run": "^3.0.2",
-    "source-map-support": "^0.4.18",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.4.3",
-    "tslint-config-standard": "^6.0.1",
-    "typescript": "^3.0.3"
-  },
-  "dependencies": {
-    "axios": "^0.18.0",
-    "dateformat": "^3.0.3",
-    "lodash": "^4.17.11",
-    "qs": "^6.5.1",
-    "reflect-metadata": "^0.1.10",
-    "tslib": "^1.6.0"
-  }
+  "homepage": "https://github.com/ChuckJonas/ts-force#readme"
 }

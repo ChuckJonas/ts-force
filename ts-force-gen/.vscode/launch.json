@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Generator",
+            "protocol": "inspector",
+            "program": "${workspaceRoot}/src/index.ts",
+            "runtimeArgs": [
+                "--nolazy",
+                "-r",
+                "${workspaceRoot}/node_modules/ts-node/register"
+            ],
+            "envFile": "${workspaceFolder}/.env",
+            "sourceMaps": true,
+            "args": [
+                "-e", "-o", "${workspaceFolder}/test/generated", "-s", "Account,Contact,Opportunity,OpportunityLineItem,User,Lead,Case"
+            ],
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha All",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-r",
+                "dotenv/config",
+                "dotenv_config_path=.env",
+                "-r",
+                "ts-node/register",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/test/**/*-spec.ts",
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "protocol": "inspector"
+        },
+    ]
+}
