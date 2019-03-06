@@ -53,6 +53,18 @@ describe('Where Value Tests', () => {
         expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name IN ('123', '456')`);
     });
 
+    it('where x = NULL', () => {
+        let qry = buildQuery(Contact, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    { field: fields.select('name'), op: '=', val: null }
+                ]
+            };
+        });
+        expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name = NULL`);
+    });
+
     it('where x = number', () => {
         let qry = buildQuery(Account, fields => {
             return {

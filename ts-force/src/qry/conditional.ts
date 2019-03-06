@@ -49,7 +49,9 @@ function composeConditional (params: ConditionParams) {
         if (params.formatter) {
             val = params.formatter(primVal);
         } else { // render defaults
-            if (typeof primVal === 'number' || typeof primVal === 'boolean') {
+            if (primVal === null) {
+                val = 'NULL';
+            }else if (typeof primVal === 'number' || typeof primVal === 'boolean') {
                 val = primVal.toString();
             } else if (Array.isArray(primVal)) {
                 if (!operator) { // default
