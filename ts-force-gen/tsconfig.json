@@ -9,6 +9,7 @@
     "listFiles": false,
     "traceResolution": false,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "strictNullChecks": false,
     "downlevelIteration": true,
     "sourceMap": true,

@@ -10,6 +10,7 @@ import { SObjectConfig } from './sObjectConfig';
 import { cleanAPIName, replaceSource } from './util';
 import { Spinner } from 'cli-spinner';
 
+// Config Types
 interface AuthConfig extends BaseConfig {
     username?: string;
     password?: string;
@@ -25,19 +26,45 @@ interface Config {
     outPath?: string;
 }
 
+// execute
 run();
 
 function run () {
-
-    generateLoadConfig().then(config => {
-        generate(config);
-    }).catch(e => {
+    checkVersion()
+    .then(generateLoadConfig)
+    .then((config) => generate(config))
+    .catch(e => {
         console.log('Failed to Generate!  Check config or cmd params!');
         console.log(e);
     });
-
 }
 
+// Checks that the installed version ts-force matches this package
+async function checkVersion () {
+
+    let tsforce: string;
+    let gen: string;
+    try {
+        gen = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8')).version;
+    }catch (e) {
+        console.warn('Failed to detect package version of ts-force-gen');
+        return;
+    }
+
+    for (let dir of fs.readdirSync('node_modules')) {
+        try {
+            if (dir === 'ts-force') {
+                let json = JSON.parse(fs.readFileSync(path.join('node_modules', dir, 'package.json'), 'utf8'));
+                tsforce = json.version;
+            }
+        }catch (err) {}
+    }
+    if (gen !== tsforce) {
+        console.warn(`The version of ts-force-gen (${gen}) should match ts-force (${tsforce}). It is recommended that you run \`npm install -D ts-force-gen@${tsforce}\` and regenerate classes`);
+    }
+}
+
+// init the configuration, either from a json file, command line augs or both
 async function generateLoadConfig (): Promise<Config> {
 
     let args = minimist(process.argv.slice(2));
@@ -126,6 +153,7 @@ async function generateLoadConfig (): Promise<Config> {
 
 }
 
+// generate the classes
 async function generate (config: Config) {
 
     let spinner = new Spinner({
@@ -140,7 +168,6 @@ async function generate (config: Config) {
     spinner.setSpinnerDelay(20);
     spinner.start();
 
-    const ast = new Ast();
     let save = true;
     if (config.outPath == null) {
         config.outPath = './placeholder.ts';
