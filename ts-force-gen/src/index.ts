@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 /// <reference types="node" />
-import { BaseConfig, OAuth, UsernamePasswordConfig, setDefaultConfig } from '../../ts-force';
+import { BaseConfig, OAuth, UsernamePasswordConfig, setDefaultConfig } from '../../ts-force/src';
 import Ast, { SourceFile } from 'ts-simple-ast';
 import { SObjectGenerator, TS_FORCE_IMPORTS } from './sObjectGenerator';
 import * as minimist from 'minimist';
