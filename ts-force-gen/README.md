@@ -1,8 +1,6 @@
 # ts-force-gen
 
-[![alt text](https://travis-ci.org/ChuckJonas/ts-force-gen.svg?branch=master)](https://travis-ci.org/ChuckJonas/ts-force-gen)
 [![alt text](https://img.shields.io/npm/v/ts-force-gen.svg)](https://www.npmjs.com/package/ts-force-gen)
-[![alt text](https://img.shields.io/badge/license-BSD--3--CLAUSE-blue.svg)](https://github.com/ChuckJonas/ts-force-gen/blob/master/LICENSE)
 
 A command line utility for generating SObject classes to use with [ts-force](https://www.npmjs.com/package/ts-force)
 
@@ -16,9 +14,9 @@ Files can be generated using the following command:
 
 `ts-force-gen`
 
-***NOTE: Because these generated files control seralization of readonly properties, you should generated the classes using a user that as the same permissions as the end user.***
+***NOTE: Because these generated files control serialization of read-only properties, you should generated the classes using a user that as the same permissions as the end user.***
 
-#### Configuartions file
+#### Configuration file
 
 A json configuration file can be passed in via the `--config|c` arg:
 
@@ -72,13 +70,13 @@ You can also pass the access token and instance url in directly
   },
 ```
 
-*enviroment configuration:*
+*environment configuration:*
 
-You can also authinicate via Username/Password via enviroment variables by setting the `-e` flag (helpful for CI or build processes):
+You can also authenticate via Username/Password via environment variables by setting the `-e` flag (helpful for CI or build processes):
 
 `ts-force-gen -e -o 'Account,Contact'`
 
-The following variables must be set on in your enviroment:
+The following variables must be set on in your environment:
 
 ```bat
 
@@ -90,9 +88,9 @@ HOST =
 
 ```
 
-#### Commandline Args
+#### Command line Args
 
-Most args can also be passed in directly via the command line.  Config File & args will be merged with args taking presidence.
+Most args can also be passed in directly via the command line.  Config File & args will be merged with args taking precedence.
 
 - `--username|-u`: If specified with password, generation will attempt to use username/password flow.  If specified without password, will attempt to retrieve token and instance url using `sfdx force:org:display` (Requires that [sfdx cli](https://developer.salesforce.com/tools/sfdxcli) is installed).
 - `--password|-p`: password to use in auth flow
@@ -100,10 +98,10 @@ Most args can also be passed in directly via the command line.  Config File & ar
 - `--clientSecret|-s`: client Secret of connected app for username/password auth flow
 - `--accessToken|-a`: access token to connect to tooling API with.  Not required if using the user/pass or dx flows
 - `--instanceUrl|-i`: instance of the org your connecting with.  Not required if using the user/pass or dx flows
-- `--sobs|-s`: list of comma seperated sobs to generate classes for
+- `--sobs|-s`: list of comma separated sobs to generate classes for
 - `--outputFile|-o`: where to save the output
 - `--config|-j`: path to config JSON file.  If specified, all above args will pull from file instead
-- `-e`: authinicate using .env vars
+- `-e`: authenticate using .env vars
 
 #### generated classes
 
@@ -123,22 +121,5 @@ Contributions are encouraged!
 
 ### Running Tests
 
-In order to run unit test you must first create a .env.test file with the following credentals that link to a valid salesforce account
-
-```bat
-
-CLIENT_ID =
-CLIENT_SECRET =
-USERNAME =
-PASSWORD =
-HOST =
-
-```
-
-***WARNING: TESTS WILL RUN DML IN THIS ORG!!!! While they attempt to reset state after complete, failed tests could result in test data being left behind ***
-
-Then run:
-
 - `npm run build`: to make sure the program is built
-- `npm run generate-test-code`: to generated classes which are used in the tests
 - `npm test`:to run tests which assert the generated classes are valid & working

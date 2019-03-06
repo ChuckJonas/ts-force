@@ -372,6 +372,8 @@ HOST =
 
 ```
 
+***WARNING: TESTS WILL RUN DML IN THIS ORG!!!! While they attempt to reset state after complete, failed tests could result in test data being left behind ***
+
 Then run `npm test`
 
 Test should run automagically
