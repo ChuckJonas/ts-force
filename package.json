@@ -6,7 +6,7 @@
     "version": "2.1.10"
   },
   "scripts": {
-    "postinstall": "cd ts-force && npm install && cd ../ts-force-gen && npm install",
+    "postinstall": "cd ts-force && npm install && npm run build && cd ../ts-force-gen && npm install",
     "test": "cd ts-force && npm test && cd ../ts-force-gen && npm test",
     "ci": "cd ts-force && npm run generate-test-classes",
     "prepublishOnly": "echo 'Code should be published from individual directories' && exit 1",

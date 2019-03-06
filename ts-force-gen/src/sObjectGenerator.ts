@@ -1,5 +1,5 @@
 
-import { ChildRelationship, Field, Rest, SalesforceFieldType, SFieldProperties, SObjectDescribe } from '../../ts-force/src';
+import { ChildRelationship, Field, Rest, SalesforceFieldType, SFieldProperties, SObjectDescribe } from '../../ts-force';
 import { ClassDeclaration, DecoratorStructure, JSDocStructure, PropertyDeclarationStructure, Scope, SourceFile, ImportDeclarationStructure } from 'ts-simple-ast';
 import { SObjectConfig } from './sObjectConfig';
 import { cleanAPIName, replaceSource } from './util';
