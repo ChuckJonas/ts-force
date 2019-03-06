@@ -11,4 +11,4 @@ export * from './rest/compositeFieldTypes';
 export * from './rest/restObject';
 export * from './rest/utils';
 export * from './qry/index';
-export {FieldProps} from './types';
+export {FieldProps, QueryField} from './types';
