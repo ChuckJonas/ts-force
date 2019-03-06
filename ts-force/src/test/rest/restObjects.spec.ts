@@ -92,8 +92,6 @@ describe('Generated Classes', () => {
         expect(acc5.name).to.equal(acc4.name);
 
         // Test preserve object
-
-        console.log(acc4._modified);
         expect(acc4._modified.size).to.equal(0, 'expected modified to be cleared after update');
 
         let acc6 = new Account(acc4);

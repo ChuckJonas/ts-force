@@ -17,12 +17,36 @@ describe('Where Value Tests', () => {
         expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name = '123'`);
     });
 
+    it('where x = string (defaulted)', () => {
+        let qry = buildQuery(Contact, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    { field: fields.select('name'), val: '123' }
+                ]
+            };
+        });
+        expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name = '123'`);
+    });
+
     it('where x IN string[]', () => {
         let qry = buildQuery(Contact, fields => {
             return {
                 select: [fields.select('id')],
                 where: [
                     { field: fields.select('name'), op: 'IN', val: ['123', '456'] }
+                ]
+            };
+        });
+        expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name IN ('123', '456')`);
+    });
+
+    it('where x IN string[] (defaulted)', () => {
+        let qry = buildQuery(Contact, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    { field: fields.select('name'), val: ['123', '456'] }
                 ]
             };
         });
@@ -61,7 +85,8 @@ describe('Where Value Tests', () => {
                     {
                         field: fields.select('createdDate'),
                         op: '=',
-                        val: new Date(1999, 0, 1, 1, 1, 1) }
+                        val: new Date(1999, 0, 1, 1, 1, 1)
+                    }
                 ]
             };
         });
@@ -90,7 +115,7 @@ describe('Where Value Tests', () => {
                         field: fields.select('id'),
                         op: 'IN',
                         subqry: buildQuery(Contact, cFields => {
-                            return { select: [cFields.select('accountId')]};
+                            return { select: [cFields.select('accountId')] };
                         })
                     }
                 ]
@@ -107,7 +132,7 @@ describe('Where Logic Tests', () => {
             return {
                 select: [fields.select('id')],
                 where: [
-                    { field: fields.select('name'), op: '=', val: '123', not: true}
+                    { field: fields.select('name'), op: '=', val: '123', not: true }
                 ]
             };
         });

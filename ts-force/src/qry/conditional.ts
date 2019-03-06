@@ -8,8 +8,8 @@ export type LogicalOperator = 'AND' | 'OR';
 export type Value = string | number | boolean | Date;
 export type ListValue = string[];
 export type BaseCondition = { field: string, not?: boolean, formatter?: (d: Value | ListValue) => string | string[] };
-export type PrimitiveConditionParams = { op: Operator, val: Value } & BaseCondition;
-export type ListConditionParams = { op: ListOperator, val: ListValue } & BaseCondition;
+export type PrimitiveConditionParams = { op?: Operator, val: Value } & BaseCondition;
+export type ListConditionParams = { op?: ListOperator, val: ListValue } & BaseCondition;
 export type SubQueryConditionParams = { op: ListOperator, subqry: string } & BaseCondition;
 export type ConditionParams = PrimitiveConditionParams | SubQueryConditionParams | ListConditionParams;
 export interface ConditionsList extends Array<Conditions> { }
@@ -52,6 +52,9 @@ function composeConditional (params: ConditionParams) {
             if (typeof primVal === 'number' || typeof primVal === 'boolean') {
                 val = primVal.toString();
             } else if (Array.isArray(primVal)) {
+                if (!operator) { // default
+                    operator = 'IN';
+                }
                 val = `(${primVal.map(v => `'${v}'`).join(', ')})`;
             } else if (primVal instanceof Date) {
                 val = dateformat(primVal, "yyyy-mm-dd'T'hh:MM:ssz");
@@ -60,11 +63,16 @@ function composeConditional (params: ConditionParams) {
             }
         }
     }
+
+    if (!operator) { // default
+        operator = '=';
+    }
+
     return `${not ? `NOT ` : ''}${field} ${operator} ${val}`;
 }
 
 function isCondition (arg: any): arg is ConditionParams {
-    return arg.op !== undefined && arg.field !== undefined && (arg.val !== undefined || arg.subqry !== undefined);
+    return arg.field !== undefined && (arg.val !== undefined || arg.subqry !== undefined);
 }
 
 function isSubQueryCondition (arg: any): arg is SubQueryConditionParams {

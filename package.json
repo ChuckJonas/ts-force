@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "config": {
-    "version": "2.1.17"
+    "version": "2.1.18"
   },
   "scripts": {
     "postinstall": "cd ts-force && npm install && npm run build && cd ../ts-force-gen && npm install",

@@ -63,6 +63,7 @@ where: [
 ```
 
 - putting `AND` between conditions is option.  If left out, it will be implied (but may be included for readability)
+- If `op` is omitted, it defaults to either `=` | `IN` depending on the `value`
 - Nested arrays are grouped using parentheses
 - unfortunately, nothing prevents multiple LogicalConditions (`AND|OR`) from occurring back to back.  If this happens, the last condition will be used
 
