@@ -1,6 +1,6 @@
 import { FieldResolver } from './fieldResolver';
 import { ConditionalClause, composeConditionalClause } from './conditional';
-import { SFieldProperties } from '..';
+import { SFieldProperties, FieldProps } from '..';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
@@ -46,7 +46,7 @@ export interface SOQLQuery {
 export interface SObjectStatic<T> {
     new(): T;
     API_NAME: string;
-    FIELDS: Partial<{ [key: string]: SFieldProperties; }>;
+    FIELDS: { [K in keyof FieldProps<T>]: SFieldProperties; };
 }
 
 /**

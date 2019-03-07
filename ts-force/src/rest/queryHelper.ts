@@ -11,7 +11,7 @@ export const generateSelect = (fields: (string|SFieldProperties)[], relationship
     fields = fields.filter(f => typeof f === 'string' ? true : !f.reference); // get rid of any relationship fields as they are not valid
     let fieldNames = fields.map(f => typeof f === 'string' ? f : f.apiName);
     if (relationships) {
-      let relationshipName;
+      let relationshipName: string;
       if (relationships instanceof Array) {
         relationshipName = relationships.map(f => typeof f === 'string' ? f : f.apiName).join('.');
       }else {
@@ -30,7 +30,7 @@ export const generateSelect = (fields: (string|SFieldProperties)[], relationship
    * @returns string formatted for a select values. eg: `'abc','123'`
    */
   export const generateInValues = <T>(objs: T[], valueSelector?: (obj: T) => string) => {
-    let values;
+    let values: any[];
     if (valueSelector) {
         values = objs.map(valueSelector);
     }else {

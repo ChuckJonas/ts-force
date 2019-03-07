@@ -55,7 +55,7 @@ export class CompositeBatch {
             }
         }
         let hasErrors = false;
-        let results = [];
+        let results: CompositeBatchResult[] = [];
         for (let br of batchResponses) {
             if (br.hasErrors) {
                 hasErrors = true;

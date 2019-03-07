@@ -35,12 +35,12 @@ export class FieldResolver<T>{
     public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F>): string[];
     public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F> | [Array<P | F>]): string | string[] {
         let relations = this._traversed.map(r => r.apiName);
-        let fieldArr = [];
+        let fieldArr: string[] = [];
         let toResolve = args;
         if (args.length === 1 && Array.isArray(args[0])) {
             toResolve = args[0];
         }
-        toResolve.forEach(field => {
+        for (let field of toResolve) {
             if (Array.isArray(field)) {
                 field.forEach(arrField => {
                     if (typeof arrField === 'string') {
@@ -54,7 +54,7 @@ export class FieldResolver<T>{
             }else if (typeof field === 'object') {
                 fieldArr.push(renderComplexTypeText(this._obj.FIELDS[field.field as string].apiName, field.fn, field.alias));
             }
-        });
+        }
         let fields = fieldArr.map(field => {
             return [...relations, ...[field]].join('.');
         });
@@ -91,6 +91,6 @@ export class FieldResolver<T>{
     }
 }
 
-export function renderComplexTypeText (field, func, alias?) {
+export function renderComplexTypeText (field: string, func: string, alias?: string) {
     return `${func}(${field})${alias ? ' ' + alias : ''}`;
 }
