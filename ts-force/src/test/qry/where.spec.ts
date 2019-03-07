@@ -135,6 +135,29 @@ describe('Where Value Tests', () => {
         });
         expect(qry).to.equal(`SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact)`);
     });
+
+    it('where id IN (subqry with where)', () => {
+        let qry = buildQuery(Account, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    {
+                        field: fields.select('id'),
+                        op: 'IN',
+                        subqry: buildQuery(Contact, cFields => {
+                            return {
+                                select: [cFields.select('accountId')],
+                                where: [
+                                    {field: cFields.select('name'), val: 'asdf'}
+                                ]
+                            };
+                        })
+                    }
+                ]
+            };
+        });
+        expect(qry).to.equal(`SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Name = 'asdf')`);
+    });
 });
 
 describe('Where Logic Tests', () => {
