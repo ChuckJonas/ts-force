@@ -33,7 +33,7 @@ export abstract class RestObject extends SObject {
         this._client = client || new Rest();
     }
 
-    protected initObject (fields?: FieldProps<RestObject>) {
+    protected initObject (fields?: Partial<FieldProps<RestObject>>) {
         if (fields) {
             if (fields instanceof RestObject) {
                 this._modified = fields._modified;

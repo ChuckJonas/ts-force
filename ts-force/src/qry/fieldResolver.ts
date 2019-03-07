@@ -16,8 +16,8 @@ export interface FunctionField<T> {
  * Allow resolving of object API
  */
 export class FieldResolver<T>{
-    private readonly _traversed: SFieldProperties[];
-    private readonly _obj: SObjectStatic<T>;
+    protected readonly _traversed: SFieldProperties[];
+    protected readonly _obj: SObjectStatic<T>;
 
     constructor (obj: SObjectStatic<T>, traversed?: SFieldProperties[]) {
         this._obj = obj;

@@ -83,7 +83,7 @@ export class SObjectGenerator {
             this.sourceFile.addTypeAlias({
                 name: this.fieldsTypeAlias,
                 isExported: true, // to maintain backwords compat
-                type: `FieldProps<${this.sObjectConfig.className}>`
+                type: `Partial<FieldProps<${this.sObjectConfig.className}>>`
             });
 
             await this.generateSObjectClass(this.sObjectConfig);
@@ -147,14 +147,14 @@ export class SObjectGenerator {
             name: '_fields',
             scope: Scope.Private,
             isStatic: true,
-            type: `{[P in keyof ${this.fieldsTypeAlias}]: SFieldProperties;}`
+            type: `{[P in keyof FieldProps<${className}>]: SFieldProperties;}`
         });
 
         classDeclaration.addGetAccessor({
             name: 'FIELDS',
             scope: Scope.Public,
             isStatic: true,
-            bodyText: `return this._fields = this._fields ? this._fields : ${className}.getPropertiesMeta<${this.fieldsTypeAlias},${className}>(${className})`
+            bodyText: `return this._fields = this._fields ? this._fields : ${className}.getPropertiesMeta<FieldProps<${className}>,${className}>(${className})`
         });
 
         classDeclaration.addMethod({

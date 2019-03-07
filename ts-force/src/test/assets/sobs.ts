@@ -1,6 +1,6 @@
 import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps } from '../..';
 
-export type AccountFields = FieldProps<Account>;
+export type AccountFields = Partial<FieldProps<Account>>;
 
 /**
  * Generated class for Account
@@ -234,10 +234,10 @@ export class Account extends RestObject {
 
     public static API_NAME: 'Account' = 'Account';
     public readonly _TYPE_: 'Account' = 'Account';
-    private static _fields: { [P in keyof AccountFields]: SFieldProperties; };
+    private static _fields: { [P in keyof FieldProps<Account>]: SFieldProperties; };
 
     public static get FIELDS() {
-        return this._fields = this._fields ? this._fields : Account.getPropertiesMeta<AccountFields, Account>(Account)
+        return this._fields = this._fields ? this._fields : Account.getPropertiesMeta<FieldProps<Account>, Account>(Account)
     }
 
     public static async retrieve(qryParam: ((fields: FieldResolver<Account>) => SOQLQueryParams) | string): Promise<Account[]> {
@@ -252,7 +252,7 @@ export class Account extends RestObject {
     }
 }
 
-export type ContactFields = FieldProps<Contact>;
+export type ContactFields = Partial<FieldProps<Contact>>;
 
 /**
  * Generated class for Contact
@@ -468,10 +468,10 @@ export class Contact extends RestObject {
 
     public static API_NAME: 'Contact' = 'Contact';
     public readonly _TYPE_: 'Contact' = 'Contact';
-    private static _fields: { [P in keyof ContactFields]: SFieldProperties; };
+    private static _fields: { [P in keyof FieldProps<Contact>]: SFieldProperties; };
 
     public static get FIELDS() {
-        return this._fields = this._fields ? this._fields : Contact.getPropertiesMeta<ContactFields, Contact>(Contact)
+        return this._fields = this._fields ? this._fields : Contact.getPropertiesMeta<FieldProps<Contact>, Contact>(Contact)
     }
 
     public static async retrieve(qryParam: ((fields: FieldResolver<Contact>) => SOQLQueryParams) | string): Promise<Contact[]> {
@@ -486,7 +486,7 @@ export class Contact extends RestObject {
     }
 }
 
-export type UserFields = FieldProps<User>;
+export type UserFields = Partial<FieldProps<User>>;
 
 /**
  * Generated class for User
@@ -1008,10 +1008,10 @@ export class User extends RestObject {
 
     public static API_NAME: 'User' = 'User';
     public readonly _TYPE_: 'User' = 'User';
-    private static _fields: { [P in keyof UserFields]: SFieldProperties; };
+    private static _fields: { [P in keyof FieldProps<User>]: SFieldProperties; };
 
     public static get FIELDS() {
-        return this._fields = this._fields ? this._fields : User.getPropertiesMeta<UserFields, User>(User)
+        return this._fields = this._fields ? this._fields : User.getPropertiesMeta<FieldProps<User>, User>(User)
     }
 
     public static async retrieve(qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string): Promise<User[]> {
