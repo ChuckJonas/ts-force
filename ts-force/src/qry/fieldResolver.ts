@@ -16,12 +16,12 @@ export interface FunctionField<T> {
  * Allow resolving of object API
  */
 export class FieldResolver<T>{
-    protected readonly _traversed: SFieldProperties[];
+    public readonly traversed: SFieldProperties[];
     protected readonly _obj: SObjectStatic<T>;
 
     constructor (obj: SObjectStatic<T>, traversed?: SFieldProperties[]) {
         this._obj = obj;
-        this._traversed = traversed || [];
+        this.traversed = traversed || [];
     }
 
     /**
@@ -34,7 +34,7 @@ export class FieldResolver<T>{
     public select<F extends FunctionField<T>, P extends QueryField<T>> (arr: Array<P | F>): string[];
     public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F>): string[];
     public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F> | [Array<P | F>]): string | string[] {
-        let relations = this._traversed.map(r => r.apiName);
+        let relations = this.traversed.map(r => r.apiName);
         let fieldArr: string[] = [];
         let toResolve = args;
         if (args.length === 1 && Array.isArray(args[0])) {
@@ -73,7 +73,7 @@ export class FieldResolver<T>{
     public parent<K extends ParentReferencePropNames<T>> (relation: K) {
         let rel1Meta = this._obj.FIELDS[relation as string];
         let rel1 = rel1Meta.reference() as any as SObjectStatic<T[K]>;
-        return new FieldResolver(rel1, [...this._traversed, ...[rel1Meta]]);
+        return new FieldResolver(rel1, [...this.traversed, ...[rel1Meta]]);
     }
 
     /**
