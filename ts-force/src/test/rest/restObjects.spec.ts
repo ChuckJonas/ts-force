@@ -100,7 +100,6 @@ describe('Generated Classes', () => {
         await acc.delete();
     });
 
-
     it('prepareFor Update all', async () => {
 
         let acc = new Account({
@@ -117,6 +116,29 @@ describe('Generated Classes', () => {
         await acc.delete();
     });
 
+    it('multi-picklists', async () => {
+
+        const {multiPick} = Account.PICKLIST;
+
+        let acc = new Account({
+            name: 'account',
+            multiPick: [multiPick.ONE, multiPick.TWO]
+
+        });
+        await acc.insert();
+
+        let acc2 = (await Account.retrieve(`SELECT Id, MultiPick__c, CreatedDate FROM Account WHERE Id = '${acc.id}'`))[0];
+
+        expect(acc2.multiPick.length).to.equal(2);
+        expect(acc2.multiPick.indexOf(multiPick.ONE)).to.be.greaterThan(-1);
+        expect(acc2.multiPick.indexOf(multiPick.TWO)).to.be.greaterThan(-1);
+
+        let sob = acc2.prepareFor('apex');
+
+        expect(sob.MultiPick__c).to.equal(`${multiPick.ONE};${multiPick.TWO}`);
+
+        await acc.delete();
+    });
 
     it('refresh', async () => {
 

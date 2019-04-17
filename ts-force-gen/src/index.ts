@@ -22,7 +22,8 @@ interface AuthConfig extends BaseConfig {
 interface Config {
     auth?: AuthConfig;
     sObjects?: (string|SObjectConfig)[];
-    exclude?: Map<string, string[]>;
+    generatePicklists?: boolean;
+    enforcePicklistValues?: false | 'ALWAYS' | 'RESTRICTED';
     outPath?: string;
 }
 
@@ -189,6 +190,14 @@ async function generate (config: Config) {
             };
         }else {
             objConfig = item;
+        }
+
+        if (config.generatePicklists && objConfig.generatePicklists === undefined) {
+            objConfig.generatePicklists = true;
+        }
+
+        if (config.enforcePicklistValues && objConfig.enforcePicklistValues === undefined) {
+            objConfig.enforcePicklistValues = config.enforcePicklistValues;
         }
 
         objConfig.autoConvertNames = objConfig.autoConvertNames || true;

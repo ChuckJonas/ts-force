@@ -41,7 +41,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'BillingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Billing Longitude', externalId: false })
     public billingLongitude: number;
     @sField({ apiName: 'BillingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Billing Geocode Accuracy', externalId: false })
-    public billingGeocodeAccuracy: string;
+    public billingGeocodeAccuracy: Account.PICKLIST.billingGeocodeAccuracy;
     @sField({ apiName: 'BillingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Billing Address', externalId: false })
     public readonly billingAddress: string;
     @sField({ apiName: 'ShippingStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Shipping Street', externalId: false })
@@ -59,7 +59,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'ShippingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Shipping Longitude', externalId: false })
     public shippingLongitude: number;
     @sField({ apiName: 'ShippingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Shipping Geocode Accuracy', externalId: false })
-    public shippingGeocodeAccuracy: string;
+    public shippingGeocodeAccuracy: Account.PICKLIST.shippingGeocodeAccuracy;
     @sField({ apiName: 'ShippingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Shipping Address', externalId: false })
     public readonly shippingAddress: string;
     @sField({ apiName: 'Phone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Account Phone', externalId: false })
@@ -119,7 +119,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'JigsawCompanyId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Jigsaw Company ID', externalId: false })
     public readonly jigsawCompanyId: string;
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
-    public cleanStatus: string;
+    public cleanStatus: Account.PICKLIST.cleanStatus;
     @sField({ apiName: 'AccountSource', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Account Source', externalId: false })
     public accountSource: string;
     @sField({ apiName: 'DunsNumber', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'D-U-N-S Number', externalId: false })
@@ -137,7 +137,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'DandbCompanyId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'D&B Company ID', externalId: false })
     public dandbCompanyId: string;
     @sField({ apiName: 'CustomerPriority__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Customer Priority', externalId: false })
-    public customerPriority: string;
+    public customerPriority: Account.PICKLIST.customerPriority;
     @sField({ apiName: 'SLA__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'SLA', externalId: false })
     public sLA: string;
     @sField({ apiName: 'Active__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Active', externalId: false })
@@ -152,6 +152,8 @@ export class Account extends RestObject {
     public sLAExpirationDate: Date;
     @sField({ apiName: 'Test_External_Id__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Test External Id', externalId: true })
     public testExternalId: string;
+    @sField({ apiName: 'MultiPick__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.MULTIPICKLIST, salesforceLabel: 'MultiPick', externalId: false })
+    public multiPick: Account.PICKLIST.multiPick[];
 
     constructor(fields?: AccountFields, client?: Rest) {
         super('Account', client);
@@ -228,6 +230,7 @@ export class Account extends RestObject {
         this.sLASerialNumber = void 0;
         this.sLAExpirationDate = void 0;
         this.testExternalId = void 0;
+        this.multiPick = void 0;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
@@ -249,6 +252,145 @@ export class Account extends RestObject {
 
     public static fromSFObject(sob: SObject): Account {
         return new Account().mapFromQuery(sob);
+    }
+}
+
+export namespace Account {
+    export namespace PICKLIST {
+        export enum type {
+            PROSPECT = "Prospect",
+            CUSTOMER__DIRECT = "Customer - Direct",
+            CUSTOMER__CHANNEL = "Customer - Channel",
+            CHANNEL_PARTNER__RESELLER = "Channel Partner / Reseller",
+            INSTALLATION_PARTNER = "Installation Partner",
+            TECHNOLOGY_PARTNER = "Technology Partner",
+            OTHER = "Other"
+        }
+
+        export enum billingGeocodeAccuracy {
+            ADDRESS = "Address",
+            NEARADDRESS = "NearAddress",
+            BLOCK = "Block",
+            STREET = "Street",
+            EXTENDEDZIP = "ExtendedZip",
+            ZIP = "Zip",
+            NEIGHBORHOOD = "Neighborhood",
+            CITY = "City",
+            COUNTY = "County",
+            STATE = "State",
+            UNKNOWN = "Unknown"
+        }
+
+        export enum shippingGeocodeAccuracy {
+            ADDRESS = "Address",
+            NEARADDRESS = "NearAddress",
+            BLOCK = "Block",
+            STREET = "Street",
+            EXTENDEDZIP = "ExtendedZip",
+            ZIP = "Zip",
+            NEIGHBORHOOD = "Neighborhood",
+            CITY = "City",
+            COUNTY = "County",
+            STATE = "State",
+            UNKNOWN = "Unknown"
+        }
+
+        export enum industry {
+            AGRICULTURE = "Agriculture",
+            APPAREL = "Apparel",
+            BANKING = "Banking",
+            BIOTECHNOLOGY = "Biotechnology",
+            CHEMICALS = "Chemicals",
+            COMMUNICATIONS = "Communications",
+            CONSTRUCTION = "Construction",
+            CONSULTING = "Consulting",
+            EDUCATION = "Education",
+            ELECTRONICS = "Electronics",
+            ENERGY = "Energy",
+            ENGINEERING = "Engineering",
+            ENTERTAINMENT = "Entertainment",
+            ENVIRONMENTAL = "Environmental",
+            FINANCE = "Finance",
+            FOOD__BEVERAGE = "Food & Beverage",
+            GOVERNMENT = "Government",
+            HEALTHCARE = "Healthcare",
+            HOSPITALITY = "Hospitality",
+            INSURANCE = "Insurance",
+            MACHINERY = "Machinery",
+            MANUFACTURING = "Manufacturing",
+            MEDIA = "Media",
+            NOT_FOR_PROFIT = "Not For Profit",
+            RECREATION = "Recreation",
+            RETAIL = "Retail",
+            SHIPPING = "Shipping",
+            TECHNOLOGY = "Technology",
+            TELECOMMUNICATIONS = "Telecommunications",
+            TRANSPORTATION = "Transportation",
+            UTILITIES = "Utilities",
+            OTHER = "Other"
+        }
+
+        export enum ownership {
+            PUBLIC = "Public",
+            PRIVATE = "Private",
+            SUBSIDIARY = "Subsidiary",
+            OTHER = "Other"
+        }
+
+        export enum rating {
+            HOT = "Hot",
+            WARM = "Warm",
+            COLD = "Cold"
+        }
+
+        export enum cleanStatus {
+            MATCHED = "Matched",
+            DIFFERENT = "Different",
+            ACKNOWLEDGED = "Acknowledged",
+            NOTFOUND = "NotFound",
+            INACTIVE = "Inactive",
+            PENDING = "Pending",
+            SELECTMATCH = "SelectMatch",
+            SKIPPED = "Skipped"
+        }
+
+        export enum accountSource {
+            WEB = "Web",
+            PHONE_INQUIRY = "Phone Inquiry",
+            PARTNER_REFERRAL = "Partner Referral",
+            PURCHASED_LIST = "Purchased List",
+            OTHER = "Other"
+        }
+
+        export enum customerPriority {
+            HIGH = "High",
+            LOW = "Low",
+            MEDIUM = "Medium"
+        }
+
+        export enum sLA {
+            GOLD = "Gold",
+            SILVER = "Silver",
+            PLATINUM = "Platinum",
+            BRONZE = "Bronze"
+        }
+
+        export enum active {
+            NO = "No",
+            YES = "Yes"
+        }
+
+        export enum upsellOpportunity {
+            MAYBE = "Maybe",
+            NO = "No",
+            YES = "Yes"
+        }
+
+        export enum multiPick {
+            ONE = "one",
+            THREE = "three",
+            TWO = "two"
+        }
     }
 }
 
@@ -295,7 +437,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'OtherLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Other Longitude', externalId: false })
     public otherLongitude: number;
     @sField({ apiName: 'OtherGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Other Geocode Accuracy', externalId: false })
-    public otherGeocodeAccuracy: string;
+    public otherGeocodeAccuracy: Contact.PICKLIST.otherGeocodeAccuracy;
     @sField({ apiName: 'OtherAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Other Address', externalId: false })
     public readonly otherAddress: string;
     @sField({ apiName: 'MailingStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Mailing Street', externalId: false })
@@ -313,7 +455,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'MailingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Mailing Longitude', externalId: false })
     public mailingLongitude: number;
     @sField({ apiName: 'MailingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Mailing Geocode Accuracy', externalId: false })
-    public mailingGeocodeAccuracy: string;
+    public mailingGeocodeAccuracy: Contact.PICKLIST.mailingGeocodeAccuracy;
     @sField({ apiName: 'MailingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Mailing Address', externalId: false })
     public readonly mailingAddress: string;
     @sField({ apiName: 'Phone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Business Phone', externalId: false })
@@ -387,7 +529,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'JigsawContactId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Jigsaw Contact ID', externalId: false })
     public readonly jigsawContactId: string;
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
-    public cleanStatus: string;
+    public cleanStatus: Contact.PICKLIST.cleanStatus;
     @sField({ apiName: 'Level__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Level', externalId: false })
     public level: string;
     @sField({ apiName: 'Languages__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Languages', externalId: false })
@@ -483,6 +625,71 @@ export class Contact extends RestObject {
 
     public static fromSFObject(sob: SObject): Contact {
         return new Contact().mapFromQuery(sob);
+    }
+}
+
+export namespace Contact {
+    export namespace PICKLIST {
+        export enum salutation {
+            MR = "Mr.",
+            MS = "Ms.",
+            MRS = "Mrs.",
+            DR = "Dr.",
+            PROF = "Prof."
+        }
+
+        export enum otherGeocodeAccuracy {
+            ADDRESS = "Address",
+            NEARADDRESS = "NearAddress",
+            BLOCK = "Block",
+            STREET = "Street",
+            EXTENDEDZIP = "ExtendedZip",
+            ZIP = "Zip",
+            NEIGHBORHOOD = "Neighborhood",
+            CITY = "City",
+            COUNTY = "County",
+            STATE = "State",
+            UNKNOWN = "Unknown"
+        }
+
+        export enum mailingGeocodeAccuracy {
+            ADDRESS = "Address",
+            NEARADDRESS = "NearAddress",
+            BLOCK = "Block",
+            STREET = "Street",
+            EXTENDEDZIP = "ExtendedZip",
+            ZIP = "Zip",
+            NEIGHBORHOOD = "Neighborhood",
+            CITY = "City",
+            COUNTY = "County",
+            STATE = "State",
+            UNKNOWN = "Unknown"
+        }
+
+        export enum leadSource {
+            WEB = "Web",
+            PHONE_INQUIRY = "Phone Inquiry",
+            PARTNER_REFERRAL = "Partner Referral",
+            PURCHASED_LIST = "Purchased List",
+            OTHER = "Other"
+        }
+
+        export enum cleanStatus {
+            MATCHED = "Matched",
+            DIFFERENT = "Different",
+            ACKNOWLEDGED = "Acknowledged",
+            NOTFOUND = "NotFound",
+            INACTIVE = "Inactive",
+            PENDING = "Pending",
+            SELECTMATCH = "SelectMatch",
+            SKIPPED = "Skipped"
+        }
+
+        export enum level {
+            SECONDARY = "Secondary",
+            TERTIARY = "Tertiary",
+            PRIMARY = "Primary"
+        }
     }
 }
 
