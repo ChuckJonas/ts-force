@@ -1,0 +1,14 @@
+{
+    "sObjects": [
+        {
+            "apiName": "Account",
+            "className": "Account",
+            "generatePicklists": true,
+            "enforcePicklistValues": "RESTRICTED"
+        },
+        "Contact",
+        "User"
+    ],
+    "generatePicklists": true,
+    "enforcePicklistValues": "ALL"
+}

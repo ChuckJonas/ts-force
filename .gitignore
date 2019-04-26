@@ -3,7 +3,6 @@ build
 coverage
 *.log
 .env.test
-ts-force-config.json
 .sfdx
 settings.json
 .nyc_output
