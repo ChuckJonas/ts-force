@@ -5,7 +5,7 @@ export interface BaseConfig {
     version?: number;
 }
 
-export const DEFAULT_CONFIG: BaseConfig = { version: 42 };
+export const DEFAULT_CONFIG: BaseConfig = { version: 44 };
 
 /**
  * @param  {BaseConfig} config

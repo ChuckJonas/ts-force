@@ -5,7 +5,7 @@ require('dotenv').config();
 genClasses();
 
 function genClasses () {
-    cprocess.exec(`ts-node ../ts-force-gen/src/index -e -s Account,Contact,User`, (err, data) => {
+    cprocess.exec(`ts-node ../ts-force-gen/src/index -e -j ./src/test/assets/ts-force-config.json`, (err, data) => {
         if (err) {
             console.log(err, data);
             process.exit(1);

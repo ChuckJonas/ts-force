@@ -187,12 +187,13 @@ export abstract class RestObject extends SObject {
 
     /**
     * Gets JSON Object from RestObject
+    * TODO: Clean this up!
     * @param type 'insert' | 'update' | 'update_all' | 'apex'  Determines which fields to include in payload and how to format them.
     * @returns {*} JSON representation of SObject (mapped using decorators)
     * @memberof RestObject
     */
     public prepareFor (type: 'insert' | 'update' | 'update_all' | 'apex'): any {
-        let data: {[key: string]: any} = {};
+        let data: { [key: string]: any } = {};
 
         // loop each property
         for (let i in this) {
@@ -214,6 +215,8 @@ export abstract class RestObject extends SObject {
                             data[sFieldProps.apiName] = {
                                 records: (this[i] as any as RestObject[]).map(obj => obj.prepareFor('apex'))
                             };
+                        } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
+                            data[sFieldProps.apiName] = (this[i] as any as string[]).join(';');
                         } else {
                             data[sFieldProps.apiName] = this[i];
                         }
@@ -241,9 +244,12 @@ export abstract class RestObject extends SObject {
                                 data[sFieldProps.apiName] = relatedSob.prepareAsRelationRecord();
                             }
                             continue;
+                        } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
+                            data[sFieldProps.apiName] = (this[i] as any as string[]).join(';');
+                        } else {
+                            // copy with mapping
+                            data[sFieldProps.apiName] = this[i];
                         }
-                        // copy with mapping
-                        data[sFieldProps.apiName] = this[i];
                     }
                 }
             }
@@ -269,7 +275,7 @@ export abstract class RestObject extends SObject {
     }
 
     protected prepareAsRelationRecord () {
-        let data: {[key: string]: any} = {};
+        let data: { [key: string]: any } = {};
         // otherwise, find first external Id field
         for (let i in this) {
             // clean properties
@@ -312,6 +318,8 @@ export abstract class RestObject extends SObject {
                             // no timezone information... date will always be whatever was stored
                             let parts = val.split('-');
                             val = new Date(parts[0], parts[1] - 1, parts[2]);
+                        } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
+                            val = val.split(';');
                         }
                         this[sobPropName] = val;
                     }
