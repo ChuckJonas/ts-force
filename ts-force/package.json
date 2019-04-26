@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
+    "@types/cometd": "^4.0.4",
     "@types/dateformat": "^1.0.1",
     "@types/mocha": "^5.2.5",
     "@types/nock": "^8.2.1",
@@ -53,7 +54,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "dateformat": "^3.0.3",
-    "lodash": "^4.17.11",
+    "cometd": "^4.0.3",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
