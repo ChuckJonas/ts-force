@@ -419,7 +419,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'FirstName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'First Name', externalId: false })
     public firstName: string;
     @sField({ apiName: 'Salutation', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Salutation', externalId: false })
-    public salutation: string;
+    public salutation: Contact.PICKLIST.salutation;
     @sField({ apiName: 'Name', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Full Name', externalId: false })
     public readonly name: string;
     @sField({ apiName: 'OtherStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Other Street', externalId: false })
@@ -483,7 +483,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'AssistantName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Assistant\'s Name', externalId: false })
     public assistantName: string;
     @sField({ apiName: 'LeadSource', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Lead Source', externalId: false })
-    public leadSource: string;
+    public leadSource: Contact.PICKLIST.leadSource;
     @sField({ apiName: 'Birthdate', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Birthdate', externalId: false })
     public birthdate: Date;
     @sField({ apiName: 'Description', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Contact Description', externalId: false })
@@ -531,7 +531,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
     public cleanStatus: Contact.PICKLIST.cleanStatus;
     @sField({ apiName: 'Level__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Level', externalId: false })
-    public level: string;
+    public level: Contact.PICKLIST.level;
     @sField({ apiName: 'Languages__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Languages', externalId: false })
     public languages: string;
 
@@ -732,7 +732,7 @@ export class User extends RestObject {
     @sField({ apiName: 'Longitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Longitude', externalId: false })
     public longitude: number;
     @sField({ apiName: 'GeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Geocode Accuracy', externalId: false })
-    public geocodeAccuracy: string;
+    public geocodeAccuracy: User.PICKLIST.geocodeAccuracy;
     @sField({ apiName: 'Address', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Address', externalId: false })
     public readonly address: string;
     @sField({ apiName: 'Email', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.EMAIL, salesforceLabel: 'Email', externalId: false })
@@ -770,23 +770,23 @@ export class User extends RestObject {
     @sField({ apiName: 'IsActive', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Active', externalId: false })
     public isActive: boolean;
     @sField({ apiName: 'TimeZoneSidKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Time Zone', externalId: false })
-    public timeZoneSidKey: string;
+    public timeZoneSidKey: User.PICKLIST.timeZoneSidKey;
     @sField({ apiName: 'UserRoleId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Role ID', externalId: false })
     public userRoleId: string;
     @sField({ apiName: 'LocaleSidKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Locale', externalId: false })
-    public localeSidKey: string;
+    public localeSidKey: User.PICKLIST.localeSidKey;
     @sField({ apiName: 'ReceivesInfoEmails', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Info Emails', externalId: false })
     public receivesInfoEmails: boolean;
     @sField({ apiName: 'ReceivesAdminInfoEmails', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Admin Info Emails', externalId: false })
     public receivesAdminInfoEmails: boolean;
     @sField({ apiName: 'EmailEncodingKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Email Encoding', externalId: false })
-    public emailEncodingKey: string;
+    public emailEncodingKey: User.PICKLIST.emailEncodingKey;
     @sField({ apiName: 'ProfileId', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Profile ID', externalId: false })
     public profileId: string;
     @sField({ apiName: 'UserType', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'User Type', externalId: false })
-    public readonly userType: string;
+    public readonly userType: User.PICKLIST.userType;
     @sField({ apiName: 'LanguageLocaleKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Language', externalId: false })
-    public languageLocaleKey: string;
+    public languageLocaleKey: User.PICKLIST.languageLocaleKey;
     @sField({ apiName: 'EmployeeNumber', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Employee Number', externalId: false })
     public employeeNumber: string;
     @sField({ apiName: 'DelegatedApproverId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Delegated Approver ID', externalId: false })
@@ -937,6 +937,8 @@ export class User extends RestObject {
     public userPreferencesDisableFeedbackEmail: boolean;
     @sField({ apiName: 'UserPreferencesDisableWorkEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableWorkEmail', externalId: false })
     public userPreferencesDisableWorkEmail: boolean;
+    @sField({ apiName: 'UserPreferencesPipelineViewHideHelpPopover', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PipelineViewHideHelpPopover', externalId: false })
+    public userPreferencesPipelineViewHideHelpPopover: boolean;
     @sField({ apiName: 'UserPreferencesHideS1BrowserUI', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideS1BrowserUI', externalId: false })
     public userPreferencesHideS1BrowserUI: boolean;
     @sField({ apiName: 'UserPreferencesDisableEndorsementEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableEndorsementEmail', externalId: false })
@@ -993,9 +995,13 @@ export class User extends RestObject {
     public userPreferencesPreviewCustomTheme: boolean;
     @sField({ apiName: 'UserPreferencesHasCelebrationBadge', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HasCelebrationBadge', externalId: false })
     public userPreferencesHasCelebrationBadge: boolean;
+    @sField({ apiName: 'UserPreferencesUserDebugModePref', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'UserDebugModePref', externalId: false })
+    public userPreferencesUserDebugModePref: boolean;
+    @sField({ apiName: 'UserPreferencesNewLightningReportRunPageEnabled', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'NewLightningReportRunPageEnabled', externalId: false })
+    public userPreferencesNewLightningReportRunPageEnabled: boolean;
     @sField({ apiName: 'Contact', createable: false, updateable: false, required: false, reference: () => { return Contact }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
     public contact: Contact;
-    @sField({ apiName: 'ContactId', createable: true, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
+    @sField({ apiName: 'ContactId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
     public contactId: string;
     @sField({ apiName: 'Account', createable: false, updateable: false, required: false, reference: () => { return Account }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
     public account: Account;
@@ -1020,9 +1026,9 @@ export class User extends RestObject {
     @sField({ apiName: 'MediumPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Url for medium profile photo', externalId: false })
     public readonly mediumPhotoUrl: string;
     @sField({ apiName: 'DigestFrequency', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Chatter Email Highlights Frequency', externalId: false })
-    public digestFrequency: string;
+    public digestFrequency: User.PICKLIST.digestFrequency;
     @sField({ apiName: 'DefaultGroupNotificationFrequency', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Default Notification Frequency when Joining Groups', externalId: false })
-    public defaultGroupNotificationFrequency: string;
+    public defaultGroupNotificationFrequency: User.PICKLIST.defaultGroupNotificationFrequency;
     @sField({ apiName: 'JigsawImportLimitOverride', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.INT, salesforceLabel: 'Data.com Monthly Addition Limit', externalId: false })
     public jigsawImportLimitOverride: number;
     @sField({ apiName: 'LastViewedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Viewed Date', externalId: false })
@@ -1159,6 +1165,7 @@ export class User extends RestObject {
         this.userPreferencesShowCountryToGuestUsers = void 0;
         this.userPreferencesDisableFeedbackEmail = void 0;
         this.userPreferencesDisableWorkEmail = void 0;
+        this.userPreferencesPipelineViewHideHelpPopover = void 0;
         this.userPreferencesHideS1BrowserUI = void 0;
         this.userPreferencesDisableEndorsementEmail = void 0;
         this.userPreferencesPathAssistantCollapsed = void 0;
@@ -1187,6 +1194,8 @@ export class User extends RestObject {
         this.userPreferencesSuppressEventSFXReminders = void 0;
         this.userPreferencesPreviewCustomTheme = void 0;
         this.userPreferencesHasCelebrationBadge = void 0;
+        this.userPreferencesUserDebugModePref = void 0;
+        this.userPreferencesNewLightningReportRunPageEnabled = void 0;
         this.contact = void 0;
         this.contactId = void 0;
         this.account = void 0;
@@ -1230,6 +1239,386 @@ export class User extends RestObject {
 
     public static fromSFObject(sob: SObject): User {
         return new User().mapFromQuery(sob);
+    }
+}
+
+export namespace User {
+    export namespace PICKLIST {
+        export enum geocodeAccuracy {
+            ADDRESS = "Address",
+            NEARADDRESS = "NearAddress",
+            BLOCK = "Block",
+            STREET = "Street",
+            EXTENDEDZIP = "ExtendedZip",
+            ZIP = "Zip",
+            NEIGHBORHOOD = "Neighborhood",
+            CITY = "City",
+            COUNTY = "County",
+            STATE = "State",
+            UNKNOWN = "Unknown"
+        }
+
+        export enum timeZoneSidKey {
+            PACIFICKIRITIMATI = "Pacific/Kiritimati",
+            PACIFICENDERBURY = "Pacific/Enderbury",
+            PACIFICTONGATAPU = "Pacific/Tongatapu",
+            PACIFICCHATHAM = "Pacific/Chatham",
+            ASIAKAMCHATKA = "Asia/Kamchatka",
+            PACIFICAUCKLAND = "Pacific/Auckland",
+            PACIFICFIJI = "Pacific/Fiji",
+            PACIFICGUADALCANAL = "Pacific/Guadalcanal",
+            PACIFICNORFOLK = "Pacific/Norfolk",
+            AUSTRALIALORD_HOWE = "Australia/Lord_Howe",
+            AUSTRALIABRISBANE = "Australia/Brisbane",
+            AUSTRALIASYDNEY = "Australia/Sydney",
+            AUSTRALIAADELAIDE = "Australia/Adelaide",
+            AUSTRALIADARWIN = "Australia/Darwin",
+            ASIASEOUL = "Asia/Seoul",
+            ASIATOKYO = "Asia/Tokyo",
+            ASIAHONG_KONG = "Asia/Hong_Kong",
+            ASIAKUALA_LUMPUR = "Asia/Kuala_Lumpur",
+            ASIAMANILA = "Asia/Manila",
+            ASIASHANGHAI = "Asia/Shanghai",
+            ASIASINGAPORE = "Asia/Singapore",
+            ASIATAIPEI = "Asia/Taipei",
+            AUSTRALIAPERTH = "Australia/Perth",
+            ASIABANGKOK = "Asia/Bangkok",
+            ASIAHO_CHI_MINH = "Asia/Ho_Chi_Minh",
+            ASIAJAKARTA = "Asia/Jakarta",
+            ASIARANGOON = "Asia/Rangoon",
+            ASIADHAKA = "Asia/Dhaka",
+            ASIAKATHMANDU = "Asia/Kathmandu",
+            ASIACOLOMBO = "Asia/Colombo",
+            ASIAKOLKATA = "Asia/Kolkata",
+            ASIAKARACHI = "Asia/Karachi",
+            ASIATASHKENT = "Asia/Tashkent",
+            ASIAYEKATERINBURG = "Asia/Yekaterinburg",
+            ASIAKABUL = "Asia/Kabul",
+            ASIATEHRAN = "Asia/Tehran",
+            ASIABAKU = "Asia/Baku",
+            ASIADUBAI = "Asia/Dubai",
+            ASIATBILISI = "Asia/Tbilisi",
+            ASIAYEREVAN = "Asia/Yerevan",
+            AFRICANAIROBI = "Africa/Nairobi",
+            ASIABAGHDAD = "Asia/Baghdad",
+            ASIABEIRUT = "Asia/Beirut",
+            ASIAJERUSALEM = "Asia/Jerusalem",
+            ASIAKUWAIT = "Asia/Kuwait",
+            ASIARIYADH = "Asia/Riyadh",
+            EUROPEATHENS = "Europe/Athens",
+            EUROPEBUCHAREST = "Europe/Bucharest",
+            EUROPEHELSINKI = "Europe/Helsinki",
+            EUROPEISTANBUL = "Europe/Istanbul",
+            EUROPEMINSK = "Europe/Minsk",
+            EUROPEMOSCOW = "Europe/Moscow",
+            AFRICACAIRO = "Africa/Cairo",
+            AFRICAJOHANNESBURG = "Africa/Johannesburg",
+            EUROPEAMSTERDAM = "Europe/Amsterdam",
+            EUROPEBERLIN = "Europe/Berlin",
+            EUROPEBRUSSELS = "Europe/Brussels",
+            EUROPEPARIS = "Europe/Paris",
+            EUROPEPRAGUE = "Europe/Prague",
+            EUROPEROME = "Europe/Rome",
+            AFRICAALGIERS = "Africa/Algiers",
+            AFRICACASABLANCA = "Africa/Casablanca",
+            EUROPEDUBLIN = "Europe/Dublin",
+            EUROPELISBON = "Europe/Lisbon",
+            EUROPELONDON = "Europe/London",
+            AMERICASCORESBYSUND = "America/Scoresbysund",
+            ATLANTICAZORES = "Atlantic/Azores",
+            GMT = "GMT",
+            ATLANTICCAPE_VERDE = "Atlantic/Cape_Verde",
+            ATLANTICSOUTH_GEORGIA = "Atlantic/South_Georgia",
+            AMERICAST_JOHNS = "America/St_Johns",
+            AMERICAARGENTINABUENOS_AIRES = "America/Argentina/Buenos_Aires",
+            AMERICAHALIFAX = "America/Halifax",
+            AMERICASAO_PAULO = "America/Sao_Paulo",
+            ATLANTICBERMUDA = "Atlantic/Bermuda",
+            AMERICACARACAS = "America/Caracas",
+            AMERICAINDIANAINDIANAPOLIS = "America/Indiana/Indianapolis",
+            AMERICANEW_YORK = "America/New_York",
+            AMERICAPUERTO_RICO = "America/Puerto_Rico",
+            AMERICASANTIAGO = "America/Santiago",
+            AMERICABOGOTA = "America/Bogota",
+            AMERICACHICAGO = "America/Chicago",
+            AMERICALIMA = "America/Lima",
+            AMERICAMEXICO_CITY = "America/Mexico_City",
+            AMERICAPANAMA = "America/Panama",
+            AMERICADENVER = "America/Denver",
+            AMERICAEL_SALVADOR = "America/El_Salvador",
+            AMERICAMAZATLAN = "America/Mazatlan",
+            AMERICALOS_ANGELES = "America/Los_Angeles",
+            AMERICAPHOENIX = "America/Phoenix",
+            AMERICATIJUANA = "America/Tijuana",
+            AMERICAANCHORAGE = "America/Anchorage",
+            PACIFICPITCAIRN = "Pacific/Pitcairn",
+            AMERICAADAK = "America/Adak",
+            PACIFICGAMBIER = "Pacific/Gambier",
+            PACIFICMARQUESAS = "Pacific/Marquesas",
+            PACIFICHONOLULU = "Pacific/Honolulu",
+            PACIFICNIUE = "Pacific/Niue",
+            PACIFICPAGO_PAGO = "Pacific/Pago_Pago"
+        }
+
+        export enum localeSidKey {
+            SQ_AL = "sq_AL",
+            AR_DZ = "ar_DZ",
+            AR_BH = "ar_BH",
+            AR_EG = "ar_EG",
+            AR_IQ = "ar_IQ",
+            AR_JO = "ar_JO",
+            AR_KW = "ar_KW",
+            AR_LB = "ar_LB",
+            AR_LY = "ar_LY",
+            AR_MA = "ar_MA",
+            AR_OM = "ar_OM",
+            AR_QA = "ar_QA",
+            AR_SA = "ar_SA",
+            AR_SD = "ar_SD",
+            AR_SY = "ar_SY",
+            AR_TN = "ar_TN",
+            AR_AE = "ar_AE",
+            AR_YE = "ar_YE",
+            HY_AM = "hy_AM",
+            AZ_AZ = "az_AZ",
+            BN_BD = "bn_BD",
+            EU_ES = "eu_ES",
+            BE_BY = "be_BY",
+            BS_BA = "bs_BA",
+            BG_BG = "bg_BG",
+            MY_MM = "my_MM",
+            CA_ES = "ca_ES",
+            ZH_CN_PINYIN = "zh_CN_PINYIN",
+            ZH_CN_STROKE = "zh_CN_STROKE",
+            ZH_CN = "zh_CN",
+            ZH_HK_STROKE = "zh_HK_STROKE",
+            ZH_HK = "zh_HK",
+            ZH_MO = "zh_MO",
+            ZH_SG = "zh_SG",
+            ZH_TW_STROKE = "zh_TW_STROKE",
+            ZH_TW = "zh_TW",
+            HR_HR = "hr_HR",
+            CS_CZ = "cs_CZ",
+            DA_DK = "da_DK",
+            NL_AW = "nl_AW",
+            NL_BE = "nl_BE",
+            NL_NL = "nl_NL",
+            NL_SR = "nl_SR",
+            DZ_BT = "dz_BT",
+            EN_AG = "en_AG",
+            EN_AU = "en_AU",
+            EN_BS = "en_BS",
+            EN_BB = "en_BB",
+            EN_BZ = "en_BZ",
+            EN_BM = "en_BM",
+            EN_BW = "en_BW",
+            EN_CM = "en_CM",
+            EN_CA = "en_CA",
+            EN_KY = "en_KY",
+            EN_ER = "en_ER",
+            EN_FK = "en_FK",
+            EN_FJ = "en_FJ",
+            EN_GM = "en_GM",
+            EN_GH = "en_GH",
+            EN_GI = "en_GI",
+            EN_GY = "en_GY",
+            EN_HK = "en_HK",
+            EN_IN = "en_IN",
+            EN_ID = "en_ID",
+            EN_IE = "en_IE",
+            EN_JM = "en_JM",
+            EN_KE = "en_KE",
+            EN_LR = "en_LR",
+            EN_MG = "en_MG",
+            EN_MW = "en_MW",
+            EN_MY = "en_MY",
+            EN_MU = "en_MU",
+            EN_NA = "en_NA",
+            EN_NZ = "en_NZ",
+            EN_NG = "en_NG",
+            EN_PK = "en_PK",
+            EN_PG = "en_PG",
+            EN_PH = "en_PH",
+            EN_RW = "en_RW",
+            EN_WS = "en_WS",
+            EN_SC = "en_SC",
+            EN_SL = "en_SL",
+            EN_SG = "en_SG",
+            EN_SX = "en_SX",
+            EN_SB = "en_SB",
+            EN_ZA = "en_ZA",
+            EN_SH = "en_SH",
+            EN_SZ = "en_SZ",
+            EN_TZ = "en_TZ",
+            EN_TO = "en_TO",
+            EN_TT = "en_TT",
+            EN_UG = "en_UG",
+            EN_GB = "en_GB",
+            EN_US = "en_US",
+            EN_VU = "en_VU",
+            ET_EE = "et_EE",
+            FI_FI = "fi_FI",
+            FR_BE = "fr_BE",
+            FR_CA = "fr_CA",
+            FR_KM = "fr_KM",
+            FR_FR = "fr_FR",
+            FR_GN = "fr_GN",
+            FR_HT = "fr_HT",
+            FR_LU = "fr_LU",
+            FR_MR = "fr_MR",
+            FR_MC = "fr_MC",
+            FR_CH = "fr_CH",
+            FR_WF = "fr_WF",
+            KA_GE = "ka_GE",
+            DE_AT = "de_AT",
+            DE_BE = "de_BE",
+            DE_DE = "de_DE",
+            DE_LU = "de_LU",
+            DE_CH = "de_CH",
+            EL_GR = "el_GR",
+            IW_IL = "iw_IL",
+            HI_IN = "hi_IN",
+            HU_HU = "hu_HU",
+            IS_IS = "is_IS",
+            IN_ID = "in_ID",
+            GA_IE = "ga_IE",
+            IT_IT = "it_IT",
+            IT_CH = "it_CH",
+            JA_JP = "ja_JP",
+            KK_KZ = "kk_KZ",
+            KM_KH = "km_KH",
+            KO_KP = "ko_KP",
+            KO_KR = "ko_KR",
+            KY_KG = "ky_KG",
+            LO_LA = "lo_LA",
+            LV_LV = "lv_LV",
+            LT_LT = "lt_LT",
+            LU_CD = "lu_CD",
+            LB_LU = "lb_LU",
+            MK_MK = "mk_MK",
+            MS_BN = "ms_BN",
+            MS_MY = "ms_MY",
+            MT_MT = "mt_MT",
+            SH_ME = "sh_ME",
+            NE_NP = "ne_NP",
+            NO_NO = "no_NO",
+            PS_AF = "ps_AF",
+            FA_IR = "fa_IR",
+            PL_PL = "pl_PL",
+            PT_AO = "pt_AO",
+            PT_BR = "pt_BR",
+            PT_CV = "pt_CV",
+            PT_MZ = "pt_MZ",
+            PT_PT = "pt_PT",
+            PT_ST = "pt_ST",
+            RO_MD = "ro_MD",
+            RO_RO = "ro_RO",
+            RM_CH = "rm_CH",
+            RN_BI = "rn_BI",
+            RU_RU = "ru_RU",
+            SR_BA = "sr_BA",
+            SR_CS = "sr_CS",
+            SH_BA = "sh_BA",
+            SH_CS = "sh_CS",
+            SR_RS = "sr_RS",
+            SK_SK = "sk_SK",
+            SL_SI = "sl_SI",
+            SO_DJ = "so_DJ",
+            SO_SO = "so_SO",
+            ES_AR = "es_AR",
+            ES_BO = "es_BO",
+            ES_CL = "es_CL",
+            ES_CO = "es_CO",
+            ES_CR = "es_CR",
+            ES_CU = "es_CU",
+            ES_DO = "es_DO",
+            ES_EC = "es_EC",
+            ES_SV = "es_SV",
+            ES_GT = "es_GT",
+            ES_HN = "es_HN",
+            ES_MX = "es_MX",
+            ES_NI = "es_NI",
+            ES_PA = "es_PA",
+            ES_PY = "es_PY",
+            ES_PE = "es_PE",
+            ES_PR = "es_PR",
+            ES_ES = "es_ES",
+            ES_US = "es_US",
+            ES_UY = "es_UY",
+            ES_VE = "es_VE",
+            SV_SE = "sv_SE",
+            TL_PH = "tl_PH",
+            TG_TJ = "tg_TJ",
+            TA_IN = "ta_IN",
+            TA_LK = "ta_LK",
+            TH_TH = "th_TH",
+            TI_ET = "ti_ET",
+            TR_TR = "tr_TR",
+            UK_UA = "uk_UA",
+            UR_PK = "ur_PK",
+            UZ_LATN_UZ = "uz_LATN_UZ",
+            VI_VN = "vi_VN",
+            CY_GB = "cy_GB",
+            YO_BJ = "yo_BJ"
+        }
+
+        export enum emailEncodingKey {
+            UTF8 = "UTF-8",
+            ISO88591 = "ISO-8859-1",
+            SHIFT_JIS = "Shift_JIS",
+            ISO2022JP = "ISO-2022-JP",
+            EUCJP = "EUC-JP",
+            KS_C_56011987 = "ks_c_5601-1987",
+            BIG5 = "Big5",
+            GB2312 = "GB2312",
+            BIG5HKSCS = "Big5-HKSCS",
+            XSJIS_0213 = "x-SJIS_0213"
+        }
+
+        export enum userType {
+            STANDARD = "Standard",
+            POWERPARTNER = "PowerPartner",
+            POWERCUSTOMERSUCCESS = "PowerCustomerSuccess",
+            CUSTOMERSUCCESS = "CustomerSuccess",
+            GUEST = "Guest",
+            CSPLITEPORTAL = "CspLitePortal",
+            CSNONLY = "CsnOnly",
+            SELFSERVICE = "SelfService"
+        }
+
+        export enum languageLocaleKey {
+            EN_US = "en_US",
+            DE = "de",
+            ES = "es",
+            FR = "fr",
+            IT = "it",
+            JA = "ja",
+            SV = "sv",
+            KO = "ko",
+            ZH_TW = "zh_TW",
+            ZH_CN = "zh_CN",
+            PT_BR = "pt_BR",
+            NL_NL = "nl_NL",
+            DA = "da",
+            TH = "th",
+            FI = "fi",
+            RU = "ru",
+            ES_MX = "es_MX",
+            NO = "no"
+        }
+
+        export enum digestFrequency {
+            D = "D",
+            W = "W",
+            N = "N"
+        }
+
+        export enum defaultGroupNotificationFrequency {
+            P = "P",
+            D = "D",
+            W = "W",
+            N = "N"
+        }
     }
 }
 

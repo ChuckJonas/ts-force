@@ -1,7 +1,7 @@
 
-import { ChildRelationship, Field, Rest, SalesforceFieldType, SFieldProperties, SObjectDescribe, FieldResolver } from '../../ts-force';
-import { ClassDeclaration, DecoratorStructure, JSDocStructure, PropertyDeclarationStructure, Scope, SourceFile, ImportDeclarationStructure, FileSystemRefreshResult } from 'ts-simple-ast';
-import { SObjectConfig } from './sObjectConfig';
+import { ChildRelationship, Field, Rest, SalesforceFieldType, SFieldProperties, SObjectDescribe } from '../../ts-force';
+import { ClassDeclaration, DecoratorStructure, JSDocStructure, PropertyDeclarationStructure, Scope, SourceFile, ImportDeclarationStructure } from 'ts-simple-ast';
+import { SObjectConfig } from './config';
 import { cleanAPIName, replaceSource } from './util';
 
 export const TS_FORCE_IMPORTS: ImportDeclarationStructure = {
@@ -414,7 +414,7 @@ export class SObjectGenerator {
                         if (this.sObjectConfig.enforcePicklistValues &&
                             (
                                 this.sObjectConfig.enforcePicklistValues === 'RESTRICTED' && field.restrictedPicklist
-                                || this.sObjectConfig.enforcePicklistValues === 'ALWAYS'
+                                || this.sObjectConfig.enforcePicklistValues === 'ALL'
                             )
                         ) {
 

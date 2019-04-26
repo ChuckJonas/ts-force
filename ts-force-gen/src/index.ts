@@ -6,26 +6,9 @@ import { SObjectGenerator, TS_FORCE_IMPORTS } from './sObjectGenerator';
 import * as minimist from 'minimist';
 import * as fs from 'fs';
 import * as path from 'path';
-import { SObjectConfig } from './sObjectConfig';
+import { SObjectConfig, PicklistRestrictionOptions, Config } from './config';
 import { cleanAPIName, replaceSource } from './util';
 import { Spinner } from 'cli-spinner';
-
-// Config Types
-interface AuthConfig extends BaseConfig {
-    username?: string;
-    password?: string;
-    oAuthHost?: string;
-    clientId?: string;
-    clientSecret?: string;
-}
-
-interface Config {
-    auth?: AuthConfig;
-    sObjects?: (string|SObjectConfig)[];
-    generatePicklists?: boolean;
-    enforcePicklistValues?: false | 'ALWAYS' | 'RESTRICTED';
-    outPath?: string;
-}
 
 // execute
 run();

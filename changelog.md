@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.3
+
+- Added `json.schema` for `ts-force-config.json`
+
 ## 2.2.1
 
 - started changelog :0
