@@ -1,14 +1,15 @@
 #! /usr/bin/env node
 /// <reference types="node" />
-import { BaseConfig, OAuth, UsernamePasswordConfig, setDefaultConfig } from '../../ts-force';
-import Ast, { SourceFile } from 'ts-simple-ast';
+import { OAuth, UsernamePasswordConfig, setDefaultConfig } from '../../ts-force';
+import { SourceFile } from 'ts-simple-ast';
 import { SObjectGenerator, TS_FORCE_IMPORTS } from './sObjectGenerator';
 import * as minimist from 'minimist';
 import * as fs from 'fs';
 import * as path from 'path';
-import { SObjectConfig, PicklistRestrictionOptions, Config } from './config';
+import { SObjectConfig, Config } from './config';
 import { cleanAPIName, replaceSource } from './util';
 import { Spinner } from 'cli-spinner';
+import { Connection, AuthInfo } from '@salesforce/core';
 
 // execute
 run();
@@ -105,12 +106,11 @@ async function generateLoadConfig (): Promise<Config> {
     if (config.auth.accessToken === undefined) {
         // if just username is set, load from sfdx
         if (config.auth.username !== undefined && config.auth.password === undefined) {
-
-            let childProcess = require('child_process');
-            let orgInfo = JSON.parse(childProcess.execSync(`sfdx force:org:display -u ${config.auth.username} --json`).toString('utf8'));
-
-            config.auth.accessToken = orgInfo.result.accessToken;
-            config.auth.instanceUrl = orgInfo.result.instanceUrl;
+            const connection: Connection = await Connection.create({
+                authInfo: await AuthInfo.create({ username: config.auth.username })
+            });
+            config.auth.accessToken = connection.accessToken;
+            config.auth.instanceUrl = connection.instanceUrl;
         }else if (config.auth.username !== undefined && config.auth.password !== undefined) {
 
             // otherwise lets try username/password flow
