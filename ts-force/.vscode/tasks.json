@@ -1,0 +1,17 @@
+{
+    "tasks": [
+        {
+            "label": "Echo input",
+            "type": "shell",
+            "command": "echo ${input:echoPrompt}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "echoPrompt",
+            "description": "Please enter a value",
+            "default": "default echo text",
+            "type": "promptString"
+        }
+    ]
+}
