@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "config": {
-    "version": "2.2.3"
+    "version": "2.3.0-rc"
   },
   "scripts": {
     "postinstall": "cd ts-force && npm install && npm run build && cd ../ts-force-gen && npm install",
@@ -14,7 +14,9 @@
     "prepublishOnly": "echo 'Code should be published from individual directories' && exit 1",
     "publishRuntime": "cd ts-force && npm version $npm_package_config_version && npm publish",
     "publishGen": "cd ts-force-gen && npm version $npm_package_config_version && npm publish",
+    "buildBoth": "cd ts-force && npm run build && cd ../ts-force-gen && npm run build",
     "publishBoth": "npm run checkCommitted && npm run publishRuntime && npm run publishGen && npm run tag"
+
   },
   "repository": {
     "type": "git",

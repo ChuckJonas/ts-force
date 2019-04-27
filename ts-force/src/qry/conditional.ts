@@ -1,5 +1,5 @@
 import { NULL, listFormatter, dateTimeFormatter, stringFormatter, dateFormatter } from './formatters';
-import { Omit } from '@src/types';
+import { Omit } from '../types';
 
 export type Operator = '=' | '!=' | '<=' | '>=' | '>' | '<' | 'LIKE' | 'INCLUDES' | 'EXCLUDES';
 
