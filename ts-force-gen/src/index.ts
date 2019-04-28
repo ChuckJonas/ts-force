@@ -9,7 +9,7 @@ import * as path from 'path';
 import { SObjectConfig, Config } from './config';
 import { cleanAPIName, replaceSource } from './util';
 import { Spinner } from 'cli-spinner';
-import { Connection, AuthInfo } from '@salesforce/core';
+import { Connection, AuthInfo, Aliases } from '@salesforce/core';
 
 // execute
 run();
@@ -106,9 +106,15 @@ async function generateLoadConfig (): Promise<Config> {
     if (config.auth.accessToken === undefined) {
         // if just username is set, load from sfdx
         if (config.auth.username !== undefined && config.auth.password === undefined) {
+            let username = await Aliases.fetch(config.auth.username);
+            if (username) {
+                config.auth.username = username;
+            }
+            console.log(config.auth.username);
             const connection: Connection = await Connection.create({
                 authInfo: await AuthInfo.create({ username: config.auth.username })
             });
+            console.log(connection.accessToken);
             config.auth.accessToken = connection.accessToken;
             config.auth.instanceUrl = connection.instanceUrl;
         }else if (config.auth.username !== undefined && config.auth.password !== undefined) {
