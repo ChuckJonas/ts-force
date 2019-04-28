@@ -18,10 +18,20 @@
                 "999999",
                 "--colors",
                 "${workspaceFolder}/src/test/**/*spec.ts",
+                "-g",
+                "${input:pickProgram}"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "protocol": "inspector"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "pickProgram",
+            "description": "Regex for test(s) you want to run",
+            "type": "promptString",
+            "default": " "
         }
     ]
 }

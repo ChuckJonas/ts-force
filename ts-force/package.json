@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "2.1.24",
+  "version": "2.3.0",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -23,7 +23,7 @@
     "clean": "rm -r -f ./build",
     "clean-build": "npm run clean && npm run build",
     "link": "npm run clean-build && npm link",
-    "test": "mocha --timeout 10000 -r dotenv/config -r ts-node/register 'src/test/**/*.spec.ts'",
+    "test": "mocha --timeout 10000 -r dotenv/config -r ts-node/register \"./src/test/**/*.spec.ts\"",
     "build": "npx tsc -p tsconfig.build.json",
     "ci": "npm run generate-test-classes",
     "generate-test-classes": "npx ts-node ./src/test/setup",
@@ -35,7 +35,6 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/cometd": "^4.0.4",
-    "@types/dateformat": "^1.0.1",
     "@types/mocha": "^5.2.5",
     "@types/nock": "^8.2.1",
     "@types/node": "^8.0.4",
@@ -53,7 +52,6 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "dateformat": "^3.0.3",
     "cometd": "^4.0.3",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",

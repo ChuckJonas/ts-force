@@ -65,6 +65,18 @@ describe('Where Value Tests', () => {
         expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name = NULL`);
     });
 
+    it('where x = UNDEFINED', () => {
+        let qry = buildQuery(Contact, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    { field: fields.select('name'), op: '=', val: undefined }
+                ]
+            };
+        });
+        expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name = NULL`);
+    });
+
     it('where x = number', () => {
         let qry = buildQuery(Account, fields => {
             return {
@@ -89,7 +101,7 @@ describe('Where Value Tests', () => {
         expect(qry).to.equal(`SELECT Id FROM Account WHERE Active__c = false`);
     });
 
-    it('where x = Date', () => {
+    it('where x = DateTime', () => {
         let qry = buildQuery(Account, fields => {
             return {
                 select: [fields.select('id')],
@@ -103,7 +115,25 @@ describe('Where Value Tests', () => {
             };
         });
 
-        expect(qry).to.equal(`SELECT Id FROM Account WHERE CreatedDate = 1999-01-01T01:01:01z`);
+        expect(qry).to.equal(`SELECT Id FROM Account WHERE CreatedDate = 1999-01-01T08:01:01.000Z`);
+    });
+
+    it('where x = Date', () => {
+        let qry = buildQuery(Account, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    {
+                        field: fields.select('createdDate'),
+                        op: '=',
+                        val: new Date(1999, 0, 1, 1, 1, 1),
+                        dateOnly: true
+                    }
+                ]
+            };
+        });
+
+        expect(qry).to.equal(`SELECT Id FROM Account WHERE CreatedDate = 1999-01-01`);
     });
 
     it('where func(x) = number', () => {
@@ -287,73 +317,4 @@ describe('Where Logic Tests', () => {
         expect(qry).to.equal(`SELECT Id FROM Account WHERE Name = '123' OR (AnnualRevenue >= 123 AND (Active__c = true OR AccountSource = 'web'))`);
     });
 
-    // it('conditional2', () => {
-    //     let x = parseConditional2([
-    //         {
-    //             field: 'createdDate',
-    //             op: '=',
-    //             val: new Date(1999, 0, 1, 1, 1, 1) }
-    //     ])
-    //     expect(x).to.equal(`createdDate = 1999-01-01T01:01:01z`);
-
-    //     x = parseConditional2([
-    //         { field: 'name', op: '=', val: '123', not: true},
-    //     ])
-    //     expect(x).to.equal(`NOT name = '123'`);
-
-    //     x = parseConditional2([
-    //         { field: 'name', op: '=', val: '123' },
-    //         { field: 'annualRevenue', op: '>=', val: 123 }
-    //     ])
-    //     expect(x).to.equal(`name = '123' AND annualRevenue >= 123`);
-
-    //     x = parseConditional2([
-    //         { field: 'name', op: '=', val: '123' },
-    //         'OR',
-    //         { field: 'annualRevenue', op: '>=', val: 123 }
-    //     ])
-
-    //     expect(x).to.equal(`name = '123' OR annualRevenue >= 123`);
-
-    //     x = parseConditional2([
-    //         { field: 'name', op: '=', val: '123' },
-    //         'AND',
-    //         [
-    //             { field: 'annualRevenue', op: '>=', val: 123 },
-    //             'OR',
-    //             { field: 'active', op: '=', val: true }
-    //         ]
-    //     ])
-    //     expect(x).to.equal(`name = '123' AND (annualRevenue >= 123 OR active = true)`);
-
-    //     x = parseConditional2([
-    //         [
-    //             { field: 'name', op: '=', val: '123' },
-    //             'OR',
-    //             { field: 'name', op: '=', val: '456' }
-    //         ],
-    //         'AND',
-    //         [
-    //             { field: 'annualRevenue', op: '>=', val: 123 },
-    //             'OR',
-    //             { field: 'active', op: '=', val: true }
-    //         ]
-    //     ])
-    //     expect(x).to.equal(`(name = '123' OR name = '456') AND (annualRevenue >= 123 OR active = true)`);
-
-    //     x = parseConditional2([
-    //         { field: 'name', op: '=', val: '123' },
-    //         'OR',
-    //         [
-    //             { field: 'annualRevenue', op: '>=', val: 123 },
-    //             'AND',
-    //             [
-    //                 { field: 'active', op: '=', val: true },
-    //                 'OR',
-    //                 { field: 'accountSource', op: '=', val: 'web' }
-    //             ]
-    //         ]
-    //     ])
-    //     expect(x).to.equal(`name = '123' OR (annualRevenue >= 123 AND (active = true OR accountSource = 'web'))`);
-    // });
 });

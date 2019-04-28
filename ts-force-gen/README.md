@@ -18,7 +18,7 @@ Files can be generated using the following command:
 
 #### Configuration file
 
-A json configuration file can be passed in via the `--config|c` arg:
+A json configuration file can be passed in via the `-j` arg:
 
 `ts-force-gen -j ./config/ts-force-config.json`
 
@@ -74,7 +74,7 @@ You can also pass the access token and instance url in directly
 
 You can also authenticate via Username/Password via environment variables by setting the `-e` flag (helpful for CI or build processes):
 
-`ts-force-gen -e -o 'Account,Contact'`
+`ts-force-gen -e
 
 The following variables must be set on in your environment:
 
@@ -88,20 +88,9 @@ HOST =
 
 ```
 
-#### Command line Args
+A JSON Schema is available to make editing the config file as easy as possible.  Simply add this line to the top of your `ts-force-config.json` file
 
-Most args can also be passed in directly via the command line.  Config File & args will be merged with args taking precedence.
-
-- `--username|-u`: If specified with password, generation will attempt to use username/password flow.  If specified without password, will attempt to retrieve token and instance url using `sfdx force:org:display` (Requires that [sfdx cli](https://developer.salesforce.com/tools/sfdxcli) is installed).
-- `--password|-p`: password to use in auth flow
-- `--clientId|-c`: client Id of connected app for username/password auth flow
-- `--clientSecret|-s`: client Secret of connected app for username/password auth flow
-- `--accessToken|-a`: access token to connect to tooling API with.  Not required if using the user/pass or dx flows
-- `--instanceUrl|-i`: instance of the org your connecting with.  Not required if using the user/pass or dx flows
-- `--sobs|-s`: list of comma separated sobs to generate classes for
-- `--outputFile|-o`: where to save the output
-- `--config|-j`: path to config JSON file.  If specified, all above args will pull from file instead
-- `-e`: authenticate using .env vars
+`"$schema": "https://raw.githubusercontent.com/ChuckJonas/ts-force/master/ts-force-gen/ts-force-config.schema.json",`
 
 #### generated classes
 
@@ -111,15 +100,4 @@ Properties will be transformed from api names to the standard javascript convent
 
 #### extending generated classes
 
-Obviously don't change the generated classes if possible unless you want to deal with "merge hell" when you need to regenerate.
-
-Will add details on how to extend once I figure it out myself (mix-ins?).
-
-## Contributing
-
-Contributions are encouraged!
-
-### Running Tests
-
-- `npm run build`: to make sure the program is built
-- `npm test`:to run tests which assert the generated classes are valid & working
+It is not recommended that you edit the generated classes directly.

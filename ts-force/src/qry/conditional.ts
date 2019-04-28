@@ -1,17 +1,21 @@
-import * as dateformat from 'dateformat';
+import { NULL, listFormatter, dateTimeFormatter, stringFormatter, dateFormatter } from './formatters';
+import { Omit } from '../types';
 
 export type Operator = '=' | '!=' | '<=' | '>=' | '>' | '<' | 'LIKE' | 'INCLUDES' | 'EXCLUDES';
 
 export type ListOperator = | 'IN' | 'NOT IN';
 
 export type LogicalOperator = 'AND' | 'OR';
-export type Value = string | number | boolean | Date;
+export type PrimValue = string | number | boolean;
+export type DateValue = Date;
 export type ListValue = string[];
-export type BaseCondition = { field: string, not?: boolean, formatter?: (d: Value | ListValue) => string | string[] };
-export type PrimitiveConditionParams = { op?: Operator, val: Value } & BaseCondition;
+export type Value = PrimValue | DateValue | ListValue;
+export type BaseCondition = { field: string, not?: boolean, formatter?: (d: Value) => string | string[] };
+export type PrimitiveConditionParams = { op?: Operator, val: PrimValue } & BaseCondition;
 export type ListConditionParams = { op?: ListOperator, val: ListValue } & BaseCondition;
-export type SubQueryConditionParams = { op: ListOperator, subqry: string } & BaseCondition;
-export type ConditionParams = PrimitiveConditionParams | SubQueryConditionParams | ListConditionParams;
+export type DateConditionParams = { op?: Operator, val: DateValue, dateOnly?: boolean } & BaseCondition;
+export type SubQueryConditionParams = { op: ListOperator, subqry: string } & Omit<BaseCondition, 'formatter'>;
+export type ConditionParams = PrimitiveConditionParams | SubQueryConditionParams | ListConditionParams | DateConditionParams;
 export interface ConditionsList extends Array<Conditions> { }
 export type Conditions = ConditionParams | LogicalOperator | ConditionsList;
 
@@ -44,24 +48,31 @@ function composeConditional (params: ConditionParams) {
 
     if (isSubQueryCondition(params)) {
         val = `(${params.subqry})`;
-    } else { // primitive value
+    } else if (params.formatter) {
+        // overridden by custom formatter
+        val = params.formatter(params.val);
+    } else if (isDateCondition(params)) {
+        if (params.dateOnly) {
+            val = dateFormatter(params.val);
+        } else {
+            val = dateTimeFormatter(params.val);
+        }
+    } else { // primitive/list conditions
         let primVal = params.val;
         if (params.formatter) {
             val = params.formatter(primVal);
         } else { // render defaults
-            if (primVal === null) {
-                val = 'NULL';
-            }else if (typeof primVal === 'number' || typeof primVal === 'boolean') {
+            if (primVal === undefined || primVal === null) {
+                val = NULL;
+            } else if (typeof primVal === 'number' || typeof primVal === 'boolean') {
                 val = primVal.toString();
             } else if (Array.isArray(primVal)) {
-                if (!operator) { // default
+                if (!operator) { // default operator
                     operator = 'IN';
                 }
-                val = `(${primVal.map(v => `'${v}'`).join(', ')})`;
-            } else if (primVal instanceof Date) {
-                val = dateformat(primVal, "yyyy-mm-dd'T'hh:MM:ssz");
+                val = listFormatter(primVal);
             } else {
-                val = `'${primVal}'`;
+                val = stringFormatter(primVal);
             }
         }
     }
@@ -74,9 +85,13 @@ function composeConditional (params: ConditionParams) {
 }
 
 function isCondition (arg: any): arg is ConditionParams {
-    return arg.field !== undefined && (arg.val !== undefined || arg.subqry !== undefined);
+    return arg.field !== undefined;
 }
 
 function isSubQueryCondition (arg: any): arg is SubQueryConditionParams {
     return arg.subqry !== undefined;
+}
+
+function isDateCondition (arg: any): arg is DateConditionParams {
+    return arg.val instanceof Date;
 }
