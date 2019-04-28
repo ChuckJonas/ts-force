@@ -1,5 +1,5 @@
 import { Rest } from '..';
-import cometd from 'cometd';
+import * as cometd from 'cometd';
 
 export interface StreamingEvent {
     event: {
