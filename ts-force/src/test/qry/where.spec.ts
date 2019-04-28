@@ -109,13 +109,13 @@ describe('Where Value Tests', () => {
                     {
                         field: fields.select('createdDate'),
                         op: '=',
-                        val: new Date(1999, 0, 1, 1, 1, 1)
+                        val: new Date(Date.UTC(1999, 0, 1, 1, 1, 1))
                     }
                 ]
             };
         });
 
-        expect(qry).to.equal(`SELECT Id FROM Account WHERE CreatedDate = 1999-01-01T08:01:01.000Z`);
+        expect(qry).to.equal(`SELECT Id FROM Account WHERE CreatedDate = 1999-01-01T01:01:01.000Z`);
     });
 
     it('where x = Date', () => {
@@ -126,7 +126,7 @@ describe('Where Value Tests', () => {
                     {
                         field: fields.select('createdDate'),
                         op: '=',
-                        val: new Date(1999, 0, 1, 1, 1, 1),
+                        val: new Date(Date.UTC(1999, 0, 1, 1, 1, 1)),
                         dateOnly: true
                     }
                 ]
