@@ -1,5 +1,7 @@
-import { Rest } from '..';
+import { Rest, SObjectStatic } from '..';
 import * as cometd from 'cometd';
+import { RestObject } from '@src/rest/restObject';
+import { SObject } from '@src/rest/sObject';
 
 export interface StreamingEvent {
     event: {
@@ -7,10 +9,25 @@ export interface StreamingEvent {
         replayId: number,
         type: SteamEventType
     };
-    sobject: { Id: string };
+    sobject: SObject;
+}
+
+export interface MappedStreamingEvent<T extends RestObject> {
+    event: {
+        createdDate: Date,
+        replayId: number,
+        type: SteamEventType
+    };
+    sObject: T;
 }
 
 export type SteamEventType = 'created' | 'updated' | 'deleted' | 'undeleted';
+
+export interface MappedListenOptions<T extends RestObject> {
+    topic: string;
+    sObjectType: SObjectStatic<T>; // optional, if set we will pass a mapped event into the stream
+    handler: (event: MappedStreamingEvent<T>) => void;
+}
 
 export interface ListenOptions {
     topic: string;
@@ -38,8 +55,11 @@ export class SObjectStream {
      *   - handler: the function to call when a new steaming event is received.  Takes a `StreamingEvent` as a param
      * @returns the cometd listener
      */
-    public listen = (opts: ListenOptions): StreamConnection => {
-        let {topic, handler} = opts;
+    public listen (opts: ListenOptions): StreamConnection;
+    public listen<T extends RestObject> ( opts: MappedListenOptions<T>): StreamConnection;
+    public listen<T extends RestObject> ( opts: MappedListenOptions<T> | ListenOptions): StreamConnection {
+
+        let {topic} = opts;
 
         const listener = new cometd.CometD();
         listener.configure({
@@ -52,11 +72,23 @@ export class SObjectStream {
             if (handshakeResp.successful) {
               // Subscribe to receive messages from the server.
               listener.subscribe(`/topic/${topic}`, (m: any) => {
-                const dataFromServer: StreamingEvent = m.data;
-                handler(dataFromServer);
+                if (isMappedListenOptions(opts)) {
+                    const {event, sobject: sObject} = m.data as StreamingEvent;
+                    let mappedEvent: MappedStreamingEvent<T> = {
+                        event,
+                        sObject: opts.sObjectType.fromSFObject(sObject)
+                    };
+                    return opts.handler(mappedEvent);
+                }else {
+                    return opts.handler(m.data);
+                }
               });
             }
         });
         return listener;
     }
+}
+
+function isMappedListenOptions (shape: any): shape is MappedListenOptions<any> {
+    return (shape as any).sObjectType !== undefined;
 }

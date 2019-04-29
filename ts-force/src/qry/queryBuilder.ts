@@ -1,6 +1,6 @@
 import { FieldResolver } from './fieldResolver';
 import { ConditionalClause, composeConditionalClause } from './conditional';
-import { SFieldProperties, FieldProps } from '..';
+import { SFieldProperties, FieldProps, SObject } from '..';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
@@ -47,6 +47,7 @@ export interface SObjectStatic<T> {
     new(): T;
     API_NAME: string;
     FIELDS: { [K in keyof FieldProps<T>]: SFieldProperties; };
+    fromSFObject (sob: SObject): T;
 }
 
 /**
