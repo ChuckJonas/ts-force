@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/cometd": "^4.0.4",
     "@types/mocha": "^5.2.5",
     "@types/nock": "^8.2.1",
     "@types/node": "^8.0.4",
@@ -53,6 +52,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cometd": "^4.0.3",
+    "@types/cometd": "^4.0.4",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
