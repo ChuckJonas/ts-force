@@ -1,6 +1,6 @@
 {
   "name": "ts-force-gen",
-  "version": "2.4.0-rc6",
+  "version": "2.4.0-rc7",
   "description": "Code generation for ts-force",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
