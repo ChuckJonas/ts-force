@@ -63,7 +63,7 @@ export class SObjectStream {
 
         const listener = new cometd.CometD();
         listener.configure({
-            url: `${this.client.config.instanceUrl}/cometd/${this.client.config.version.toFixed(0)}/`,
+            url: `${this.client.config.instanceUrl}/cometd/${this.client.config.version.toFixed(1)}/`,
             requestHeaders: { Authorization: `OAuth ${this.client.config.accessToken}` },
             appendMessageTypeToURL: false
         });
