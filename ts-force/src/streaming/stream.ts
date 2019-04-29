@@ -1,7 +1,8 @@
-import { Rest, SObjectStatic } from '..';
-import * as cometd from 'cometd';
+import { Rest, SObjectStatic, StreamConnection } from '..';
+import { CometD } from 'cometd';
 import { RestObject } from '../rest/restObject';
 import { SObject } from '../rest/sObject';
+export { CometD as StreamConnection } from 'cometd';
 
 export interface StreamingEvent {
     event: {
@@ -34,8 +35,6 @@ export interface ListenOptions {
     handler: (event: StreamingEvent) => void;
 }
 
-export type StreamConnection = cometd.CometD;
-
 export class SObjectStream {
 
     private client: Rest;
@@ -61,7 +60,7 @@ export class SObjectStream {
 
         let {topic} = opts;
 
-        const listener = new cometd.CometD();
+        const listener = new CometD();
         listener.configure({
             url: `${this.client.config.instanceUrl}/cometd/${this.client.config.version.toFixed(1)}/`,
             requestHeaders: { Authorization: `OAuth ${this.client.config.accessToken}` },
@@ -85,6 +84,7 @@ export class SObjectStream {
               });
             }
         });
+
         return listener;
     }
 }
