@@ -1,7 +1,7 @@
 import { Rest, SObjectStatic } from '..';
 import * as cometd from 'cometd';
-import { RestObject } from '@src/rest/restObject';
-import { SObject } from '@src/rest/sObject';
+import { RestObject } from '../rest/restObject';
+import { SObject } from '../rest/sObject';
 
 export interface StreamingEvent {
     event: {
