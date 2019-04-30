@@ -9,29 +9,29 @@ import * as path from 'path';
 import { SObjectConfig, Config } from './config';
 import { cleanAPIName, replaceSource } from './util';
 import { Spinner } from 'cli-spinner';
-import { Connection, AuthInfo, Aliases } from '@salesforce/core';
+import { Org, Connection, AuthInfo, Aliases } from '@salesforce/core';
 
 // execute
 run();
 
-function run () {
+function run() {
     checkVersion()
-    .then(generateLoadConfig)
-    .then((config) => generate(config))
-    .catch(e => {
-        console.log('Failed to Generate!  Check config or cmd params!');
-        console.log(e);
-    });
+        .then(generateLoadConfig)
+        .then((config) => generate(config))
+        .catch(e => {
+            console.log('Failed to Generate!  Check config or cmd params!');
+            console.log(e);
+        });
 }
 
 // Checks that the installed version ts-force matches this package
-async function checkVersion () {
+async function checkVersion() {
 
     let tsforce: string;
     let gen: string;
     try {
         gen = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8')).version;
-    }catch (e) {
+    } catch (e) {
         console.warn('Failed to detect package version of ts-force-gen');
         return;
     }
@@ -42,7 +42,7 @@ async function checkVersion () {
                 let json = JSON.parse(fs.readFileSync(path.join('node_modules', dir, 'package.json'), 'utf8'));
                 tsforce = json.version;
             }
-        }catch (err) {}
+        } catch (err) { }
     }
     if (gen !== tsforce) {
         console.warn(`The version of ts-force-gen (${gen}) should match ts-force (${tsforce}). It is recommended that you run \`npm install -D ts-force-gen@${tsforce}\` and regenerate classes`);
@@ -50,7 +50,7 @@ async function checkVersion () {
 }
 
 // init the configuration, either from a json file, command line augs or both
-async function generateLoadConfig (): Promise<Config> {
+async function generateLoadConfig(): Promise<Config> {
 
     let args = minimist(process.argv.slice(2));
 
@@ -110,14 +110,18 @@ async function generateLoadConfig (): Promise<Config> {
             if (username) {
                 config.auth.username = username;
             }
-            console.log(config.auth.username);
-            const connection: Connection = await Connection.create({
-                authInfo: await AuthInfo.create({ username: config.auth.username })
+
+            let connection: Connection = await Connection.create({
+                authInfo: await AuthInfo.create({ username: config.auth.username }
+                )
             });
-            console.log(connection.accessToken);
+            let org = await Org.create({ connection });
+            await org.refreshAuth();
+            connection = org.getConnection();
+
             config.auth.accessToken = connection.accessToken;
             config.auth.instanceUrl = connection.instanceUrl;
-        }else if (config.auth.username !== undefined && config.auth.password !== undefined) {
+        } else if (config.auth.username !== undefined && config.auth.password !== undefined) {
 
             // otherwise lets try username/password flow
             let pwConfig = new UsernamePasswordConfig(
@@ -131,7 +135,7 @@ async function generateLoadConfig (): Promise<Config> {
             let oAuth = new OAuth(pwConfig);
             await oAuth.initialize();
             config.auth = oAuth;
-        }else {
+        } else {
             throw new Error('No valid authentication configuration found!');
         }
     }
@@ -144,7 +148,7 @@ async function generateLoadConfig (): Promise<Config> {
 }
 
 // generate the classes
-async function generate (config: Config) {
+async function generate(config: Config) {
 
     let spinner = new Spinner({
         text: 'warming up...',
@@ -177,7 +181,7 @@ async function generate (config: Config) {
                 className: null,
                 autoConvertNames: true
             };
-        }else {
+        } else {
             objConfig = item;
         }
 
@@ -199,7 +203,7 @@ async function generate (config: Config) {
     if (singleFileMode) {
         index = replaceSource(config.outPath);
         index.addImportDeclaration(TS_FORCE_IMPORTS);
-    }else {
+    } else {
         // create index so we can easily import
         let indexPath = path.join(config.outPath, 'index.ts');
         index = replaceSource(indexPath);
@@ -211,11 +215,11 @@ async function generate (config: Config) {
         let classSource: string | SourceFile;
         if (singleFileMode) {
             classSource = index;
-        }else {
+        } else {
             index.addExportDeclaration({
                 moduleSpecifier: `./${sobConfig.className}`
             });
-            classSource = path.join(config.outPath,`${sobConfig.className}.ts`);
+            classSource = path.join(config.outPath, `${sobConfig.className}.ts`);
         }
 
         let gen = new SObjectGenerator(
@@ -230,7 +234,7 @@ async function generate (config: Config) {
                 source.formatText();
                 if (save) {
                     await source.save();
-                }else {
+                } else {
                     console.log(source.getText());
                 }
             }
@@ -243,14 +247,14 @@ async function generate (config: Config) {
     index.formatText();
     if (save) {
         await index.save();
-    }else {
+    } else {
         console.log(index.getText());
     }
     spinner.stop();
 
 }
 
-function sanitizeClassName (sobConfig: SObjectConfig): string {
+function sanitizeClassName(sobConfig: SObjectConfig): string {
     if (sobConfig.autoConvertNames) {
         return cleanAPIName(sobConfig.apiName);
     }
