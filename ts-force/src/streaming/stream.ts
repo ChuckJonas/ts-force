@@ -25,6 +25,7 @@ export class Streaming {
         if (mode === 'node') {
             // DANGER! this mutates window :(
             require('cometd-nodejs-client').adapt();
+
         }
         this.listener = new CometD();
         this.listener.configure({
@@ -33,6 +34,7 @@ export class Streaming {
             appendMessageTypeToURL: false
         });
 
+        this.listener.unregisterTransport('websocket')
         if (mode === 'browser') {
             // salesforce doesn't seem to support websocket from browser
             this.listener.unregisterTransport('websocket');
