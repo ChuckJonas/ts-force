@@ -2,118 +2,101 @@ import { Rest, SObjectStatic } from '..';
 import { CometD, SubscriptionHandle } from 'cometd';
 import { RestObject } from '../rest/restObject';
 import { SObject } from '../rest/sObject';
+import { Omit } from '../types';
 
-export interface StreamingEvent {
-    event: {
-        createdDate: Date,
-        replayId: number,
-        type: SteamEventType
-    };
-    sobject: SObject;
-}
+export class Streaming {
 
-export interface MappedStreamingEvent<T extends RestObject> {
-    event: {
-        createdDate: Date,
-        replayId: number,
-        type: SteamEventType
-    };
-    sObject: T;
-}
-
-export type SteamEventType = 'created' | 'updated' | 'deleted' | 'undeleted';
-
-export interface MappedListenOptions<T extends RestObject> extends BaseSubscribeOptions {
-    sObjectType: SObjectStatic<T>; // optional, if set we will pass a mapped event into the stream
-    onEvent: (event: MappedStreamingEvent<T>) => void;
-}
-
-export interface ListenOptions extends BaseSubscribeOptions {
-    onEvent: (event: StreamingEvent) => void;
-}
-
-interface BaseSubscribeOptions {
-    topic: string;
-}
-
-
-export class SObjectStream {
-
-    private client: Rest;
     private listener: CometD;
     private subscribers: Map<string, SubscriptionHandle>;
 
     /**
-     * Creates a SObjectStream which can listen to streaming events
-     * @param  {Rest} client? Optional.  If not set, will use Rest.DEFAULT_CONFIG
+     * Creates an instance of Streaming class.  Used to listen to PushTopic and Platform Events
+     * @param {('browser' | 'node')} [mode]  Determines if the client should be setup for browser or node. Defaults to browser.
+     *    WARNING: When using `'node'` the global `window` will be modified.  This may cause issues with other isomorphic libraries.
+     *    See: https://github.com/cometd/cometd-nodejs-client/issues/17
+     * @param {Rest} [client] Optional client to use instead of the default connection
+     * @memberof Streaming
      */
-    constructor(client?: Rest) {
-        this.client = client || new Rest();
-        this.listener = new CometD();
+    constructor(mode?: 'browser' | 'node', client?: Rest) {
+        client = client || new Rest();
+        mode = mode || 'browser';
+
         this.subscribers = new Map<string, SubscriptionHandle>();
+        if (mode === 'node') {
+            // DANGER! this mutates window :(
+            require('cometd-nodejs-client').adapt();
+        }
+        this.listener = new CometD();
         this.listener.configure({
-            url: `${this.client.config.instanceUrl}/cometd/${this.client.config.version.toFixed(1)}/`,
-            requestHeaders: { Authorization: `OAuth ${this.client.config.accessToken}` },
-            appendMessageTypeToURL: false,
+            url: `${client.config.instanceUrl}/cometd/${client.config.version.toFixed(1)}/`,
+            requestHeaders: { Authorization: `OAuth ${client.config.accessToken}` },
+            appendMessageTypeToURL: false
         });
-        console.log(this.listener.unregisterTransport('websocket'));
 
-        // console.log(this.listener.unregisterTransport('Websocket'));
-
+        if (mode === 'browser') {
+            // salesforce doesn't seem to support websocket from browser
+            this.listener.unregisterTransport('websocket');
+        }
     }
 
     /**
-     * Creates a SObjectStream which can listen to streaming events
-     * @param  {ListenOptions} opts:
-     *   - topic: the topic to listen to
-     *   - handler: the function to call when a new steaming event is received.  Takes a `StreamingEvent` as a param
-     * @returns the cometd listener
+     * Method to connect to salesforce.  Call before attempting to subscribe to event events or topics
+     *
+     * @memberof Streaming
      */
-    public subscribe(opts: ListenOptions): Promise<SubscriptionHandle>;
-    public subscribe<T extends RestObject>(opts: MappedListenOptions<T>): Promise<SubscriptionHandle>;
-    public subscribe<T extends RestObject>(opts: MappedListenOptions<T> | ListenOptions): Promise<SubscriptionHandle> {
-
+    public connect = () => {
         return new Promise((resolve, reject) => {
-            if (this.listener.isDisconnected()) {
-                reject('Streaming Listener is not connected!  Must run connect first!');
-            }
-            let { topic } = opts;
-
-            // Subscribe to receive messages from the server.
-            let topicUri = `/topic/${topic}`;
-            let subscriber = this.listener.subscribe(
-                topicUri,
-                // data handler
-                (m: { data: any }) => {
-                    if (isMappedListenOptions(opts)) {
-                        const { event, sobject: sObject } = m.data;
-                        let mappedEvent: MappedStreamingEvent<T> = {
-                            event,
-                            sObject: opts.sObjectType.fromSFObject(sObject)
-                        };
-                        return opts.onEvent(mappedEvent);
-                    } else {
-                        return opts.onEvent(m.data);
-                    }
-                },
-                // success handler
-                (message) => {
-                    if (message.successful) {
-                        this.subscribers.set(topicUri, subscriber);
-                        resolve(subscriber);
-                    } else {
-                        reject(message);
-                    }
+            this.listener.handshake((resp) => {
+                if (resp.successful) {
+                    resolve();
+                } else {
+                    reject(resp);
                 }
-            )
+            });
         });
     }
 
-    public unsubscribe = (topic: string) => {
+    /**
+     * General purpose method to subscribe to any uri.
+     *   Use `subscribeToTopic`, `subscribeToTopicMapped` & `subscribeToEvent` for most use cases
+     *
+     * @param {string} channel the relative uri to subscribe to.  EX: '/topic/abc'
+     * @param {(message: any) => void} onEvent Callback handler to process received events
+     * @returns {Promise<SubscriptionHandle>} A cometd SubscriberHandle.  It's recommended to use
+     * @memberof StreamClient
+     */
+    public _subscribe(channel: string, onEvent: (message: any) => void): Promise<SubscriptionHandle> {
         return new Promise((resolve, reject) => {
-            let topicUri = `/topic/${topic}`;
-            if (this.subscribers.has(topicUri)) {
-                let subscriber = this.subscribers.get(topicUri);
+            if (this.listener.isDisconnected()) {
+                reject('Streaming client is not connected!  Must run connect first!');
+            }
+            let subscriber = this.listener.subscribe(
+                channel,
+                onEvent,
+                (m) => {
+                    if (m.successful) {
+                        this.subscribers.set(channel, subscriber);
+                        resolve(subscriber);
+                    } else {
+                        reject(m);
+                    }
+                }
+            );
+        });
+    }
+
+    /**
+     * Method to unsubscribe from any subscription.
+     * @param {string} channel
+     * @param {('topic' | 'event')} [type] Optional parameter to help build channel
+     * @returns {Promise<void>}
+     * @memberof StreamClient
+    */
+    public unsubscribe(channel: string, type?: 'topic' | 'event'): Promise<void> {
+        channel = type ? `/${type}/${channel}` : channel;
+        return new Promise((resolve, reject) => {
+            if (this.subscribers.has(channel)) {
+                let subscriber = this.subscribers.get(channel);
                 this.listener.unsubscribe(subscriber, (m) => {
                     if (m.successful) {
                         resolve();
@@ -122,24 +105,81 @@ export class SObjectStream {
                     }
                 });
             } else {
-                reject(`No subscriber for ${topic} found`);
+                reject(`No subscriber for ${channel} found`);
             }
-        })
-
-    }
-
-    public connect = () => {
-        return new Promise((resolve, reject) => {
-            this.listener.handshake((resp) => {
-                if (resp.successful) {
-                    resolve()
-                } else {
-                    reject(resp)
-                }
-            });
         });
     }
 
+    /**
+     * Method to subscribe to a platform events
+      * @template T type of the event `payload`
+      * @param {string} event The name of the PlatformEvent to subscribe to.  EG: `My_Event__e` (do not include `/event/`)
+      * @param {(m: PlatformEvent<T>) => void} onEvent
+      * @returns {Promise<SubscriptionHandle>}
+      * @memberof Streaming
+      */
+    public subscribeToEvent<T>(event: string, onEvent: (m: PlatformEvent<T>) => void): Promise<SubscriptionHandle> {
+        return this._subscribe(`/event/${event}`, onEvent);
+    }
+
+    /**
+    * Method to subscribe to a push topic
+    *    See `subscribeToTopicMapped` to automatically map your response to a generated SObject class
+    * @template T The signature of of the event `data.sobject`
+    * @param {string} topic The name of the PushTopic to subscribe to.  EG: `MyTopic` (do not include `/topic/`)
+    * @param {(m: TopicMessage<T>) => void} onEvent Your event handler
+    * @returns {Promise<SubscriptionHandle>}
+    * @memberof Streaming
+    */
+    public subscribeToTopic<T extends TopicSObject>(topic: string, onEvent: (m: TopicMessage<T>) => void): Promise<SubscriptionHandle> {
+        return this._subscribe(`/topic/${topic}`, onEvent);
+    }
+
+    /**
+     * Method to subscribe to a PushTopic and parse event messages directly to a generated SObject type
+     *
+     * @template T The SObject type.  Implied from `sObjectType` param
+     * @param {SObjectStatic<T>} sObjectType The static instance of the SObject type to map.  EG: `Account`
+     * @param {string} topic The name of the PushTopic to subscribe to.  EG: `MyTopic` (do not include `/topic/`)
+     * @param {(event: SObjectTopicMessage<T>) => void} onEvent Your event handler.  Payload will be parsed to your `sObjectType`
+     * @returns {Promise<SubscriptionHandle>}
+     * @memberof Streaming
+     *
+     * Example:
+     *
+     * ```typescript
+     *await stream.subscribeToTopicMapped(
+     *   Account,
+     *   topic.name,
+     *   e => {
+     *      let acc: Account = e.data.sObject;
+     *      console.log(acc.annualRevenue);
+     *   }
+     * );
+     * ```
+     */
+    public subscribeToTopicMapped<T extends RestObject>(sObjectType: SObjectStatic<T>, topic: string, onEvent: (event: SObjectTopicMessage<T>) => void): Promise<SubscriptionHandle> {
+        return this.subscribeToTopic(
+            topic,
+            (m: TopicMessage<any>) => {
+                let mappedEvent: SObjectTopicMessage<any> = {
+                    data: {
+                        event: m.data.event,
+                        sObject: sObjectType.fromSFObject(m.data.sobject as SObject)
+                    },
+                    channel: m.channel,
+                    clientId: m.clientId
+                };
+                return onEvent(mappedEvent);
+            }
+        );
+    }
+
+    /**
+     * Disconnects the streaming client.  Will unsubscribe for all active subscriptions
+     *
+     * @memberof Streaming
+     */
     public disconnect = () => {
         return new Promise((resolve, reject) => {
             this.listener.disconnect(m => {
@@ -151,13 +191,60 @@ export class SObjectStream {
             });
         });
     }
-
+    /**
+     * Returns `true` if the client is currently connected with salesforce
+     *
+     * @memberof Streaming
+     */
     public isConnected = () => {
         return !this.listener.isDisconnected();
     }
-
 }
 
-function isMappedListenOptions(shape: any): shape is MappedListenOptions<any> {
-    return (shape as any).sObjectType !== undefined;
+/*=== MESSAGE TYPES ===*/
+
+// Push Topic
+export interface SObjectTopicMessage<T extends RestObject> extends Omit<TopicMessage<any>, 'data'> {
+    data: {
+        event: Event;
+        sObject: T;
+    };
+}
+
+export interface TopicMessage<T extends TopicSObject> {
+    clientId: string;
+    data: Data<T>;
+    channel: string;
+}
+
+export interface Event {
+    createdDate: Date;
+    replayId: number;
+    type: TopicEventType;
+}
+export type TopicEventType = 'created' | 'updated' | 'deleted' | 'undeleted';
+
+export interface TopicSObject {
+    Id: string;
+}
+
+export interface Data<T extends TopicSObject> {
+    event: Event;
+    sobject: T;
+}
+
+// PLATFORM EVENTS
+export interface PlatformEvent<T> {
+    data: PlatformEventData<T>;
+    channel: string;
+}
+
+export interface PlatformEventInfo {
+    replayId: number;
+}
+
+export interface PlatformEventData<T> {
+    schema: string;
+    payload: T;
+    event: PlatformEventInfo;
 }

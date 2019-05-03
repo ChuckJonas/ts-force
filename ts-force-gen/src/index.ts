@@ -14,7 +14,7 @@ import { Org, Connection, AuthInfo, Aliases } from '@salesforce/core';
 // execute
 run();
 
-function run() {
+function run () {
     checkVersion()
         .then(generateLoadConfig)
         .then((config) => generate(config))
@@ -25,7 +25,7 @@ function run() {
 }
 
 // Checks that the installed version ts-force matches this package
-async function checkVersion() {
+async function checkVersion () {
 
     let tsforce: string;
     let gen: string;
@@ -50,7 +50,7 @@ async function checkVersion() {
 }
 
 // init the configuration, either from a json file, command line augs or both
-async function generateLoadConfig(): Promise<Config> {
+async function generateLoadConfig (): Promise<Config> {
 
     let args = minimist(process.argv.slice(2));
 
@@ -110,7 +110,7 @@ async function generateLoadConfig(): Promise<Config> {
             if (username) {
                 config.auth.username = username;
             }
-
+            console.log(config.auth.username);
             let connection: Connection = await Connection.create({
                 authInfo: await AuthInfo.create({ username: config.auth.username }
                 )
@@ -148,7 +148,7 @@ async function generateLoadConfig(): Promise<Config> {
 }
 
 // generate the classes
-async function generate(config: Config) {
+async function generate (config: Config) {
 
     let spinner = new Spinner({
         text: 'warming up...',
@@ -254,7 +254,7 @@ async function generate(config: Config) {
 
 }
 
-function sanitizeClassName(sobConfig: SObjectConfig): string {
+function sanitizeClassName (sobConfig: SObjectConfig): string {
     if (sobConfig.autoConvertNames) {
         return cleanAPIName(sobConfig.apiName);
     }

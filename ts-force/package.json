@@ -51,9 +51,10 @@
     "typescript": "^3.3.1"
   },
   "dependencies": {
+    "@types/cometd": "^4.0.4",
     "axios": "^0.18.0",
     "cometd": "^4.0.3",
-    "@types/cometd": "^4.0.4",
+    "cometd-nodejs-client": "^1.0.2",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
