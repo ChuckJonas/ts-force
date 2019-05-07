@@ -1,5 +1,6 @@
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { CompositeBatchResult } from '..';
+import { ApiLimit } from './rest';
 
 export interface AxiosErrorException{
     type: 'axios';
@@ -83,4 +84,21 @@ export const isAxiosError = (error: any | AxiosError): error is AxiosError => {
 
 export const isCompositeError = (error: any | CompositeError): error is CompositeError => {
     return error.compositeResponses !== undefined;
+};
+
+const LIMITS_REGEX = /api-usage=(\d+)\/(\d+)/;
+
+export const parseLimitsFromResponse = (response: AxiosResponse): ApiLimit => {
+    if (response.headers && response.headers['sforce-limit-info']) {
+        const match = LIMITS_REGEX.exec(response.headers['sforce-limit-info']);
+        if (!match) {
+            return null;
+        }
+        const [,used, total] = match;
+        return {
+            used: Number(used),
+            limit: Number(total)
+        };
+    }
+    return null;
 };
