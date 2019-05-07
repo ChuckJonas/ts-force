@@ -5,18 +5,36 @@ import { BaseConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
 const LIMITS_REGEX = /api-usage=(\d+)\/(\d+)/;
 
 export class Rest {
+    private static defaultInstance: Rest;
+
     public config: BaseConfig;
 
     public request: AxiosInstance;
     public version: string;
+
     public limits: ApiLimit = {
         used: null,
         limit: null
     };
-
+    
+    /**
+     * Constructor
+     * @param {BaseConfig} [config] Optional authenication configuration.   
+     *     If not passed in will return a "singleton" client from the default config
+     * @memberof Rest
+     */
     constructor (config?: BaseConfig) {
-        if (!config) {
+
+        this.config = config;
+        // setup/get "singleton" if using default config
+        if (!this.config) {
+            if (Rest.defaultInstance && 
+                Rest.defaultInstance.config.accessToken === DEFAULT_CONFIG.accessToken)
+            {
+                return Rest.defaultInstance;
+            }
             this.config = DEFAULT_CONFIG;
+            Rest.defaultInstance = this;
         }
 
         this.version = `v${(this.config.version ? this.config.version : DEFAULT_CONFIG.version).toFixed(1)}`;
