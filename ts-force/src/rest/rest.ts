@@ -1,6 +1,8 @@
-import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { SObjectDescribe } from './sObjectDescribe';
 import { BaseConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
+
+const LIMITS_REGEX = /api-usage=(\d+)\/(\d+)/;
 
 export class Rest {
     private static defaultInstance: Rest;
@@ -9,6 +11,11 @@ export class Rest {
 
     public request: AxiosInstance;
     public version: string;
+
+    public limits: ApiLimit = {
+        used: null,
+        limit: null
+    };
     
     /**
      * Constructor
@@ -39,6 +46,20 @@ export class Rest {
                 'Accept': 'application/json'
             }
         });
+
+        const updateLimits = (response) => this.updateLimits(response);
+        this.request.interceptors.response.use(updateLimits, updateLimits);
+    }
+
+    private updateLimits (response: AxiosResponse) {
+        if (response.headers['sforce-limit-info']) {
+            const [_, used, total] = LIMITS_REGEX.exec(response.headers['sforce-limit-info']);
+            this.limits = {
+                used: Number(used),
+                limit: Number(total)
+            };
+        }
+        return response;
     }
 
     /**
@@ -67,6 +88,7 @@ export class Rest {
         let qryString = encodeURIComponent(query);
         return (await this.request.get<SearchResponse<T>>(`/services/data/${this.version}/search?q=${qryString}`)).data;
     }
+
 }
 
 export interface QueryResponse<T> {
@@ -78,4 +100,9 @@ export interface QueryResponse<T> {
 
 export interface SearchResponse<T> {
     searchRecords: T[];
+}
+
+export interface ApiLimit {
+    used?: number;
+    limit?: number;
 }
