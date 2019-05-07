@@ -1,16 +1,33 @@
 import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios';
-import { SObject } from './sObject';
 import { SObjectDescribe } from './sObjectDescribe';
 import { BaseConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
 
 export class Rest {
+    private static defaultInstance: Rest;
+
     public config: BaseConfig;
 
     public request: AxiosInstance;
     public version: string;
+    
+    /**
+     * Constructor
+     * @param {BaseConfig} [config] Optional authenication configuration.   
+     *     If not passed in will return a "singleton" client from the default config
+     * @memberof Rest
+     */
     constructor (config?: BaseConfig) {
-        if (!config) {
+
+        this.config = config;
+        // setup/get "singleton" if using default config
+        if (!this.config) {
+            if (Rest.defaultInstance && 
+                Rest.defaultInstance.config.accessToken === DEFAULT_CONFIG.accessToken)
+            {
+                return Rest.defaultInstance;
+            }
             this.config = DEFAULT_CONFIG;
+            Rest.defaultInstance = this;
         }
 
         this.version = `v${(this.config.version ? this.config.version : DEFAULT_CONFIG.version).toFixed(1)}`;
@@ -23,6 +40,7 @@ export class Rest {
             }
         });
     }
+
     /**
      * @param  {string} apiName the object to get the describe for
      * @returns Promise<SObjectDescribe>
