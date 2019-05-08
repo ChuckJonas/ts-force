@@ -47,15 +47,13 @@ export class Rest {
             }
         });
 
-        const updateLimits = (response: AxiosResponse) => {
+        this.request.interceptors.response.use((response: AxiosResponse) => {
             const limits = parseLimitsFromResponse(response);
             if (limits) {
                 this.apiLimit = limits;
             }
             return response;
-        };
-
-        this.request.interceptors.response.use(updateLimits);
+        });
     }
 
     /**
