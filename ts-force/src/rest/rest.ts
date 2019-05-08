@@ -2,8 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { SObjectDescribe } from './sObjectDescribe';
 import { BaseConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
 import { Limits, ApiLimit, QueryResponse, SearchResponse } from './restTypes';
-
-const LIMITS_REGEX = /api-usage=(\d+)\/(\d+)/;
+import { parseLimitsFromResponse } from './utils';
 
 export class Rest {
     private static defaultInstance: Rest;
@@ -48,19 +47,13 @@ export class Rest {
             }
         });
 
-        const updateLimits = (response) => this.updateLimits(response);
-        this.request.interceptors.response.use(updateLimits);
-    }
-
-    private updateLimits (response: AxiosResponse) {
-        if (response.headers && response.headers['sforce-limit-info']) {
-            const [_, used, total] = LIMITS_REGEX.exec(response.headers['sforce-limit-info']);
-            this.apiLimit = {
-                used: Number(used),
-                limit: Number(total)
-            };
-        }
-        return response;
+        this.request.interceptors.response.use((response: AxiosResponse) => {
+            const limits = parseLimitsFromResponse(response);
+            if (limits) {
+                this.apiLimit = limits;
+            }
+            return response;
+        });
     }
 
     /**
