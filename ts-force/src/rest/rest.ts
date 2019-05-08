@@ -55,7 +55,7 @@ export class Rest {
             return response;
         };
 
-        this.request.interceptors.response.use(updateLimits, updateLimits);
+        this.request.interceptors.response.use(updateLimits);
     }
 
     /**
