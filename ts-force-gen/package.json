@@ -1,6 +1,6 @@
 {
   "name": "ts-force-gen",
-  "version": "2.3.0",
+  "version": "2.4.0-rc9",
   "description": "Code generation for ts-force",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -27,7 +27,7 @@
     "pretest": "npm run clean && tsc",
     "test": "mocha --timeout 100000",
     "build": "tsc -p tsconfig.build.json",
-    "watch": "mocha-typescript-watch",
+    "watch": "tsc -p tsconfig.build.json -w",
     "generate-json-schema": "npx typescript-json-schema --required ./tsconfig.json Config > ./ts-force-config.schema.json",
     "prepublishOnly": "npm run clean-build && npm run generate-json-schema"
   },

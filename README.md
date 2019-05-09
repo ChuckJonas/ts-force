@@ -11,7 +11,7 @@ The **MISSION** of this project is to:
   * Providing types for `SObjects` that are resilient to schema changes
   * Mapping SF API names to js friendly syntax
   * Make constructing SOQL queries as easy and fool-proof as possible. [See Demo](https://stackblitz.com/edit/ts-force-query-playground)
-  * Provide "Quality of Life" features by abstracting away some of the more tedious parts of working with the REST API (EG: `queryMore`, translating `mulit-select picklist` to arrays, standardize error handling, etc)
+  * Provide "Quality of Life" features by abstracting away some of the more tedious parts of working with the REST API (EG: `queryMore`, translating `multi-select picklist` to arrays, standardize error handling, etc)
 
 2. Maintain acceptable performance & reliability
 

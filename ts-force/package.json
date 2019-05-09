@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "2.3.0",
+  "version": "2.4.0-rc9",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -25,6 +25,7 @@
     "link": "npm run clean-build && npm link",
     "test": "mocha --timeout 10000 -r dotenv/config -r ts-node/register \"./src/test/**/*.spec.ts\"",
     "build": "npx tsc -p tsconfig.build.json",
+    "watch": "tsc -p tsconfig.build.json -w",
     "ci": "npm run generate-test-classes",
     "generate-test-classes": "npx ts-node ./src/test/setup",
     "prepublishOnly": "npm run clean-build"
@@ -50,8 +51,10 @@
     "typescript": "^3.3.1"
   },
   "dependencies": {
+    "@types/cometd": "^4.0.4",
     "axios": "^0.18.0",
-    "lodash": "^4.17.11",
+    "cometd": "^4.0.3",
+    "cometd-nodejs-client": "^1.0.2",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
