@@ -11,35 +11,21 @@ export class Streaming {
 
     /**
      * Creates an instance of Streaming class.  Used to listen to PushTopic and Platform Events
-     * @param {('browser' | 'node')} [mode]  Determines if the client should be setup for browser or node. Defaults to browser.
-     *    WARNING: When using `'node'` the global `window` will be modified.  This may cause issues with other isomorphic libraries.
-     *    See: https://github.com/cometd/cometd-nodejs-client/issues/17
      * @param {Rest} [client] Optional client to use instead of the default connection
      * @memberof Streaming
      */
-    constructor(mode?: 'browser' | 'node', client?: Rest) {
+    constructor(client?: Rest) {
         client = client || new Rest();
-        mode = mode || 'browser';
 
         this.subscribers = new Map<string, SubscriptionHandle>();
-        if (mode === 'node') {
-            // DANGER! this mutates window :(
-            require('cometd-nodejs-client').adapt();
-
-        }
         this.listener = new CometD();
         this.listener.configure({
             url: `${client.config.instanceUrl}/cometd/${client.config.version.toFixed(1)}/`,
             requestHeaders: { Authorization: `OAuth ${client.config.accessToken}` },
             appendMessageTypeToURL: false
         });
-
-        this.listener.unregisterTransport('websocket')
-        if (mode === 'browser') {
-            // salesforce doesn't seem to support websocket from browser
-            this.listener.unregisterTransport('websocket');
-        }
     }
+
 
     /**
      * Method to connect to salesforce.  Call before attempting to subscribe to event events or topics
@@ -56,6 +42,16 @@ export class Streaming {
                 }
             });
         });
+    }
+
+    /**
+     * Removes a transport from the cometd connection.
+     * See: https://docs.cometd.org/current/reference/#_javascript_transports_unregistering
+     * @param {('websocket' | 'long-polling' | 'callback-polling')} transport
+     * @memberof Streaming
+     */
+    public unregisterTransport(transport: 'websocket' | 'long-polling' | 'callback-polling') {
+        this.listener.unregisterTransport(transport);
     }
 
     /**

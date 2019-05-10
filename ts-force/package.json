@@ -48,13 +48,13 @@
     "ts-node": "^7.0.1",
     "tslint": "^5.4.3",
     "tslint-config-standard": "^6.0.1",
+    "cometd-nodejs-client": "^1.0.2",
     "typescript": "^3.3.1"
   },
   "dependencies": {
     "@types/cometd": "^4.0.4",
     "axios": "^0.18.0",
     "cometd": "^4.0.3",
-    "cometd-nodejs-client": "^1.0.2",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
