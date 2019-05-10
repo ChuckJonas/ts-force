@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.4.0
+
+- added `Streaming` class for streaming and platform events
+- added `limits()` method to query full limits data
+- `Rest` client now captures rest limits from header (thxs @joeruello)
+- fixed missing optional Rest instance `retrieve` method on generated classes (thxs @joeruello)
+
 ## 2.2.3
 
 - Added `json.schema` for `ts-force-config.json`
@@ -7,7 +14,7 @@
 
 ## 2.2.1
 
-- started changelog :0
+- restarted changelog :0
 - added optional picklist enums generation
 - added optional restrictive types
 - mapping of multi-picklists to arrays

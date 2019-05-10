@@ -155,8 +155,8 @@ export class Account extends RestObject {
     @sField({ apiName: 'MultiPick__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.MULTIPICKLIST, salesforceLabel: 'MultiPick', externalId: false })
     public multiPick: Account.PICKLIST.multiPick[];
 
-    constructor(fields?: AccountFields, client?: Rest) {
-        super('Account', client);
+    constructor(fields?: AccountFields, restInstance?: Rest) {
+        super('Account', restInstance);
         this.contacts = void 0;
         this.users = void 0;
         this.id = void 0;
@@ -243,10 +243,10 @@ export class Account extends RestObject {
         return this._fields = this._fields ? this._fields : Account.getPropertiesMeta<FieldProps<Account>, Account>(Account)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<Account>) => SOQLQueryParams) | string): Promise<Account[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<Account>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<Account[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(Account, qryParam) : qryParam;
-        return await RestObject.query<Account>(Account, qry);
+        return await RestObject.query<Account>(Account, qry, restInstance);
 
     }
 
@@ -535,8 +535,8 @@ export class Contact extends RestObject {
     @sField({ apiName: 'Languages__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Languages', externalId: false })
     public languages: string;
 
-    constructor(fields?: ContactFields, client?: Rest) {
-        super('Contact', client);
+    constructor(fields?: ContactFields, restInstance?: Rest) {
+        super('Contact', restInstance);
         this.users = void 0;
         this.id = void 0;
         this.isDeleted = void 0;
@@ -616,10 +616,10 @@ export class Contact extends RestObject {
         return this._fields = this._fields ? this._fields : Contact.getPropertiesMeta<FieldProps<Contact>, Contact>(Contact)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<Contact>) => SOQLQueryParams) | string): Promise<Contact[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<Contact>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<Contact[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(Contact, qryParam) : qryParam;
-        return await RestObject.query<Contact>(Contact, qry);
+        return await RestObject.query<Contact>(Contact, qry, restInstance);
 
     }
 
@@ -1044,8 +1044,8 @@ export class User extends RestObject {
     @sField({ apiName: 'IsProfilePhotoActive', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Has Profile Photo', externalId: false })
     public readonly isProfilePhotoActive: boolean;
 
-    constructor(fields?: UserFields, client?: Rest) {
-        super('User', client);
+    constructor(fields?: UserFields, restInstance?: Rest) {
+        super('User', restInstance);
         this.id = void 0;
         this.username = void 0;
         this.lastName = void 0;
@@ -1230,10 +1230,10 @@ export class User extends RestObject {
         return this._fields = this._fields ? this._fields : User.getPropertiesMeta<FieldProps<User>, User>(User)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string): Promise<User[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<User[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(User, qryParam) : qryParam;
-        return await RestObject.query<User>(User, qry);
+        return await RestObject.query<User>(User, qry, restInstance);
 
     }
 
@@ -1669,8 +1669,8 @@ export class PushTopic extends RestObject {
     @sField({ apiName: 'SystemModstamp', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'System Modstamp', externalId: false })
     public readonly systemModstamp: Date;
 
-    constructor(fields?: PushTopicFields, client?: Rest) {
-        super('PushTopic', client);
+    constructor(fields?: PushTopicFields, restInstance?: Rest) {
+        super('PushTopic', restInstance);
         this.id = void 0;
         this.name = void 0;
         this.query = void 0;
@@ -1703,10 +1703,10 @@ export class PushTopic extends RestObject {
         return this._fields = this._fields ? this._fields : PushTopic.getPropertiesMeta<FieldProps<PushTopic>, PushTopic>(PushTopic)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<PushTopic>) => SOQLQueryParams) | string): Promise<PushTopic[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<PushTopic>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<PushTopic[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(PushTopic, qryParam) : qryParam;
-        return await RestObject.query<PushTopic>(PushTopic, qry);
+        return await RestObject.query<PushTopic>(PushTopic, qry, restInstance);
 
     }
 

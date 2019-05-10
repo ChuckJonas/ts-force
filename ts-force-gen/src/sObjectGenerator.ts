@@ -212,7 +212,7 @@ export class SObjectGenerator {
             hasQuestionToken: true
         });
         constr.addParameter({
-            name: 'client',
+            name: 'restInstance',
             type: 'Rest',
             hasQuestionToken: true
         });
@@ -221,7 +221,7 @@ export class SObjectGenerator {
             return `this.${prop.name} = void 0;`;
         }).join('\n');
 
-        let constructorBody = `super('${sobConfig.apiName}', client);
+        let constructorBody = `super('${sobConfig.apiName}', restInstance);
                             ${propsInit}
                             this.initObject(${interfaceParamName});
                             return new Proxy(this, this.safeUpdateProxyHandler);`;
