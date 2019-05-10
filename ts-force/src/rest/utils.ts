@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { CompositeBatchResult } from '..';
-import { ApiLimit } from './rest';
+import { ApiLimit } from './restTypes';
 
 export interface AxiosErrorException{
     type: 'axios';
