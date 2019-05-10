@@ -14,12 +14,13 @@ describe('Streaming API', () => {
         const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
         let oAuth = new OAuth(passwordConfig);
         setDefaultConfig(await oAuth.initialize());
+        require('cometd-nodejs-client').adapt();
     });
 
 
     it('can connect & disconnect', async () => {
         try {
-            let stream = new Streaming('node');
+            let stream = new Streaming();
             await stream.connect();
             expect(stream.isConnected()).to.equal(true);
             await stream.disconnect();
@@ -37,7 +38,7 @@ describe('Streaming API', () => {
                 let topic = await getOrCreateTestTopic();
 
                 // run test
-                let stream = new Streaming('node');
+                let stream = new Streaming();
                 await stream.connect();
                 expect(stream.isConnected()).to.equal(true);
 
@@ -71,7 +72,7 @@ describe('Streaming API', () => {
                 let topic = await getOrCreateTestTopic();
 
                 // run test
-                let stream = new Streaming('node');
+                let stream = new Streaming();
                 await stream.connect();
                 expect(stream.isConnected()).to.equal(true);
 
