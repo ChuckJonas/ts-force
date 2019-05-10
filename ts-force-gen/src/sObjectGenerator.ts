@@ -164,13 +164,14 @@ export class SObjectGenerator {
             isStatic: true,
             scope: Scope.Public,
             parameters: [
-                { name: 'qryParam', type: `((fields: FieldResolver<${className}>) => SOQLQueryParams) | string` }
+                { name: 'qryParam', type: `((fields: FieldResolver<${className}>) => SOQLQueryParams) | string` },
+                { name: 'restInstance', type: 'Rest', hasQuestionToken: true }
             ],
             returnType: `Promise<${className}[]>`,
             isAsync: true,
             bodyText: `
             let qry = typeof qryParam === 'function' ? buildQuery(${className}, qryParam) : qryParam;
-            return await ${SUPER_CLASS}.query<${className}>(${className}, qry);
+            return await ${SUPER_CLASS}.query<${className}>(${className}, qry, restInstance);
             `
         });
 
