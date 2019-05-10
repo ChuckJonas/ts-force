@@ -1,6 +1,6 @@
 {
   "name": "ts-force-project",
-  "version": "2.3.0",
+  "version": "2.4.2",
   "description": "",
   "scripts": {
     "postinstall": "cd ts-force && npm install && npm run build && cd ../ts-force-gen && npm install",
@@ -11,9 +11,9 @@
     "prepublishOnly": "echo 'Code should be published from individual directories' && exit 1",
     "publishRuntime": "cd ts-force && npm version $npm_package_version && npm publish",
     "publishGen": "cd ts-force-gen && npm version $npm_package_version && npm publish",
-    "buildBoth": "cd ts-force && npm run build && cd ../ts-force-gen && npm run build",
+    "build": "cd ts-force && npm run build && cd ../ts-force-gen && npm run build",
+    "tagNext": "npm dist-tag add ts-force@$npm_package_version && npm dist-tag add ts-force-gen@$npm_package_version",
     "publishBoth": "npm run checkCommitted && npm run publishRuntime && npm run publishGen && npm run tag"
-
   },
   "repository": {
     "type": "git",

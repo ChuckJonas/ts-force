@@ -7,7 +7,8 @@
             "enforcePicklistValues": "RESTRICTED"
         },
         "Contact",
-        "User"
+        "User",
+        "PushTopic"
     ],
     "generatePicklists": true,
     "enforcePicklistValues": "ALL"
