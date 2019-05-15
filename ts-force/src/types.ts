@@ -21,3 +21,6 @@ export type ExcludeNonQueryFields<T> = Omit<T, '_TYPE_' | 'attributes' | '_modif
 // for constructing SObjects
 export type ExcludeNonFields<T> = Omit<T, 'attributes' | '_modified'>;
 export type FieldProps<T> = ExcludeNonFields<NonFunctionProperties<T>>;
+
+// for picklist generation
+export type PicklistConst<T extends any> = T[keyof T];

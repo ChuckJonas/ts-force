@@ -78,7 +78,6 @@ describe('Select Tests', () => {
   it('select x, y, z.a, z.b', () => {
 
     let qry = buildQuery(Contact, fields => {
-        let x = fields.select('assistantName',{field: 'createdById', fn: 'AVG'}, 'accountId', {field: 'assistantPhone', fn: 'CALENDAR_MONTH'});
         return {
             select: [
                 ...fields.select('accountId', 'email'),
@@ -99,4 +98,15 @@ describe('Select Tests', () => {
     });
     expect(qry).to.equal('SELECT COUNT(AccountNumber) c FROM Account');
   });
+
+  it('select COUNT(x), x, y, COUNT(y)', () => {
+    let qry = buildQuery(Contact, fields => {
+        return {
+            select: fields.select('assistantName', {field: 'createdById', fn: 'AVG'}, 'accountId', {field: 'assistantPhone', fn: 'CALENDAR_MONTH'})
+        };
+    });
+    expect(qry).to.equal('SELECT AssistantName, AVG(CreatedById), AccountId, CALENDAR_MONTH(AssistantPhone) FROM Contact');
+  });
+
 });
+

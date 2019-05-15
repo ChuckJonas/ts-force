@@ -122,8 +122,7 @@ describe('Generated Classes', () => {
 
         let acc = new Account({
             name: 'account',
-            multiPick: [multiPick.ONE, multiPick.TWO]
-
+            multiPick: [multiPick.ONE, 'two']
         });
         await acc.insert();
 

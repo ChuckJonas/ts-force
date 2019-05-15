@@ -49,7 +49,7 @@
     "tslint": "^5.4.3",
     "tslint-config-standard": "^6.0.1",
     "cometd-nodejs-client": "^1.0.2",
-    "typescript": "^3.3.1"
+    "typescript": "^3.4.5"
   },
   "dependencies": {
     "@types/cometd": "^4.0.4",

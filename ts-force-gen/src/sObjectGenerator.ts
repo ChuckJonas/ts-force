@@ -1,10 +1,11 @@
 
 import { ChildRelationship, Field, Rest, SalesforceFieldType, SFieldProperties, SObjectDescribe } from '../../ts-force';
-import { ClassDeclaration, DecoratorStructure, JSDocStructure, PropertyDeclarationStructure, Scope, SourceFile, ImportDeclarationStructure } from 'ts-simple-ast';
+import { ClassDeclaration, DecoratorStructure, JSDocStructure, PropertyDeclarationStructure, Scope, SourceFile, ImportDeclarationStructure, StructureKind, WriterFunctions } from 'ts-morph';
 import { SObjectConfig } from './config';
 import { cleanAPIName, replaceSource } from './util';
 
 export const TS_FORCE_IMPORTS: ImportDeclarationStructure = {
+    kind: StructureKind.ImportDeclaration,
     moduleSpecifier: 'ts-force',
     namedImports: [
         { name: 'Rest' },
@@ -17,7 +18,8 @@ export const TS_FORCE_IMPORTS: ImportDeclarationStructure = {
         { name: 'FieldResolver' },
         { name: 'SOQLQueryParams' },
         { name: 'buildQuery' },
-        { name: 'FieldProps' }
+        { name: 'FieldProps' },
+        { name: 'PicklistConst' }
     ]
 };
 
@@ -87,9 +89,6 @@ export class SObjectGenerator {
             });
 
             await this.generateSObjectClass(this.sObjectConfig);
-            if (this.sObjectConfig.generatePicklists) {
-                this.generatePickistNamespace();
-            }
 
             if (!this.singleFileMode) {
                 // ts-imports must be added by controlling process
@@ -156,7 +155,8 @@ export class SObjectGenerator {
             name: 'FIELDS',
             scope: Scope.Public,
             isStatic: true,
-            bodyText: `return this._fields = this._fields ? this._fields : ${className}.getPropertiesMeta<FieldProps<${className}>,${className}>(${className})`
+
+            statements: `return this._fields = this._fields ? this._fields : ${className}.getPropertiesMeta<FieldProps<${className}>,${className}>(${className})`
         });
 
         classDeclaration.addMethod({
@@ -169,7 +169,7 @@ export class SObjectGenerator {
             ],
             returnType: `Promise<${className}[]>`,
             isAsync: true,
-            bodyText: `
+            statements: `
             let qry = typeof qryParam === 'function' ? buildQuery(${className}, qryParam) : qryParam;
             return await ${SUPER_CLASS}.query<${className}>(${className}, qry, restInstance);
             `
@@ -183,8 +183,12 @@ export class SObjectGenerator {
                 { name: 'sob', type: 'SObject' }
             ],
             returnType: `${className}`,
-            bodyText: `return new ${className}().mapFromQuery(sob);`
+            statements: `return new ${className}().mapFromQuery(sob);`
         });
+
+        if (this.sObjectConfig.generatePicklists) {
+            this.generatePickistConst(classDeclaration);
+        }
 
         classDeclaration.forget();
     }
@@ -231,31 +235,30 @@ export class SObjectGenerator {
         return classDeclaration;
     }
 
-    private generatePickistNamespace () {
+    private generatePickistConst (classDeclaration: ClassDeclaration) {
         if (this.pickLists.size) {
-            let namespace = this.sourceFile.addNamespace({
-                name: this.sObjectConfig.className,
-                isExported: true
-            });
-            let picklists = namespace.addNamespace({
+            let picklistsConst = classDeclaration.addProperty({
                 name: 'PICKLIST',
-                isExported: true
+                scope: Scope.Public,
+                isStatic: true,
+                isReadonly: true
             });
 
+            let picklistConsts = {};
+
             this.pickLists.forEach((values, field) => {
-                // picklists.addTypeAlias({
-                //     name: field,
-                //     isExported: true,
-                //     type: values.map(pv => `'${pv[1]}'` ).join(' | \r\n')
-                // });
-                picklists.addEnums([
-                    {
-                        isExported: true,
-                        name: field,
-                        members: values.map(pv => ({name: pv[0], value: pv[1]}))
-                    }
-                ]);
+                picklistConsts[field] = WriterFunctions.object(values.reduce((obj, pv) => {
+                    obj[pv[0]] = writer => writer.quote(pv[1]);
+                    return obj;
+                }, {}));
             });
+
+            let x = writer => {
+                WriterFunctions.object(picklistConsts)(writer);
+                writer.write(' as const');
+            };
+
+            picklistsConst.setInitializer(x);
         }
     }
 
@@ -348,7 +351,7 @@ export class SObjectGenerator {
             try {
                 let docs: JSDocStructure[] = [];
                 if (field.inlineHelpText != null) {
-                    docs.push({ description: field.inlineHelpText });
+                    docs.push({ kind: StructureKind.JSDoc, description: field.inlineHelpText });
                 }
 
                 // only include reference types if we are also generating the referenced class
@@ -392,6 +395,7 @@ export class SObjectGenerator {
                 }
 
                 let prop: PropertyDeclarationStructure = {
+                    kind: StructureKind.Property,
                     name: this.sanitizeProperty(sobConfig, field.name, field.type === SalesforceFieldType.REFERENCE),
                     type: this.mapSObjectType(field.type),
                     scope: Scope.Public,
@@ -419,7 +423,7 @@ export class SObjectGenerator {
                             )
                         ) {
 
-                            let picklist = `${sobConfig.className}.PICKLIST.${prop.name}`;
+                            let picklist = `PicklistConst<typeof ${sobConfig.className}.PICKLIST.${prop.name}>`;
                             if (field.type === SalesforceFieldType.MULTIPICKLIST) {
                                 prop.type = `${picklist}[]`;
                             }else {
@@ -482,7 +486,7 @@ export class SObjectGenerator {
         return this.generateDecorator(decoratorProps);
     }
 
-    private generateDecorator (decoratorProps: SalesforceDecoratorProps) {
+    private generateDecorator (decoratorProps: SalesforceDecoratorProps): DecoratorStructure {
         let ref = decoratorProps.reference != null ? `()=>{return ${decoratorProps.reference}}` : 'undefined';
         let sfType = decoratorProps.salesforceType ? `${this.mapTypeToEnum(decoratorProps.salesforceType)}` : 'undefined';
         let label = decoratorProps.salesforceLabel ? decoratorProps.salesforceLabel.replace(/'/g, "\\'") : '';
@@ -506,6 +510,7 @@ export class SObjectGenerator {
         }).join(', ');
 
         return {
+            kind: StructureKind.Decorator,
             name: `sField`,
             arguments: [
                 `{${propsString}}`

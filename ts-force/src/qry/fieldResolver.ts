@@ -30,10 +30,10 @@ export class FieldResolver<T>{
      * @param ...args: One or more Field Key of T (SObject) or FunctionType<T>
      * @returns string|string[] of resolved API name(s) matching how many params where passed in
      */
-    public select<F extends FunctionField<T>, P extends QueryField<T>> (f: P | F ): string;
-    public select<F extends FunctionField<T>, P extends QueryField<T>> (arr: Array<P | F>): string[];
-    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F>): string[];
-    public select<F extends FunctionField<T>, P extends QueryField<T>> (...args: Array<P | F> | [Array<P | F>]): string | string[] {
+    public select(f: QueryField<T> | FunctionField<T> ): string;
+    public select(arr: Array<QueryField<T> | FunctionField<T>>): string[];
+    public select(...args: Array<QueryField<T> | FunctionField<T>>): string[];
+    public select(...args: Array<QueryField<T> | FunctionField<T>> | [Array<QueryField<T> | FunctionField<T>>]): string | string[] {
         let relations = this.traversed.map(r => r.apiName);
         let fieldArr: string[] = [];
         let toResolve = args;

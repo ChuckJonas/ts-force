@@ -1,4 +1,4 @@
-import Ast, { SourceFile } from 'ts-simple-ast';
+import { Project, SourceFile } from 'ts-morph';
 import * as fs from 'fs';
 
 export const cleanAPIName = (sfName: string) => {
@@ -9,6 +9,6 @@ export const replaceSource = (path: string): SourceFile => {
     try {
         fs.unlinkSync(path);
     }catch (e) {}
-    let ast = new Ast();
+    let ast = new Project();
     return ast.createSourceFile(path);
 };

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.0
+
+- Changed picklist away from namespaces to use `as const`
+
+**NOTE** Must use typescript > 3.4.x to use classes generated with picklists!
+
 ## 2.4.0
 
 - added `Streaming` class for streaming and platform events

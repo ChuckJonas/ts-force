@@ -1,4 +1,4 @@
-import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps } from '../..';
+import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst } from '../..';
 
 export type AccountFields = Partial<FieldProps<Account>>;
 
@@ -41,7 +41,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'BillingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Billing Longitude', externalId: false })
     public billingLongitude: number;
     @sField({ apiName: 'BillingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Billing Geocode Accuracy', externalId: false })
-    public billingGeocodeAccuracy: Account.PICKLIST.billingGeocodeAccuracy;
+    public billingGeocodeAccuracy: PicklistConst<typeof Account.PICKLIST.billingGeocodeAccuracy>;
     @sField({ apiName: 'BillingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Billing Address', externalId: false })
     public readonly billingAddress: string;
     @sField({ apiName: 'ShippingStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Shipping Street', externalId: false })
@@ -59,7 +59,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'ShippingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Shipping Longitude', externalId: false })
     public shippingLongitude: number;
     @sField({ apiName: 'ShippingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Shipping Geocode Accuracy', externalId: false })
-    public shippingGeocodeAccuracy: Account.PICKLIST.shippingGeocodeAccuracy;
+    public shippingGeocodeAccuracy: PicklistConst<typeof Account.PICKLIST.shippingGeocodeAccuracy>;
     @sField({ apiName: 'ShippingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Shipping Address', externalId: false })
     public readonly shippingAddress: string;
     @sField({ apiName: 'Phone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Account Phone', externalId: false })
@@ -119,7 +119,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'JigsawCompanyId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Jigsaw Company ID', externalId: false })
     public readonly jigsawCompanyId: string;
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
-    public cleanStatus: Account.PICKLIST.cleanStatus;
+    public cleanStatus: PicklistConst<typeof Account.PICKLIST.cleanStatus>;
     @sField({ apiName: 'AccountSource', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Account Source', externalId: false })
     public accountSource: string;
     @sField({ apiName: 'DunsNumber', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'D-U-N-S Number', externalId: false })
@@ -137,7 +137,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'DandbCompanyId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'D&B Company ID', externalId: false })
     public dandbCompanyId: string;
     @sField({ apiName: 'CustomerPriority__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Customer Priority', externalId: false })
-    public customerPriority: Account.PICKLIST.customerPriority;
+    public customerPriority: PicklistConst<typeof Account.PICKLIST.customerPriority>;
     @sField({ apiName: 'SLA__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'SLA', externalId: false })
     public sLA: string;
     @sField({ apiName: 'Active__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Active', externalId: false })
@@ -153,7 +153,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'Test_External_Id__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Test External Id', externalId: true })
     public testExternalId: string;
     @sField({ apiName: 'MultiPick__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.MULTIPICKLIST, salesforceLabel: 'MultiPick', externalId: false })
-    public multiPick: Account.PICKLIST.multiPick[];
+    public multiPick: PicklistConst<typeof Account.PICKLIST.multiPick>[];
 
     constructor(fields?: AccountFields, restInstance?: Rest) {
         super('Account', restInstance);
@@ -253,145 +253,131 @@ export class Account extends RestObject {
     public static fromSFObject(sob: SObject): Account {
         return new Account().mapFromQuery(sob);
     }
-}
 
-export namespace Account {
-    export namespace PICKLIST {
-        export enum type {
-            PROSPECT = "Prospect",
-            CUSTOMER__DIRECT = "Customer - Direct",
-            CUSTOMER__CHANNEL = "Customer - Channel",
-            CHANNEL_PARTNER__RESELLER = "Channel Partner / Reseller",
-            INSTALLATION_PARTNER = "Installation Partner",
-            TECHNOLOGY_PARTNER = "Technology Partner",
-            OTHER = "Other"
+    public static readonly PICKLIST = {
+        type: {
+            PROSPECT: "Prospect",
+            CUSTOMER__DIRECT: "Customer - Direct",
+            CUSTOMER__CHANNEL: "Customer - Channel",
+            CHANNEL_PARTNER__RESELLER: "Channel Partner / Reseller",
+            INSTALLATION_PARTNER: "Installation Partner",
+            TECHNOLOGY_PARTNER: "Technology Partner",
+            OTHER: "Other"
+        },
+        billingGeocodeAccuracy: {
+            ADDRESS: "Address",
+            NEARADDRESS: "NearAddress",
+            BLOCK: "Block",
+            STREET: "Street",
+            EXTENDEDZIP: "ExtendedZip",
+            ZIP: "Zip",
+            NEIGHBORHOOD: "Neighborhood",
+            CITY: "City",
+            COUNTY: "County",
+            STATE: "State",
+            UNKNOWN: "Unknown"
+        },
+        shippingGeocodeAccuracy: {
+            ADDRESS: "Address",
+            NEARADDRESS: "NearAddress",
+            BLOCK: "Block",
+            STREET: "Street",
+            EXTENDEDZIP: "ExtendedZip",
+            ZIP: "Zip",
+            NEIGHBORHOOD: "Neighborhood",
+            CITY: "City",
+            COUNTY: "County",
+            STATE: "State",
+            UNKNOWN: "Unknown"
+        },
+        industry: {
+            AGRICULTURE: "Agriculture",
+            APPAREL: "Apparel",
+            BANKING: "Banking",
+            BIOTECHNOLOGY: "Biotechnology",
+            CHEMICALS: "Chemicals",
+            COMMUNICATIONS: "Communications",
+            CONSTRUCTION: "Construction",
+            CONSULTING: "Consulting",
+            EDUCATION: "Education",
+            ELECTRONICS: "Electronics",
+            ENERGY: "Energy",
+            ENGINEERING: "Engineering",
+            ENTERTAINMENT: "Entertainment",
+            ENVIRONMENTAL: "Environmental",
+            FINANCE: "Finance",
+            FOOD__BEVERAGE: "Food & Beverage",
+            GOVERNMENT: "Government",
+            HEALTHCARE: "Healthcare",
+            HOSPITALITY: "Hospitality",
+            INSURANCE: "Insurance",
+            MACHINERY: "Machinery",
+            MANUFACTURING: "Manufacturing",
+            MEDIA: "Media",
+            NOT_FOR_PROFIT: "Not For Profit",
+            RECREATION: "Recreation",
+            RETAIL: "Retail",
+            SHIPPING: "Shipping",
+            TECHNOLOGY: "Technology",
+            TELECOMMUNICATIONS: "Telecommunications",
+            TRANSPORTATION: "Transportation",
+            UTILITIES: "Utilities",
+            OTHER: "Other"
+        },
+        ownership: {
+            PUBLIC: "Public",
+            PRIVATE: "Private",
+            SUBSIDIARY: "Subsidiary",
+            OTHER: "Other"
+        },
+        rating: {
+            HOT: "Hot",
+            WARM: "Warm",
+            COLD: "Cold"
+        },
+        cleanStatus: {
+            MATCHED: "Matched",
+            DIFFERENT: "Different",
+            ACKNOWLEDGED: "Acknowledged",
+            NOTFOUND: "NotFound",
+            INACTIVE: "Inactive",
+            PENDING: "Pending",
+            SELECTMATCH: "SelectMatch",
+            SKIPPED: "Skipped"
+        },
+        accountSource: {
+            WEB: "Web",
+            PHONE_INQUIRY: "Phone Inquiry",
+            PARTNER_REFERRAL: "Partner Referral",
+            PURCHASED_LIST: "Purchased List",
+            OTHER: "Other"
+        },
+        customerPriority: {
+            HIGH: "High",
+            LOW: "Low",
+            MEDIUM: "Medium"
+        },
+        sLA: {
+            GOLD: "Gold",
+            SILVER: "Silver",
+            PLATINUM: "Platinum",
+            BRONZE: "Bronze"
+        },
+        active: {
+            NO: "No",
+            YES: "Yes"
+        },
+        upsellOpportunity: {
+            MAYBE: "Maybe",
+            NO: "No",
+            YES: "Yes"
+        },
+        multiPick: {
+            ONE: "one",
+            THREE: "three",
+            TWO: "two"
         }
-
-        export enum billingGeocodeAccuracy {
-            ADDRESS = "Address",
-            NEARADDRESS = "NearAddress",
-            BLOCK = "Block",
-            STREET = "Street",
-            EXTENDEDZIP = "ExtendedZip",
-            ZIP = "Zip",
-            NEIGHBORHOOD = "Neighborhood",
-            CITY = "City",
-            COUNTY = "County",
-            STATE = "State",
-            UNKNOWN = "Unknown"
-        }
-
-        export enum shippingGeocodeAccuracy {
-            ADDRESS = "Address",
-            NEARADDRESS = "NearAddress",
-            BLOCK = "Block",
-            STREET = "Street",
-            EXTENDEDZIP = "ExtendedZip",
-            ZIP = "Zip",
-            NEIGHBORHOOD = "Neighborhood",
-            CITY = "City",
-            COUNTY = "County",
-            STATE = "State",
-            UNKNOWN = "Unknown"
-        }
-
-        export enum industry {
-            AGRICULTURE = "Agriculture",
-            APPAREL = "Apparel",
-            BANKING = "Banking",
-            BIOTECHNOLOGY = "Biotechnology",
-            CHEMICALS = "Chemicals",
-            COMMUNICATIONS = "Communications",
-            CONSTRUCTION = "Construction",
-            CONSULTING = "Consulting",
-            EDUCATION = "Education",
-            ELECTRONICS = "Electronics",
-            ENERGY = "Energy",
-            ENGINEERING = "Engineering",
-            ENTERTAINMENT = "Entertainment",
-            ENVIRONMENTAL = "Environmental",
-            FINANCE = "Finance",
-            FOOD__BEVERAGE = "Food & Beverage",
-            GOVERNMENT = "Government",
-            HEALTHCARE = "Healthcare",
-            HOSPITALITY = "Hospitality",
-            INSURANCE = "Insurance",
-            MACHINERY = "Machinery",
-            MANUFACTURING = "Manufacturing",
-            MEDIA = "Media",
-            NOT_FOR_PROFIT = "Not For Profit",
-            RECREATION = "Recreation",
-            RETAIL = "Retail",
-            SHIPPING = "Shipping",
-            TECHNOLOGY = "Technology",
-            TELECOMMUNICATIONS = "Telecommunications",
-            TRANSPORTATION = "Transportation",
-            UTILITIES = "Utilities",
-            OTHER = "Other"
-        }
-
-        export enum ownership {
-            PUBLIC = "Public",
-            PRIVATE = "Private",
-            SUBSIDIARY = "Subsidiary",
-            OTHER = "Other"
-        }
-
-        export enum rating {
-            HOT = "Hot",
-            WARM = "Warm",
-            COLD = "Cold"
-        }
-
-        export enum cleanStatus {
-            MATCHED = "Matched",
-            DIFFERENT = "Different",
-            ACKNOWLEDGED = "Acknowledged",
-            NOTFOUND = "NotFound",
-            INACTIVE = "Inactive",
-            PENDING = "Pending",
-            SELECTMATCH = "SelectMatch",
-            SKIPPED = "Skipped"
-        }
-
-        export enum accountSource {
-            WEB = "Web",
-            PHONE_INQUIRY = "Phone Inquiry",
-            PARTNER_REFERRAL = "Partner Referral",
-            PURCHASED_LIST = "Purchased List",
-            OTHER = "Other"
-        }
-
-        export enum customerPriority {
-            HIGH = "High",
-            LOW = "Low",
-            MEDIUM = "Medium"
-        }
-
-        export enum sLA {
-            GOLD = "Gold",
-            SILVER = "Silver",
-            PLATINUM = "Platinum",
-            BRONZE = "Bronze"
-        }
-
-        export enum active {
-            NO = "No",
-            YES = "Yes"
-        }
-
-        export enum upsellOpportunity {
-            MAYBE = "Maybe",
-            NO = "No",
-            YES = "Yes"
-        }
-
-        export enum multiPick {
-            ONE = "one",
-            THREE = "three",
-            TWO = "two"
-        }
-    }
+    } as const;
 }
 
 export type ContactFields = Partial<FieldProps<Contact>>;
@@ -419,7 +405,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'FirstName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'First Name', externalId: false })
     public firstName: string;
     @sField({ apiName: 'Salutation', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Salutation', externalId: false })
-    public salutation: Contact.PICKLIST.salutation;
+    public salutation: PicklistConst<typeof Contact.PICKLIST.salutation>;
     @sField({ apiName: 'Name', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Full Name', externalId: false })
     public readonly name: string;
     @sField({ apiName: 'OtherStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Other Street', externalId: false })
@@ -437,7 +423,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'OtherLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Other Longitude', externalId: false })
     public otherLongitude: number;
     @sField({ apiName: 'OtherGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Other Geocode Accuracy', externalId: false })
-    public otherGeocodeAccuracy: Contact.PICKLIST.otherGeocodeAccuracy;
+    public otherGeocodeAccuracy: PicklistConst<typeof Contact.PICKLIST.otherGeocodeAccuracy>;
     @sField({ apiName: 'OtherAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Other Address', externalId: false })
     public readonly otherAddress: string;
     @sField({ apiName: 'MailingStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Mailing Street', externalId: false })
@@ -455,7 +441,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'MailingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Mailing Longitude', externalId: false })
     public mailingLongitude: number;
     @sField({ apiName: 'MailingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Mailing Geocode Accuracy', externalId: false })
-    public mailingGeocodeAccuracy: Contact.PICKLIST.mailingGeocodeAccuracy;
+    public mailingGeocodeAccuracy: PicklistConst<typeof Contact.PICKLIST.mailingGeocodeAccuracy>;
     @sField({ apiName: 'MailingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Mailing Address', externalId: false })
     public readonly mailingAddress: string;
     @sField({ apiName: 'Phone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Business Phone', externalId: false })
@@ -483,7 +469,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'AssistantName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Assistant\'s Name', externalId: false })
     public assistantName: string;
     @sField({ apiName: 'LeadSource', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Lead Source', externalId: false })
-    public leadSource: Contact.PICKLIST.leadSource;
+    public leadSource: PicklistConst<typeof Contact.PICKLIST.leadSource>;
     @sField({ apiName: 'Birthdate', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Birthdate', externalId: false })
     public birthdate: Date;
     @sField({ apiName: 'Description', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Contact Description', externalId: false })
@@ -529,9 +515,9 @@ export class Contact extends RestObject {
     @sField({ apiName: 'JigsawContactId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Jigsaw Contact ID', externalId: false })
     public readonly jigsawContactId: string;
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
-    public cleanStatus: Contact.PICKLIST.cleanStatus;
+    public cleanStatus: PicklistConst<typeof Contact.PICKLIST.cleanStatus>;
     @sField({ apiName: 'Level__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Level', externalId: false })
-    public level: Contact.PICKLIST.level;
+    public level: PicklistConst<typeof Contact.PICKLIST.level>;
     @sField({ apiName: 'Languages__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Languages', externalId: false })
     public languages: string;
 
@@ -626,71 +612,64 @@ export class Contact extends RestObject {
     public static fromSFObject(sob: SObject): Contact {
         return new Contact().mapFromQuery(sob);
     }
-}
 
-export namespace Contact {
-    export namespace PICKLIST {
-        export enum salutation {
-            MR = "Mr.",
-            MS = "Ms.",
-            MRS = "Mrs.",
-            DR = "Dr.",
-            PROF = "Prof."
+    public static readonly PICKLIST = {
+        salutation: {
+            MR: "Mr.",
+            MS: "Ms.",
+            MRS: "Mrs.",
+            DR: "Dr.",
+            PROF: "Prof."
+        },
+        otherGeocodeAccuracy: {
+            ADDRESS: "Address",
+            NEARADDRESS: "NearAddress",
+            BLOCK: "Block",
+            STREET: "Street",
+            EXTENDEDZIP: "ExtendedZip",
+            ZIP: "Zip",
+            NEIGHBORHOOD: "Neighborhood",
+            CITY: "City",
+            COUNTY: "County",
+            STATE: "State",
+            UNKNOWN: "Unknown"
+        },
+        mailingGeocodeAccuracy: {
+            ADDRESS: "Address",
+            NEARADDRESS: "NearAddress",
+            BLOCK: "Block",
+            STREET: "Street",
+            EXTENDEDZIP: "ExtendedZip",
+            ZIP: "Zip",
+            NEIGHBORHOOD: "Neighborhood",
+            CITY: "City",
+            COUNTY: "County",
+            STATE: "State",
+            UNKNOWN: "Unknown"
+        },
+        leadSource: {
+            WEB: "Web",
+            PHONE_INQUIRY: "Phone Inquiry",
+            PARTNER_REFERRAL: "Partner Referral",
+            PURCHASED_LIST: "Purchased List",
+            OTHER: "Other"
+        },
+        cleanStatus: {
+            MATCHED: "Matched",
+            DIFFERENT: "Different",
+            ACKNOWLEDGED: "Acknowledged",
+            NOTFOUND: "NotFound",
+            INACTIVE: "Inactive",
+            PENDING: "Pending",
+            SELECTMATCH: "SelectMatch",
+            SKIPPED: "Skipped"
+        },
+        level: {
+            SECONDARY: "Secondary",
+            TERTIARY: "Tertiary",
+            PRIMARY: "Primary"
         }
-
-        export enum otherGeocodeAccuracy {
-            ADDRESS = "Address",
-            NEARADDRESS = "NearAddress",
-            BLOCK = "Block",
-            STREET = "Street",
-            EXTENDEDZIP = "ExtendedZip",
-            ZIP = "Zip",
-            NEIGHBORHOOD = "Neighborhood",
-            CITY = "City",
-            COUNTY = "County",
-            STATE = "State",
-            UNKNOWN = "Unknown"
-        }
-
-        export enum mailingGeocodeAccuracy {
-            ADDRESS = "Address",
-            NEARADDRESS = "NearAddress",
-            BLOCK = "Block",
-            STREET = "Street",
-            EXTENDEDZIP = "ExtendedZip",
-            ZIP = "Zip",
-            NEIGHBORHOOD = "Neighborhood",
-            CITY = "City",
-            COUNTY = "County",
-            STATE = "State",
-            UNKNOWN = "Unknown"
-        }
-
-        export enum leadSource {
-            WEB = "Web",
-            PHONE_INQUIRY = "Phone Inquiry",
-            PARTNER_REFERRAL = "Partner Referral",
-            PURCHASED_LIST = "Purchased List",
-            OTHER = "Other"
-        }
-
-        export enum cleanStatus {
-            MATCHED = "Matched",
-            DIFFERENT = "Different",
-            ACKNOWLEDGED = "Acknowledged",
-            NOTFOUND = "NotFound",
-            INACTIVE = "Inactive",
-            PENDING = "Pending",
-            SELECTMATCH = "SelectMatch",
-            SKIPPED = "Skipped"
-        }
-
-        export enum level {
-            SECONDARY = "Secondary",
-            TERTIARY = "Tertiary",
-            PRIMARY = "Primary"
-        }
-    }
+    } as const;
 }
 
 export type UserFields = Partial<FieldProps<User>>;
@@ -732,7 +711,7 @@ export class User extends RestObject {
     @sField({ apiName: 'Longitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Longitude', externalId: false })
     public longitude: number;
     @sField({ apiName: 'GeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Geocode Accuracy', externalId: false })
-    public geocodeAccuracy: User.PICKLIST.geocodeAccuracy;
+    public geocodeAccuracy: PicklistConst<typeof User.PICKLIST.geocodeAccuracy>;
     @sField({ apiName: 'Address', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Address', externalId: false })
     public readonly address: string;
     @sField({ apiName: 'Email', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.EMAIL, salesforceLabel: 'Email', externalId: false })
@@ -770,23 +749,23 @@ export class User extends RestObject {
     @sField({ apiName: 'IsActive', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Active', externalId: false })
     public isActive: boolean;
     @sField({ apiName: 'TimeZoneSidKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Time Zone', externalId: false })
-    public timeZoneSidKey: User.PICKLIST.timeZoneSidKey;
+    public timeZoneSidKey: PicklistConst<typeof User.PICKLIST.timeZoneSidKey>;
     @sField({ apiName: 'UserRoleId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Role ID', externalId: false })
     public userRoleId: string;
     @sField({ apiName: 'LocaleSidKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Locale', externalId: false })
-    public localeSidKey: User.PICKLIST.localeSidKey;
+    public localeSidKey: PicklistConst<typeof User.PICKLIST.localeSidKey>;
     @sField({ apiName: 'ReceivesInfoEmails', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Info Emails', externalId: false })
     public receivesInfoEmails: boolean;
     @sField({ apiName: 'ReceivesAdminInfoEmails', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Admin Info Emails', externalId: false })
     public receivesAdminInfoEmails: boolean;
     @sField({ apiName: 'EmailEncodingKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Email Encoding', externalId: false })
-    public emailEncodingKey: User.PICKLIST.emailEncodingKey;
+    public emailEncodingKey: PicklistConst<typeof User.PICKLIST.emailEncodingKey>;
     @sField({ apiName: 'ProfileId', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Profile ID', externalId: false })
     public profileId: string;
     @sField({ apiName: 'UserType', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'User Type', externalId: false })
-    public readonly userType: User.PICKLIST.userType;
+    public readonly userType: PicklistConst<typeof User.PICKLIST.userType>;
     @sField({ apiName: 'LanguageLocaleKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Language', externalId: false })
-    public languageLocaleKey: User.PICKLIST.languageLocaleKey;
+    public languageLocaleKey: PicklistConst<typeof User.PICKLIST.languageLocaleKey>;
     @sField({ apiName: 'EmployeeNumber', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Employee Number', externalId: false })
     public employeeNumber: string;
     @sField({ apiName: 'DelegatedApproverId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Delegated Approver ID', externalId: false })
@@ -1026,9 +1005,9 @@ export class User extends RestObject {
     @sField({ apiName: 'MediumPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Url for medium profile photo', externalId: false })
     public readonly mediumPhotoUrl: string;
     @sField({ apiName: 'DigestFrequency', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Chatter Email Highlights Frequency', externalId: false })
-    public digestFrequency: User.PICKLIST.digestFrequency;
+    public digestFrequency: PicklistConst<typeof User.PICKLIST.digestFrequency>;
     @sField({ apiName: 'DefaultGroupNotificationFrequency', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Default Notification Frequency when Joining Groups', externalId: false })
-    public defaultGroupNotificationFrequency: User.PICKLIST.defaultGroupNotificationFrequency;
+    public defaultGroupNotificationFrequency: PicklistConst<typeof User.PICKLIST.defaultGroupNotificationFrequency>;
     @sField({ apiName: 'JigsawImportLimitOverride', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.INT, salesforceLabel: 'Data.com Monthly Addition Limit', externalId: false })
     public jigsawImportLimitOverride: number;
     @sField({ apiName: 'LastViewedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Viewed Date', externalId: false })
@@ -1240,386 +1219,377 @@ export class User extends RestObject {
     public static fromSFObject(sob: SObject): User {
         return new User().mapFromQuery(sob);
     }
-}
 
-export namespace User {
-    export namespace PICKLIST {
-        export enum geocodeAccuracy {
-            ADDRESS = "Address",
-            NEARADDRESS = "NearAddress",
-            BLOCK = "Block",
-            STREET = "Street",
-            EXTENDEDZIP = "ExtendedZip",
-            ZIP = "Zip",
-            NEIGHBORHOOD = "Neighborhood",
-            CITY = "City",
-            COUNTY = "County",
-            STATE = "State",
-            UNKNOWN = "Unknown"
+    public static readonly PICKLIST = {
+        geocodeAccuracy: {
+            ADDRESS: "Address",
+            NEARADDRESS: "NearAddress",
+            BLOCK: "Block",
+            STREET: "Street",
+            EXTENDEDZIP: "ExtendedZip",
+            ZIP: "Zip",
+            NEIGHBORHOOD: "Neighborhood",
+            CITY: "City",
+            COUNTY: "County",
+            STATE: "State",
+            UNKNOWN: "Unknown"
+        },
+        timeZoneSidKey: {
+            PACIFICKIRITIMATI: "Pacific/Kiritimati",
+            PACIFICENDERBURY: "Pacific/Enderbury",
+            PACIFICTONGATAPU: "Pacific/Tongatapu",
+            PACIFICCHATHAM: "Pacific/Chatham",
+            ASIAKAMCHATKA: "Asia/Kamchatka",
+            PACIFICAUCKLAND: "Pacific/Auckland",
+            PACIFICFIJI: "Pacific/Fiji",
+            PACIFICGUADALCANAL: "Pacific/Guadalcanal",
+            PACIFICNORFOLK: "Pacific/Norfolk",
+            AUSTRALIALORD_HOWE: "Australia/Lord_Howe",
+            AUSTRALIABRISBANE: "Australia/Brisbane",
+            AUSTRALIASYDNEY: "Australia/Sydney",
+            AUSTRALIAADELAIDE: "Australia/Adelaide",
+            AUSTRALIADARWIN: "Australia/Darwin",
+            ASIASEOUL: "Asia/Seoul",
+            ASIATOKYO: "Asia/Tokyo",
+            ASIAHONG_KONG: "Asia/Hong_Kong",
+            ASIAKUALA_LUMPUR: "Asia/Kuala_Lumpur",
+            ASIAMANILA: "Asia/Manila",
+            ASIASHANGHAI: "Asia/Shanghai",
+            ASIASINGAPORE: "Asia/Singapore",
+            ASIATAIPEI: "Asia/Taipei",
+            AUSTRALIAPERTH: "Australia/Perth",
+            ASIABANGKOK: "Asia/Bangkok",
+            ASIAHO_CHI_MINH: "Asia/Ho_Chi_Minh",
+            ASIAJAKARTA: "Asia/Jakarta",
+            ASIARANGOON: "Asia/Rangoon",
+            ASIADHAKA: "Asia/Dhaka",
+            ASIAKATHMANDU: "Asia/Kathmandu",
+            ASIACOLOMBO: "Asia/Colombo",
+            ASIAKOLKATA: "Asia/Kolkata",
+            ASIAKARACHI: "Asia/Karachi",
+            ASIATASHKENT: "Asia/Tashkent",
+            ASIAYEKATERINBURG: "Asia/Yekaterinburg",
+            ASIAKABUL: "Asia/Kabul",
+            ASIATEHRAN: "Asia/Tehran",
+            ASIABAKU: "Asia/Baku",
+            ASIADUBAI: "Asia/Dubai",
+            ASIATBILISI: "Asia/Tbilisi",
+            ASIAYEREVAN: "Asia/Yerevan",
+            AFRICANAIROBI: "Africa/Nairobi",
+            ASIABAGHDAD: "Asia/Baghdad",
+            ASIABEIRUT: "Asia/Beirut",
+            ASIAJERUSALEM: "Asia/Jerusalem",
+            ASIAKUWAIT: "Asia/Kuwait",
+            ASIARIYADH: "Asia/Riyadh",
+            EUROPEATHENS: "Europe/Athens",
+            EUROPEBUCHAREST: "Europe/Bucharest",
+            EUROPEHELSINKI: "Europe/Helsinki",
+            EUROPEISTANBUL: "Europe/Istanbul",
+            EUROPEMINSK: "Europe/Minsk",
+            EUROPEMOSCOW: "Europe/Moscow",
+            AFRICACAIRO: "Africa/Cairo",
+            AFRICAJOHANNESBURG: "Africa/Johannesburg",
+            EUROPEAMSTERDAM: "Europe/Amsterdam",
+            EUROPEBERLIN: "Europe/Berlin",
+            EUROPEBRUSSELS: "Europe/Brussels",
+            EUROPEPARIS: "Europe/Paris",
+            EUROPEPRAGUE: "Europe/Prague",
+            EUROPEROME: "Europe/Rome",
+            AFRICAALGIERS: "Africa/Algiers",
+            AFRICACASABLANCA: "Africa/Casablanca",
+            EUROPEDUBLIN: "Europe/Dublin",
+            EUROPELISBON: "Europe/Lisbon",
+            EUROPELONDON: "Europe/London",
+            AMERICASCORESBYSUND: "America/Scoresbysund",
+            ATLANTICAZORES: "Atlantic/Azores",
+            GMT: "GMT",
+            ATLANTICCAPE_VERDE: "Atlantic/Cape_Verde",
+            ATLANTICSOUTH_GEORGIA: "Atlantic/South_Georgia",
+            AMERICAST_JOHNS: "America/St_Johns",
+            AMERICAARGENTINABUENOS_AIRES: "America/Argentina/Buenos_Aires",
+            AMERICAHALIFAX: "America/Halifax",
+            AMERICASAO_PAULO: "America/Sao_Paulo",
+            ATLANTICBERMUDA: "Atlantic/Bermuda",
+            AMERICACARACAS: "America/Caracas",
+            AMERICAINDIANAINDIANAPOLIS: "America/Indiana/Indianapolis",
+            AMERICANEW_YORK: "America/New_York",
+            AMERICAPUERTO_RICO: "America/Puerto_Rico",
+            AMERICASANTIAGO: "America/Santiago",
+            AMERICABOGOTA: "America/Bogota",
+            AMERICACHICAGO: "America/Chicago",
+            AMERICALIMA: "America/Lima",
+            AMERICAMEXICO_CITY: "America/Mexico_City",
+            AMERICAPANAMA: "America/Panama",
+            AMERICADENVER: "America/Denver",
+            AMERICAEL_SALVADOR: "America/El_Salvador",
+            AMERICAMAZATLAN: "America/Mazatlan",
+            AMERICALOS_ANGELES: "America/Los_Angeles",
+            AMERICAPHOENIX: "America/Phoenix",
+            AMERICATIJUANA: "America/Tijuana",
+            AMERICAANCHORAGE: "America/Anchorage",
+            PACIFICPITCAIRN: "Pacific/Pitcairn",
+            AMERICAADAK: "America/Adak",
+            PACIFICGAMBIER: "Pacific/Gambier",
+            PACIFICMARQUESAS: "Pacific/Marquesas",
+            PACIFICHONOLULU: "Pacific/Honolulu",
+            PACIFICNIUE: "Pacific/Niue",
+            PACIFICPAGO_PAGO: "Pacific/Pago_Pago"
+        },
+        localeSidKey: {
+            SQ_AL: "sq_AL",
+            AR_DZ: "ar_DZ",
+            AR_BH: "ar_BH",
+            AR_EG: "ar_EG",
+            AR_IQ: "ar_IQ",
+            AR_JO: "ar_JO",
+            AR_KW: "ar_KW",
+            AR_LB: "ar_LB",
+            AR_LY: "ar_LY",
+            AR_MA: "ar_MA",
+            AR_OM: "ar_OM",
+            AR_QA: "ar_QA",
+            AR_SA: "ar_SA",
+            AR_SD: "ar_SD",
+            AR_SY: "ar_SY",
+            AR_TN: "ar_TN",
+            AR_AE: "ar_AE",
+            AR_YE: "ar_YE",
+            HY_AM: "hy_AM",
+            AZ_AZ: "az_AZ",
+            BN_BD: "bn_BD",
+            EU_ES: "eu_ES",
+            BE_BY: "be_BY",
+            BS_BA: "bs_BA",
+            BG_BG: "bg_BG",
+            MY_MM: "my_MM",
+            CA_ES: "ca_ES",
+            ZH_CN_PINYIN: "zh_CN_PINYIN",
+            ZH_CN_STROKE: "zh_CN_STROKE",
+            ZH_CN: "zh_CN",
+            ZH_HK_STROKE: "zh_HK_STROKE",
+            ZH_HK: "zh_HK",
+            ZH_MO: "zh_MO",
+            ZH_SG: "zh_SG",
+            ZH_TW_STROKE: "zh_TW_STROKE",
+            ZH_TW: "zh_TW",
+            HR_HR: "hr_HR",
+            CS_CZ: "cs_CZ",
+            DA_DK: "da_DK",
+            NL_AW: "nl_AW",
+            NL_BE: "nl_BE",
+            NL_NL: "nl_NL",
+            NL_SR: "nl_SR",
+            DZ_BT: "dz_BT",
+            EN_AG: "en_AG",
+            EN_AU: "en_AU",
+            EN_BS: "en_BS",
+            EN_BB: "en_BB",
+            EN_BZ: "en_BZ",
+            EN_BM: "en_BM",
+            EN_BW: "en_BW",
+            EN_CM: "en_CM",
+            EN_CA: "en_CA",
+            EN_KY: "en_KY",
+            EN_ER: "en_ER",
+            EN_FK: "en_FK",
+            EN_FJ: "en_FJ",
+            EN_GM: "en_GM",
+            EN_GH: "en_GH",
+            EN_GI: "en_GI",
+            EN_GY: "en_GY",
+            EN_HK: "en_HK",
+            EN_IN: "en_IN",
+            EN_ID: "en_ID",
+            EN_IE: "en_IE",
+            EN_JM: "en_JM",
+            EN_KE: "en_KE",
+            EN_LR: "en_LR",
+            EN_MG: "en_MG",
+            EN_MW: "en_MW",
+            EN_MY: "en_MY",
+            EN_MU: "en_MU",
+            EN_NA: "en_NA",
+            EN_NZ: "en_NZ",
+            EN_NG: "en_NG",
+            EN_PK: "en_PK",
+            EN_PG: "en_PG",
+            EN_PH: "en_PH",
+            EN_RW: "en_RW",
+            EN_WS: "en_WS",
+            EN_SC: "en_SC",
+            EN_SL: "en_SL",
+            EN_SG: "en_SG",
+            EN_SX: "en_SX",
+            EN_SB: "en_SB",
+            EN_ZA: "en_ZA",
+            EN_SH: "en_SH",
+            EN_SZ: "en_SZ",
+            EN_TZ: "en_TZ",
+            EN_TO: "en_TO",
+            EN_TT: "en_TT",
+            EN_UG: "en_UG",
+            EN_GB: "en_GB",
+            EN_US: "en_US",
+            EN_VU: "en_VU",
+            ET_EE: "et_EE",
+            FI_FI: "fi_FI",
+            FR_BE: "fr_BE",
+            FR_CA: "fr_CA",
+            FR_KM: "fr_KM",
+            FR_FR: "fr_FR",
+            FR_GN: "fr_GN",
+            FR_HT: "fr_HT",
+            FR_LU: "fr_LU",
+            FR_MR: "fr_MR",
+            FR_MC: "fr_MC",
+            FR_CH: "fr_CH",
+            FR_WF: "fr_WF",
+            KA_GE: "ka_GE",
+            DE_AT: "de_AT",
+            DE_BE: "de_BE",
+            DE_DE: "de_DE",
+            DE_LU: "de_LU",
+            DE_CH: "de_CH",
+            EL_GR: "el_GR",
+            IW_IL: "iw_IL",
+            HI_IN: "hi_IN",
+            HU_HU: "hu_HU",
+            IS_IS: "is_IS",
+            IN_ID: "in_ID",
+            GA_IE: "ga_IE",
+            IT_IT: "it_IT",
+            IT_CH: "it_CH",
+            JA_JP: "ja_JP",
+            KK_KZ: "kk_KZ",
+            KM_KH: "km_KH",
+            KO_KP: "ko_KP",
+            KO_KR: "ko_KR",
+            KY_KG: "ky_KG",
+            LO_LA: "lo_LA",
+            LV_LV: "lv_LV",
+            LT_LT: "lt_LT",
+            LU_CD: "lu_CD",
+            LB_LU: "lb_LU",
+            MK_MK: "mk_MK",
+            MS_BN: "ms_BN",
+            MS_MY: "ms_MY",
+            MT_MT: "mt_MT",
+            SH_ME: "sh_ME",
+            NE_NP: "ne_NP",
+            NO_NO: "no_NO",
+            PS_AF: "ps_AF",
+            FA_IR: "fa_IR",
+            PL_PL: "pl_PL",
+            PT_AO: "pt_AO",
+            PT_BR: "pt_BR",
+            PT_CV: "pt_CV",
+            PT_MZ: "pt_MZ",
+            PT_PT: "pt_PT",
+            PT_ST: "pt_ST",
+            RO_MD: "ro_MD",
+            RO_RO: "ro_RO",
+            RM_CH: "rm_CH",
+            RN_BI: "rn_BI",
+            RU_RU: "ru_RU",
+            SR_BA: "sr_BA",
+            SR_CS: "sr_CS",
+            SH_BA: "sh_BA",
+            SH_CS: "sh_CS",
+            SR_RS: "sr_RS",
+            SK_SK: "sk_SK",
+            SL_SI: "sl_SI",
+            SO_DJ: "so_DJ",
+            SO_SO: "so_SO",
+            ES_AR: "es_AR",
+            ES_BO: "es_BO",
+            ES_CL: "es_CL",
+            ES_CO: "es_CO",
+            ES_CR: "es_CR",
+            ES_CU: "es_CU",
+            ES_DO: "es_DO",
+            ES_EC: "es_EC",
+            ES_SV: "es_SV",
+            ES_GT: "es_GT",
+            ES_HN: "es_HN",
+            ES_MX: "es_MX",
+            ES_NI: "es_NI",
+            ES_PA: "es_PA",
+            ES_PY: "es_PY",
+            ES_PE: "es_PE",
+            ES_PR: "es_PR",
+            ES_ES: "es_ES",
+            ES_US: "es_US",
+            ES_UY: "es_UY",
+            ES_VE: "es_VE",
+            SV_SE: "sv_SE",
+            TL_PH: "tl_PH",
+            TG_TJ: "tg_TJ",
+            TA_IN: "ta_IN",
+            TA_LK: "ta_LK",
+            TH_TH: "th_TH",
+            TI_ET: "ti_ET",
+            TR_TR: "tr_TR",
+            UK_UA: "uk_UA",
+            UR_PK: "ur_PK",
+            UZ_LATN_UZ: "uz_LATN_UZ",
+            VI_VN: "vi_VN",
+            CY_GB: "cy_GB",
+            YO_BJ: "yo_BJ"
+        },
+        emailEncodingKey: {
+            UTF8: "UTF-8",
+            ISO88591: "ISO-8859-1",
+            SHIFT_JIS: "Shift_JIS",
+            ISO2022JP: "ISO-2022-JP",
+            EUCJP: "EUC-JP",
+            KS_C_56011987: "ks_c_5601-1987",
+            BIG5: "Big5",
+            GB2312: "GB2312",
+            BIG5HKSCS: "Big5-HKSCS",
+            XSJIS_0213: "x-SJIS_0213"
+        },
+        userType: {
+            STANDARD: "Standard",
+            POWERPARTNER: "PowerPartner",
+            POWERCUSTOMERSUCCESS: "PowerCustomerSuccess",
+            CUSTOMERSUCCESS: "CustomerSuccess",
+            GUEST: "Guest",
+            CSPLITEPORTAL: "CspLitePortal",
+            CSNONLY: "CsnOnly",
+            SELFSERVICE: "SelfService"
+        },
+        languageLocaleKey: {
+            EN_US: "en_US",
+            DE: "de",
+            ES: "es",
+            FR: "fr",
+            IT: "it",
+            JA: "ja",
+            SV: "sv",
+            KO: "ko",
+            ZH_TW: "zh_TW",
+            ZH_CN: "zh_CN",
+            PT_BR: "pt_BR",
+            NL_NL: "nl_NL",
+            DA: "da",
+            TH: "th",
+            FI: "fi",
+            RU: "ru",
+            ES_MX: "es_MX",
+            NO: "no"
+        },
+        digestFrequency: {
+            D: "D",
+            W: "W",
+            N: "N"
+        },
+        defaultGroupNotificationFrequency: {
+            P: "P",
+            D: "D",
+            W: "W",
+            N: "N"
         }
-
-        export enum timeZoneSidKey {
-            PACIFICKIRITIMATI = "Pacific/Kiritimati",
-            PACIFICENDERBURY = "Pacific/Enderbury",
-            PACIFICTONGATAPU = "Pacific/Tongatapu",
-            PACIFICCHATHAM = "Pacific/Chatham",
-            ASIAKAMCHATKA = "Asia/Kamchatka",
-            PACIFICAUCKLAND = "Pacific/Auckland",
-            PACIFICFIJI = "Pacific/Fiji",
-            PACIFICGUADALCANAL = "Pacific/Guadalcanal",
-            PACIFICNORFOLK = "Pacific/Norfolk",
-            AUSTRALIALORD_HOWE = "Australia/Lord_Howe",
-            AUSTRALIABRISBANE = "Australia/Brisbane",
-            AUSTRALIASYDNEY = "Australia/Sydney",
-            AUSTRALIAADELAIDE = "Australia/Adelaide",
-            AUSTRALIADARWIN = "Australia/Darwin",
-            ASIASEOUL = "Asia/Seoul",
-            ASIATOKYO = "Asia/Tokyo",
-            ASIAHONG_KONG = "Asia/Hong_Kong",
-            ASIAKUALA_LUMPUR = "Asia/Kuala_Lumpur",
-            ASIAMANILA = "Asia/Manila",
-            ASIASHANGHAI = "Asia/Shanghai",
-            ASIASINGAPORE = "Asia/Singapore",
-            ASIATAIPEI = "Asia/Taipei",
-            AUSTRALIAPERTH = "Australia/Perth",
-            ASIABANGKOK = "Asia/Bangkok",
-            ASIAHO_CHI_MINH = "Asia/Ho_Chi_Minh",
-            ASIAJAKARTA = "Asia/Jakarta",
-            ASIARANGOON = "Asia/Rangoon",
-            ASIADHAKA = "Asia/Dhaka",
-            ASIAKATHMANDU = "Asia/Kathmandu",
-            ASIACOLOMBO = "Asia/Colombo",
-            ASIAKOLKATA = "Asia/Kolkata",
-            ASIAKARACHI = "Asia/Karachi",
-            ASIATASHKENT = "Asia/Tashkent",
-            ASIAYEKATERINBURG = "Asia/Yekaterinburg",
-            ASIAKABUL = "Asia/Kabul",
-            ASIATEHRAN = "Asia/Tehran",
-            ASIABAKU = "Asia/Baku",
-            ASIADUBAI = "Asia/Dubai",
-            ASIATBILISI = "Asia/Tbilisi",
-            ASIAYEREVAN = "Asia/Yerevan",
-            AFRICANAIROBI = "Africa/Nairobi",
-            ASIABAGHDAD = "Asia/Baghdad",
-            ASIABEIRUT = "Asia/Beirut",
-            ASIAJERUSALEM = "Asia/Jerusalem",
-            ASIAKUWAIT = "Asia/Kuwait",
-            ASIARIYADH = "Asia/Riyadh",
-            EUROPEATHENS = "Europe/Athens",
-            EUROPEBUCHAREST = "Europe/Bucharest",
-            EUROPEHELSINKI = "Europe/Helsinki",
-            EUROPEISTANBUL = "Europe/Istanbul",
-            EUROPEMINSK = "Europe/Minsk",
-            EUROPEMOSCOW = "Europe/Moscow",
-            AFRICACAIRO = "Africa/Cairo",
-            AFRICAJOHANNESBURG = "Africa/Johannesburg",
-            EUROPEAMSTERDAM = "Europe/Amsterdam",
-            EUROPEBERLIN = "Europe/Berlin",
-            EUROPEBRUSSELS = "Europe/Brussels",
-            EUROPEPARIS = "Europe/Paris",
-            EUROPEPRAGUE = "Europe/Prague",
-            EUROPEROME = "Europe/Rome",
-            AFRICAALGIERS = "Africa/Algiers",
-            AFRICACASABLANCA = "Africa/Casablanca",
-            EUROPEDUBLIN = "Europe/Dublin",
-            EUROPELISBON = "Europe/Lisbon",
-            EUROPELONDON = "Europe/London",
-            AMERICASCORESBYSUND = "America/Scoresbysund",
-            ATLANTICAZORES = "Atlantic/Azores",
-            GMT = "GMT",
-            ATLANTICCAPE_VERDE = "Atlantic/Cape_Verde",
-            ATLANTICSOUTH_GEORGIA = "Atlantic/South_Georgia",
-            AMERICAST_JOHNS = "America/St_Johns",
-            AMERICAARGENTINABUENOS_AIRES = "America/Argentina/Buenos_Aires",
-            AMERICAHALIFAX = "America/Halifax",
-            AMERICASAO_PAULO = "America/Sao_Paulo",
-            ATLANTICBERMUDA = "Atlantic/Bermuda",
-            AMERICACARACAS = "America/Caracas",
-            AMERICAINDIANAINDIANAPOLIS = "America/Indiana/Indianapolis",
-            AMERICANEW_YORK = "America/New_York",
-            AMERICAPUERTO_RICO = "America/Puerto_Rico",
-            AMERICASANTIAGO = "America/Santiago",
-            AMERICABOGOTA = "America/Bogota",
-            AMERICACHICAGO = "America/Chicago",
-            AMERICALIMA = "America/Lima",
-            AMERICAMEXICO_CITY = "America/Mexico_City",
-            AMERICAPANAMA = "America/Panama",
-            AMERICADENVER = "America/Denver",
-            AMERICAEL_SALVADOR = "America/El_Salvador",
-            AMERICAMAZATLAN = "America/Mazatlan",
-            AMERICALOS_ANGELES = "America/Los_Angeles",
-            AMERICAPHOENIX = "America/Phoenix",
-            AMERICATIJUANA = "America/Tijuana",
-            AMERICAANCHORAGE = "America/Anchorage",
-            PACIFICPITCAIRN = "Pacific/Pitcairn",
-            AMERICAADAK = "America/Adak",
-            PACIFICGAMBIER = "Pacific/Gambier",
-            PACIFICMARQUESAS = "Pacific/Marquesas",
-            PACIFICHONOLULU = "Pacific/Honolulu",
-            PACIFICNIUE = "Pacific/Niue",
-            PACIFICPAGO_PAGO = "Pacific/Pago_Pago"
-        }
-
-        export enum localeSidKey {
-            SQ_AL = "sq_AL",
-            AR_DZ = "ar_DZ",
-            AR_BH = "ar_BH",
-            AR_EG = "ar_EG",
-            AR_IQ = "ar_IQ",
-            AR_JO = "ar_JO",
-            AR_KW = "ar_KW",
-            AR_LB = "ar_LB",
-            AR_LY = "ar_LY",
-            AR_MA = "ar_MA",
-            AR_OM = "ar_OM",
-            AR_QA = "ar_QA",
-            AR_SA = "ar_SA",
-            AR_SD = "ar_SD",
-            AR_SY = "ar_SY",
-            AR_TN = "ar_TN",
-            AR_AE = "ar_AE",
-            AR_YE = "ar_YE",
-            HY_AM = "hy_AM",
-            AZ_AZ = "az_AZ",
-            BN_BD = "bn_BD",
-            EU_ES = "eu_ES",
-            BE_BY = "be_BY",
-            BS_BA = "bs_BA",
-            BG_BG = "bg_BG",
-            MY_MM = "my_MM",
-            CA_ES = "ca_ES",
-            ZH_CN_PINYIN = "zh_CN_PINYIN",
-            ZH_CN_STROKE = "zh_CN_STROKE",
-            ZH_CN = "zh_CN",
-            ZH_HK_STROKE = "zh_HK_STROKE",
-            ZH_HK = "zh_HK",
-            ZH_MO = "zh_MO",
-            ZH_SG = "zh_SG",
-            ZH_TW_STROKE = "zh_TW_STROKE",
-            ZH_TW = "zh_TW",
-            HR_HR = "hr_HR",
-            CS_CZ = "cs_CZ",
-            DA_DK = "da_DK",
-            NL_AW = "nl_AW",
-            NL_BE = "nl_BE",
-            NL_NL = "nl_NL",
-            NL_SR = "nl_SR",
-            DZ_BT = "dz_BT",
-            EN_AG = "en_AG",
-            EN_AU = "en_AU",
-            EN_BS = "en_BS",
-            EN_BB = "en_BB",
-            EN_BZ = "en_BZ",
-            EN_BM = "en_BM",
-            EN_BW = "en_BW",
-            EN_CM = "en_CM",
-            EN_CA = "en_CA",
-            EN_KY = "en_KY",
-            EN_ER = "en_ER",
-            EN_FK = "en_FK",
-            EN_FJ = "en_FJ",
-            EN_GM = "en_GM",
-            EN_GH = "en_GH",
-            EN_GI = "en_GI",
-            EN_GY = "en_GY",
-            EN_HK = "en_HK",
-            EN_IN = "en_IN",
-            EN_ID = "en_ID",
-            EN_IE = "en_IE",
-            EN_JM = "en_JM",
-            EN_KE = "en_KE",
-            EN_LR = "en_LR",
-            EN_MG = "en_MG",
-            EN_MW = "en_MW",
-            EN_MY = "en_MY",
-            EN_MU = "en_MU",
-            EN_NA = "en_NA",
-            EN_NZ = "en_NZ",
-            EN_NG = "en_NG",
-            EN_PK = "en_PK",
-            EN_PG = "en_PG",
-            EN_PH = "en_PH",
-            EN_RW = "en_RW",
-            EN_WS = "en_WS",
-            EN_SC = "en_SC",
-            EN_SL = "en_SL",
-            EN_SG = "en_SG",
-            EN_SX = "en_SX",
-            EN_SB = "en_SB",
-            EN_ZA = "en_ZA",
-            EN_SH = "en_SH",
-            EN_SZ = "en_SZ",
-            EN_TZ = "en_TZ",
-            EN_TO = "en_TO",
-            EN_TT = "en_TT",
-            EN_UG = "en_UG",
-            EN_GB = "en_GB",
-            EN_US = "en_US",
-            EN_VU = "en_VU",
-            ET_EE = "et_EE",
-            FI_FI = "fi_FI",
-            FR_BE = "fr_BE",
-            FR_CA = "fr_CA",
-            FR_KM = "fr_KM",
-            FR_FR = "fr_FR",
-            FR_GN = "fr_GN",
-            FR_HT = "fr_HT",
-            FR_LU = "fr_LU",
-            FR_MR = "fr_MR",
-            FR_MC = "fr_MC",
-            FR_CH = "fr_CH",
-            FR_WF = "fr_WF",
-            KA_GE = "ka_GE",
-            DE_AT = "de_AT",
-            DE_BE = "de_BE",
-            DE_DE = "de_DE",
-            DE_LU = "de_LU",
-            DE_CH = "de_CH",
-            EL_GR = "el_GR",
-            IW_IL = "iw_IL",
-            HI_IN = "hi_IN",
-            HU_HU = "hu_HU",
-            IS_IS = "is_IS",
-            IN_ID = "in_ID",
-            GA_IE = "ga_IE",
-            IT_IT = "it_IT",
-            IT_CH = "it_CH",
-            JA_JP = "ja_JP",
-            KK_KZ = "kk_KZ",
-            KM_KH = "km_KH",
-            KO_KP = "ko_KP",
-            KO_KR = "ko_KR",
-            KY_KG = "ky_KG",
-            LO_LA = "lo_LA",
-            LV_LV = "lv_LV",
-            LT_LT = "lt_LT",
-            LU_CD = "lu_CD",
-            LB_LU = "lb_LU",
-            MK_MK = "mk_MK",
-            MS_BN = "ms_BN",
-            MS_MY = "ms_MY",
-            MT_MT = "mt_MT",
-            SH_ME = "sh_ME",
-            NE_NP = "ne_NP",
-            NO_NO = "no_NO",
-            PS_AF = "ps_AF",
-            FA_IR = "fa_IR",
-            PL_PL = "pl_PL",
-            PT_AO = "pt_AO",
-            PT_BR = "pt_BR",
-            PT_CV = "pt_CV",
-            PT_MZ = "pt_MZ",
-            PT_PT = "pt_PT",
-            PT_ST = "pt_ST",
-            RO_MD = "ro_MD",
-            RO_RO = "ro_RO",
-            RM_CH = "rm_CH",
-            RN_BI = "rn_BI",
-            RU_RU = "ru_RU",
-            SR_BA = "sr_BA",
-            SR_CS = "sr_CS",
-            SH_BA = "sh_BA",
-            SH_CS = "sh_CS",
-            SR_RS = "sr_RS",
-            SK_SK = "sk_SK",
-            SL_SI = "sl_SI",
-            SO_DJ = "so_DJ",
-            SO_SO = "so_SO",
-            ES_AR = "es_AR",
-            ES_BO = "es_BO",
-            ES_CL = "es_CL",
-            ES_CO = "es_CO",
-            ES_CR = "es_CR",
-            ES_CU = "es_CU",
-            ES_DO = "es_DO",
-            ES_EC = "es_EC",
-            ES_SV = "es_SV",
-            ES_GT = "es_GT",
-            ES_HN = "es_HN",
-            ES_MX = "es_MX",
-            ES_NI = "es_NI",
-            ES_PA = "es_PA",
-            ES_PY = "es_PY",
-            ES_PE = "es_PE",
-            ES_PR = "es_PR",
-            ES_ES = "es_ES",
-            ES_US = "es_US",
-            ES_UY = "es_UY",
-            ES_VE = "es_VE",
-            SV_SE = "sv_SE",
-            TL_PH = "tl_PH",
-            TG_TJ = "tg_TJ",
-            TA_IN = "ta_IN",
-            TA_LK = "ta_LK",
-            TH_TH = "th_TH",
-            TI_ET = "ti_ET",
-            TR_TR = "tr_TR",
-            UK_UA = "uk_UA",
-            UR_PK = "ur_PK",
-            UZ_LATN_UZ = "uz_LATN_UZ",
-            VI_VN = "vi_VN",
-            CY_GB = "cy_GB",
-            YO_BJ = "yo_BJ"
-        }
-
-        export enum emailEncodingKey {
-            UTF8 = "UTF-8",
-            ISO88591 = "ISO-8859-1",
-            SHIFT_JIS = "Shift_JIS",
-            ISO2022JP = "ISO-2022-JP",
-            EUCJP = "EUC-JP",
-            KS_C_56011987 = "ks_c_5601-1987",
-            BIG5 = "Big5",
-            GB2312 = "GB2312",
-            BIG5HKSCS = "Big5-HKSCS",
-            XSJIS_0213 = "x-SJIS_0213"
-        }
-
-        export enum userType {
-            STANDARD = "Standard",
-            POWERPARTNER = "PowerPartner",
-            POWERCUSTOMERSUCCESS = "PowerCustomerSuccess",
-            CUSTOMERSUCCESS = "CustomerSuccess",
-            GUEST = "Guest",
-            CSPLITEPORTAL = "CspLitePortal",
-            CSNONLY = "CsnOnly",
-            SELFSERVICE = "SelfService"
-        }
-
-        export enum languageLocaleKey {
-            EN_US = "en_US",
-            DE = "de",
-            ES = "es",
-            FR = "fr",
-            IT = "it",
-            JA = "ja",
-            SV = "sv",
-            KO = "ko",
-            ZH_TW = "zh_TW",
-            ZH_CN = "zh_CN",
-            PT_BR = "pt_BR",
-            NL_NL = "nl_NL",
-            DA = "da",
-            TH = "th",
-            FI = "fi",
-            RU = "ru",
-            ES_MX = "es_MX",
-            NO = "no"
-        }
-
-        export enum digestFrequency {
-            D = "D",
-            W = "W",
-            N = "N"
-        }
-
-        export enum defaultGroupNotificationFrequency {
-            P = "P",
-            D = "D",
-            W = "W",
-            N = "N"
-        }
-    }
+    } as const;
 }
 
 export type PushTopicFields = Partial<FieldProps<PushTopic>>;
@@ -1639,9 +1609,9 @@ export class PushTopic extends RestObject {
     @sField({ apiName: 'IsActive', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Is Active', externalId: false })
     public isActive: boolean;
     @sField({ apiName: 'NotifyForFields', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Notify For Fields', externalId: false })
-    public notifyForFields: PushTopic.PICKLIST.notifyForFields;
+    public notifyForFields: PicklistConst<typeof PushTopic.PICKLIST.notifyForFields>;
     @sField({ apiName: 'NotifyForOperations', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Notify For Operations', externalId: false })
-    public readonly notifyForOperations: PushTopic.PICKLIST.notifyForOperations;
+    public readonly notifyForOperations: PicklistConst<typeof PushTopic.PICKLIST.notifyForOperations>;
     @sField({ apiName: 'Description', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Description', externalId: false })
     public description: string;
     @sField({ apiName: 'NotifyForOperationCreate', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Create', externalId: false })
@@ -1713,23 +1683,20 @@ export class PushTopic extends RestObject {
     public static fromSFObject(sob: SObject): PushTopic {
         return new PushTopic().mapFromQuery(sob);
     }
-}
 
-export namespace PushTopic {
-    export namespace PICKLIST {
-        export enum notifyForFields {
-            SELECT = "Select",
-            WHERE = "Where",
-            REFERENCED = "Referenced",
-            ALL = "All"
+    public static readonly PICKLIST = {
+        notifyForFields: {
+            SELECT: "Select",
+            WHERE: "Where",
+            REFERENCED: "Referenced",
+            ALL: "All"
+        },
+        notifyForOperations: {
+            CREATE: "Create",
+            UPDATE: "Update",
+            ALL: "All",
+            EXTENDED: "Extended"
         }
-
-        export enum notifyForOperations {
-            CREATE = "Create",
-            UPDATE = "Update",
-            ALL = "All",
-            EXTENDED = "Extended"
-        }
-    }
+    } as const;
 }
 
