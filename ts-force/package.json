@@ -23,7 +23,7 @@
     "clean": "rm -r -f ./build",
     "clean-build": "npm run clean && npm run build",
     "link": "npm run clean-build && npm link",
-    "test": "mocha --timeout 10000 -r dotenv/config -r ts-node/register \"./src/test/**/*.spec.ts\"",
+    "test": "mocha --timeout 20000 -r dotenv/config -r ts-node/register \"./src/test/**/*.spec.ts\"",
     "build": "npx tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json -w",
     "ci": "npm run generate-test-classes",
