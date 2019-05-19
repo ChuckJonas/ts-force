@@ -1,4 +1,5 @@
-<img width="400" alt="ts-force" src="https://raw.githubusercontent.com/ChuckJonas/ts-force/master/logo.svg?sanitize=true">
+<img width="350" alt="ts-force" src="https://raw.githubusercontent.com/ChuckJonas/ts-force/master/logo.svg?sanitize=true">
+
 [![alt text](https://travis-ci.org/ChuckJonas/ts-force.svg?branch=master)](https://travis-ci.org/ChuckJonas/ts-force)
 [![alt text](https://img.shields.io/badge/license-BSD--3--CLAUSE-blue.svg)](https://github.com/ChuckJonas/ts-force/blob/master/LICENSE)
 
