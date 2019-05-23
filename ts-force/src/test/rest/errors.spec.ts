@@ -4,8 +4,7 @@ import 'mocha';
 import { AxiosError } from 'axios';
 import { expect } from 'chai';
 
-import { OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig } from '../..';
-import { getStandardError } from '../../rest/utils';
+import { OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig, getStandardError } from '../..';
 import { Account, Contact } from '../assets/sobs';
 
 describe('Error Handlers', () => {

@@ -47,6 +47,18 @@ export interface Limits {
     StreamingApiConcurrentClients: Limit;
 }
 
+export type InvokableResult<T> = Array<{
+    actionName: string;
+    errors?: InvokableError[];
+    isSuccess: boolean;
+    outputValues: { output: T };
+}>
+
+export interface InvokableError {
+    statusCode: string;
+    message: string;
+    fields: any[];
+}
 
 type ComplexLimit = AppLimits & Limit;
 

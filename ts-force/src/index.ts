@@ -12,5 +12,6 @@ export * from './rest/compositeFieldTypes';
 export * from './rest/restObject';
 export * from './streaming/stream';
 export * from './rest/utils';
+export * from './rest/errors';
 export * from './qry/index';
 export {FieldProps, QueryField, PicklistConst} from './types';

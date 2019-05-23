@@ -2,7 +2,7 @@ import { BatchResponse, Composite, CompositeBatch, CompositeBatchResult, Composi
 import { Rest } from './rest';
 import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObjectDecorators';
 import { SObject } from './sObject';
-import { CompositeError } from './utils';
+import { CompositeError } from './errors';
 import { FieldProps } from '..';
 
 export interface DMLResponse {
