@@ -452,11 +452,13 @@ export class SObjectGenerator {
             case SalesforceFieldType.DOUBLE:
             case SalesforceFieldType.INTEGER:
             case SalesforceFieldType.CURRENCY:
-            case SalesforceFieldType.INT:
+            case SalesforceFieldType.INT:   
             case SalesforceFieldType.PERCENT:
                 return 'number';
             case SalesforceFieldType.LOCATION:
                 return 'SFLocation';
+            case SalesforceFieldType.MULTIPICKLIST:
+                return 'string[]';
             case SalesforceFieldType.REFERENCE:
             case SalesforceFieldType.STRING:
             case SalesforceFieldType.PICKLIST:
