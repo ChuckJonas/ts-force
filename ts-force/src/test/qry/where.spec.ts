@@ -53,6 +53,19 @@ describe('Where Value Tests', () => {
         expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name IN ('123', '456')`);
     });
 
+
+    it('where x INCLUDES string[]', () => {
+        let qry = buildQuery(Contact, fields => {
+            return {
+                select: [fields.select('id')],
+                where: [
+                    { field: fields.select('name'), op: 'INCLUDES', val: ['123', '456'] }
+                ]
+            };
+        });
+        expect(qry).to.equal(`SELECT Id FROM Contact WHERE Name INCLUDES ('123', '456')`);
+    });
+
     it('where x = NULL', () => {
         let qry = buildQuery(Contact, fields => {
             return {
