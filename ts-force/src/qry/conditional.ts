@@ -1,9 +1,9 @@
 import { NULL, listFormatter, dateTimeFormatter, stringFormatter, dateFormatter } from './formatters';
 import { Omit } from '../types';
 
-export type Operator = '=' | '!=' | '<=' | '>=' | '>' | '<' | 'LIKE' | 'INCLUDES' | 'EXCLUDES';
+export type Operator = '=' | '!=' | '<=' | '>=' | '>' | '<' | 'LIKE';
 
-export type ListOperator = | 'IN' | 'NOT IN';
+export type ListOperator = | 'IN' | 'NOT IN' | 'INCLUDES' | 'EXCLUDES';
 
 export type LogicalOperator = 'AND' | 'OR';
 export type PrimValue = string | number | boolean;
