@@ -35,14 +35,17 @@ describe('Streaming API 1', () => {
         
         await new Promise(async (resolve, reject) => {
             try {
+                console.log('creating topic')
                 // setup topic
                 let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
 
                 // run test
+                console.log('connecting')
                 let stream = new Streaming();
                 await stream.connect();
                 expect(stream.isConnected()).to.equal(true);
-
+                
+                console.log('subscribing')
                 // sObject mapping
                 await stream.subscribeToTopic<{ Id: string, Name: string }>(
                     topic.name,
