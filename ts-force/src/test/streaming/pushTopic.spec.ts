@@ -68,10 +68,13 @@ describe('Streaming API 1', () => {
                             .catch(e => reject(e));
                     }
                 );
-
-                let acc = new Account({ name: TEST_ACC_NAME });
-                await acc.insert();
+                setTimeout(()=>{
+                    let acc = new Account({ name: TEST_ACC_NAME });
+                    acc.insert().then(()=>{console.log('account inserted')});
+                }, 1000);
+                
             } catch (e) {
+                console.log(e);
                 reject(e);
             }
         });
