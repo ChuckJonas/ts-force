@@ -37,7 +37,7 @@ describe('Streaming API 1', () => {
 
         await new Promise(async (resolve, reject) => {
             try {
-                setTimeout(() => {
+                setTimeout(async () => {
                     console.log('creating topic')
                     // setup topic
                     // let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
