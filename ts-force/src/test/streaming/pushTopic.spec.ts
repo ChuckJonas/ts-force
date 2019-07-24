@@ -8,6 +8,7 @@ import { DEFAULT_CONFIG } from '../../auth/baseConfig';
 import { buildQuery } from '../../qry';
 
 const TEST_ACC_NAME = 'testing push topic';
+const TestTopicName = 'TESTING';
 
 describe('Streaming API 1', () => {
     before(async () => {
@@ -15,6 +16,7 @@ describe('Streaming API 1', () => {
         let oAuth = new OAuth(passwordConfig);
         setDefaultConfig(await oAuth.initialize());
         require('cometd-nodejs-client').adapt();
+        await getOrCreateTestTopic(TestTopicName);
     });
 
 
@@ -37,7 +39,7 @@ describe('Streaming API 1', () => {
             try {
                 console.log('creating topic')
                 // setup topic
-                let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
+                // let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
 
                 // run test
                 console.log('connecting')
@@ -48,19 +50,19 @@ describe('Streaming API 1', () => {
                 console.log('subscribing')
                 // sObject mapping
                 await stream.subscribeToTopic<{ Id: string, Name: string }>(
-                    topic.name,
+                    TestTopicName,
                     e => {
                         console.log('recieved data');
                         expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
-                        stream.unsubscribe(topic.name, 'topic')
+                        stream.unsubscribe(TestTopicName, 'topic')
                             .then(() => {
                                 console.log('disconnecting data');
                                 return stream.disconnect()
                             })    
-                            .then(() => {
-                                console.log('deleting data');
-                                return topic.delete()
-                            })
+                            // .then(() => {
+                            //     console.log('deleting data');
+                            //     return topic.delete()
+                            // })
                             .then(() => {
                                 console.log('deleting data');
                                 return resolve()
@@ -72,7 +74,7 @@ describe('Streaming API 1', () => {
                 setTimeout(()=>{
                     let acc = new Account({ name: TEST_ACC_NAME });
                     acc.insert().then(()=>{console.log('account inserted')});
-                }, 1000);
+                }, 3000);
                 
             } catch (e) {
                 console.log(e);
@@ -99,7 +101,7 @@ describe('Streaming API 1', () => {
                     e => {
                         expect(e.data.sObject.name).to.equal(TEST_ACC_NAME);
                         stream.unsubscribe(topic.name, 'topic')
-                            .then(() => topic.delete())
+                            // .then(() => topic.delete())
                             .then(() => stream.disconnect())
                             .then(() => resolve())
                             .catch(e => reject(e));
