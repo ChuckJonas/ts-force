@@ -47,11 +47,21 @@ describe('Streaming API 1', () => {
                 await stream.subscribeToTopic<{ Id: string, Name: string }>(
                     topic.name,
                     e => {
+                        console.log('recieved data');
                         expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
                         stream.unsubscribe(topic.name, 'topic')
-                            .then(() => stream.disconnect())    
-                            .then(() => topic.delete())
-                            .then(() => resolve())
+                            .then(() => {
+                                console.log('disconnecting data');
+                                return stream.disconnect()
+                            })    
+                            .then(() => {
+                                console.log('deleting data');
+                                return topic.delete()
+                            })
+                            .then(() => {
+                                console.log('deleting data');
+                                return resolve()
+                            })
                             .catch(e => reject(e));
                     }
                 );
