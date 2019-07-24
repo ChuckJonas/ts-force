@@ -30,19 +30,10 @@ describe('Streaming API 1', () => {
             expect.fail('SHOULD NOT HAVE THROWN ERROR!');
         }
     });
-});
 
-describe('Streaming API2', () => {
-    before(async () => {
-        const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
-        let oAuth = new OAuth(passwordConfig);
-        setDefaultConfig(await oAuth.initialize());
-        require('cometd-nodejs-client').adapt();
-    });
-
-    it('can subscribe & unsubscribe unmapped', async (suite) => {
+    it('can subscribe & unsubscribe unmapped', async () => {
         
-        return new Promise(async (resolve, reject) => {
+        await new Promise(async (resolve, reject) => {
             try {
                 // setup topic
                 let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
@@ -72,18 +63,9 @@ describe('Streaming API2', () => {
             }
         });
     });
-});
-
-describe('Streaming API3', () => {
-    before(async () => {
-        const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
-        let oAuth = new OAuth(passwordConfig);
-        setDefaultConfig(await oAuth.initialize());
-        require('cometd-nodejs-client').adapt();
-    });
 
     it('can subscribe & unsubscribe mapped', async () => {
-        return new Promise(async (resolve, reject) => {
+        await new Promise(async (resolve, reject) => {
             try {
                 // setup topic
                 let topic = await getOrCreateTestTopic('MAPPEDTEST');
