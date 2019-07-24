@@ -31,7 +31,7 @@ describe('Streaming API', () => {
         }
     });
 
-    it('can subscribe & unsubscribe mapped', async () => {
+    it('can subscribe & unsubscribe unmapped', async () => {
         return new Promise(async (resolve, reject) => {
             try {
                 // setup topic
@@ -43,11 +43,10 @@ describe('Streaming API', () => {
                 expect(stream.isConnected()).to.equal(true);
 
                 // sObject mapping
-                await stream.subscribeToTopicMapped(
-                    Account,
+                await stream.subscribeToTopic<{ Id: string, Name: string }>(
                     topic.name,
                     e => {
-                        expect(e.data.sObject.name).to.equal(TEST_ACC_NAME);
+                        expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
                         stream.unsubscribe(topic.name, 'topic')
                             .then(() => topic.delete())
                             .then(() => stream.disconnect())
@@ -65,7 +64,7 @@ describe('Streaming API', () => {
     });
 
 
-    it('can subscribe & unsubscribe unmapped', async () => {
+    it('can subscribe & unsubscribe mapped', async () => {
         return new Promise(async (resolve, reject) => {
             try {
                 // setup topic
@@ -77,10 +76,11 @@ describe('Streaming API', () => {
                 expect(stream.isConnected()).to.equal(true);
 
                 // sObject mapping
-                await stream.subscribeToTopic<{ Id: string, Name: string }>(
+                await stream.subscribeToTopicMapped(
+                    Account,
                     topic.name,
                     e => {
-                        expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
+                        expect(e.data.sObject.name).to.equal(TEST_ACC_NAME);
                         stream.unsubscribe(topic.name, 'topic')
                             .then(() => topic.delete())
                             .then(() => stream.disconnect())
