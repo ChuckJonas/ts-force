@@ -46,10 +46,11 @@ describe('Streaming API', () => {
                 await stream.subscribeToTopic<{ Id: string, Name: string }>(
                     topic.name,
                     e => {
+                        console.log('Received Data');
                         expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
                         stream.unsubscribe(topic.name, 'topic')
+                            .then(() => stream.disconnect())    
                             .then(() => topic.delete())
-                            .then(() => stream.disconnect())
                             .then(() => resolve())
                             .catch(e => reject(e));
                     }
