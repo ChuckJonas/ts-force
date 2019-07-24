@@ -18,18 +18,18 @@ describe('Streaming API', () => {
     });
 
 
-    it('can connect & disconnect', async () => {
-        try {
-            let stream = new Streaming();
-            await stream.connect();
-            expect(stream.isConnected()).to.equal(true);
-            await stream.disconnect();
-            expect(stream.isConnected()).to.equal(false);
-        } catch (e) {
-            console.log(e);
-            expect.fail('SHOULD NOT HAVE THROWN ERROR!');
-        }
-    });
+    // it('can connect & disconnect', async () => {
+    //     try {
+    //         let stream = new Streaming();
+    //         await stream.connect();
+    //         expect(stream.isConnected()).to.equal(true);
+    //         await stream.disconnect();
+    //         expect(stream.isConnected()).to.equal(false);
+    //     } catch (e) {
+    //         console.log(e);
+    //         expect.fail('SHOULD NOT HAVE THROWN ERROR!');
+    //     }
+    // });
 
     it('can subscribe & unsubscribe unmapped', async () => {
         return new Promise(async (resolve, reject) => {
