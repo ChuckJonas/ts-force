@@ -34,52 +34,54 @@ describe('Streaming API 1', () => {
     });
 
     it('can subscribe & unsubscribe unmapped', async () => {
-        
+
         await new Promise(async (resolve, reject) => {
             try {
-                console.log('creating topic')
-                // setup topic
-                // let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
+                setTimeout(() => {
+                    console.log('creating topic')
+                    // setup topic
+                    // let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
 
-                // run test
-                console.log('connecting')
-                let stream = new Streaming();
-                await stream.connect();
-                expect(stream.isConnected()).to.equal(true);
-                
-                console.log('subscribing')
-                // sObject mapping
-                await stream.subscribeToTopic<{ Id: string, Name: string }>(
-                    TestTopicName,
-                    e => {
-                        console.log('recieved data');
-                        expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
-                        stream.unsubscribe(TestTopicName, 'topic')
-                            .then(() => {
-                                console.log('disconnecting data');
-                                return stream.disconnect()
-                            })    
-                            // .then(() => {
-                            //     console.log('deleting data');
-                            //     return topic.delete()
-                            // })
-                            .then(() => {
-                                console.log('deleting data');
-                                return resolve()
-                            })
-                            .catch(e => reject(e));
-                    }
-                );
-                console.log('creating data');
-                setTimeout(()=>{
-                    let acc = new Account({ name: TEST_ACC_NAME });
-                    acc.insert().then(()=>{console.log('account inserted')});
-                }, 3000);
-                
+                    // run test
+                    console.log('connecting')
+                    let stream = new Streaming();
+                    await stream.connect();
+                    expect(stream.isConnected()).to.equal(true);
+
+                    console.log('subscribing')
+                    // sObject mapping
+                    await stream.subscribeToTopic<{ Id: string, Name: string }>(
+                        TestTopicName,
+                        e => {
+                            console.log('recieved data');
+                            expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
+                            stream.unsubscribe(TestTopicName, 'topic')
+                                .then(() => {
+                                    console.log('disconnecting data');
+                                    return stream.disconnect()
+                                })
+                                // .then(() => {
+                                //     console.log('deleting data');
+                                //     return topic.delete()
+                                // })
+                                .then(() => {
+                                    console.log('deleting data');
+                                    return resolve()
+                                })
+                                .catch(e => reject(e));
+                        }
+                    );
+                    console.log('creating data');
+                    setTimeout(() => {
+                        let acc = new Account({ name: TEST_ACC_NAME });
+                        acc.insert().then(() => { console.log('account inserted') });
+                    }, 3000);
+                }, 5000)
             } catch (e) {
                 console.log(e);
                 reject(e);
             }
+
         });
     });
 
