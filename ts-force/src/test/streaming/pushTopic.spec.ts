@@ -101,7 +101,7 @@ describe('Streaming API', () => {
 async function getOrCreateTestTopic() {
     let topicName = 'UNITTEST';
     let topic: PushTopic;
-    topic = (await PushTopic.retrieve(`SELECT Id, Name FROM PushTopic WHERE Name = '${topicName}'`))[0];
+    topic = (await PushTopic.retrieve(`SELECT Id, Name FROM PushTopic WHERE Name = '${topicName}' AND IsDeleted = false`))[0];
     if (!topic) {
         topic = new PushTopic({
             name: topicName,
