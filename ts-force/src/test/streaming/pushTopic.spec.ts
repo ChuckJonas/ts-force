@@ -9,7 +9,7 @@ import { buildQuery } from '../../qry';
 
 const TEST_ACC_NAME = 'testing push topic';
 
-describe('Streaming API', () => {
+describe('Streaming API 1', () => {
     before(async () => {
         const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
         let oAuth = new OAuth(passwordConfig);
@@ -18,20 +18,30 @@ describe('Streaming API', () => {
     });
 
 
-    // it('can connect & disconnect', async () => {
-    //     try {
-    //         let stream = new Streaming();
-    //         await stream.connect();
-    //         expect(stream.isConnected()).to.equal(true);
-    //         await stream.disconnect();
-    //         expect(stream.isConnected()).to.equal(false);
-    //     } catch (e) {
-    //         console.log(e);
-    //         expect.fail('SHOULD NOT HAVE THROWN ERROR!');
-    //     }
-    // });
+    it('can connect & disconnect', async () => {
+        try {
+            let stream = new Streaming();
+            await stream.connect();
+            expect(stream.isConnected()).to.equal(true);
+            await stream.disconnect();
+            expect(stream.isConnected()).to.equal(false);
+        } catch (e) {
+            console.log(e);
+            expect.fail('SHOULD NOT HAVE THROWN ERROR!');
+        }
+    });
+});
 
-    it('can subscribe & unsubscribe unmapped', async () => {
+describe('Streaming API2', () => {
+    before(async () => {
+        const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
+        let oAuth = new OAuth(passwordConfig);
+        setDefaultConfig(await oAuth.initialize());
+        require('cometd-nodejs-client').adapt();
+    });
+
+    it('can subscribe & unsubscribe unmapped', async (suite) => {
+        
         return new Promise(async (resolve, reject) => {
             try {
                 // setup topic
@@ -46,7 +56,6 @@ describe('Streaming API', () => {
                 await stream.subscribeToTopic<{ Id: string, Name: string }>(
                     topic.name,
                     e => {
-                        console.log('Received Data');
                         expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
                         stream.unsubscribe(topic.name, 'topic')
                             .then(() => stream.disconnect())    
@@ -63,7 +72,15 @@ describe('Streaming API', () => {
             }
         });
     });
+});
 
+describe('Streaming API3', () => {
+    before(async () => {
+        const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
+        let oAuth = new OAuth(passwordConfig);
+        setDefaultConfig(await oAuth.initialize());
+        require('cometd-nodejs-client').adapt();
+    });
 
     it('can subscribe & unsubscribe mapped', async () => {
         return new Promise(async (resolve, reject) => {
