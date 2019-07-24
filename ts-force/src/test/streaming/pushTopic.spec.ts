@@ -35,7 +35,7 @@ describe('Streaming API', () => {
         return new Promise(async (resolve, reject) => {
             try {
                 // setup topic
-                let topic = await getOrCreateTestTopic();
+                let topic = await getOrCreateTestTopic('UNMAPPEDTEST');
 
                 // run test
                 let stream = new Streaming();
@@ -68,7 +68,7 @@ describe('Streaming API', () => {
         return new Promise(async (resolve, reject) => {
             try {
                 // setup topic
-                let topic = await getOrCreateTestTopic();
+                let topic = await getOrCreateTestTopic('MAPPEDTEST');
 
                 // run test
                 let stream = new Streaming();
@@ -98,8 +98,7 @@ describe('Streaming API', () => {
     });
 });
 
-async function getOrCreateTestTopic() {
-    let topicName = 'UNITTEST';
+async function getOrCreateTestTopic(topicName: string) {
     let topic: PushTopic;
     topic = (await PushTopic.retrieve(`SELECT Id, Name FROM PushTopic WHERE Name = '${topicName}' AND IsDeleted = false`))[0];
     if (!topic) {
