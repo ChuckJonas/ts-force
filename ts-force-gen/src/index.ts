@@ -149,7 +149,7 @@ async function generateLoadConfig (): Promise<Config> {
 
 // generate the classes
 async function generate (config: Config) {
-
+    
     let spinner = new Spinner({
         text: 'warming up...',
         stream: process.stderr,
@@ -192,8 +192,8 @@ async function generate (config: Config) {
         if (config.enforcePicklistValues && objConfig.enforcePicklistValues === undefined) {
             objConfig.enforcePicklistValues = config.enforcePicklistValues;
         }
-
-        objConfig.autoConvertNames = objConfig.autoConvertNames || true;
+        
+        objConfig.autoConvertNames = objConfig.autoConvertNames !== false;
         objConfig.className = objConfig.className || sanitizeClassName(objConfig);
 
         return objConfig;
