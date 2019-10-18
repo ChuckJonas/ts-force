@@ -516,6 +516,8 @@ export class Contact extends RestObject {
     public readonly jigsawContactId: string;
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
     public cleanStatus: PicklistConst<typeof Contact.PICKLIST.cleanStatus>;
+    @sField({ apiName: 'IndividualId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Individual ID', externalId: false })
+    public individualId: string;
     @sField({ apiName: 'Level__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Level', externalId: false })
     public level: PicklistConst<typeof Contact.PICKLIST.level>;
     @sField({ apiName: 'Languages__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Languages', externalId: false })
@@ -588,6 +590,7 @@ export class Contact extends RestObject {
         this.jigsaw = void 0;
         this.jigsawContactId = void 0;
         this.cleanStatus = void 0;
+        this.individualId = void 0;
         this.level = void 0;
         this.languages = void 0;
         this.initObject(fields);
@@ -1022,6 +1025,8 @@ export class User extends RestObject {
     public readonly mediumBannerPhotoUrl: string;
     @sField({ apiName: 'IsProfilePhotoActive', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Has Profile Photo', externalId: false })
     public readonly isProfilePhotoActive: boolean;
+    @sField({ apiName: 'IndividualId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Individual ID', externalId: false })
+    public individualId: string;
 
     constructor(fields?: UserFields, restInstance?: Rest) {
         super('User', restInstance);
@@ -1197,6 +1202,7 @@ export class User extends RestObject {
         this.smallBannerPhotoUrl = void 0;
         this.mediumBannerPhotoUrl = void 0;
         this.isProfilePhotoActive = void 0;
+        this.individualId = void 0;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
@@ -1236,18 +1242,18 @@ export class User extends RestObject {
         },
         timeZoneSidKey: {
             PACIFICKIRITIMATI: "Pacific/Kiritimati",
+            PACIFICCHATHAM: "Pacific/Chatham",
+            PACIFICAUCKLAND: "Pacific/Auckland",
             PACIFICENDERBURY: "Pacific/Enderbury",
             PACIFICTONGATAPU: "Pacific/Tongatapu",
-            PACIFICCHATHAM: "Pacific/Chatham",
             ASIAKAMCHATKA: "Asia/Kamchatka",
-            PACIFICAUCKLAND: "Pacific/Auckland",
             PACIFICFIJI: "Pacific/Fiji",
+            AUSTRALIALORD_HOWE: "Australia/Lord_Howe",
+            AUSTRALIASYDNEY: "Australia/Sydney",
             PACIFICGUADALCANAL: "Pacific/Guadalcanal",
             PACIFICNORFOLK: "Pacific/Norfolk",
-            AUSTRALIALORD_HOWE: "Australia/Lord_Howe",
-            AUSTRALIABRISBANE: "Australia/Brisbane",
-            AUSTRALIASYDNEY: "Australia/Sydney",
             AUSTRALIAADELAIDE: "Australia/Adelaide",
+            AUSTRALIABRISBANE: "Australia/Brisbane",
             AUSTRALIADARWIN: "Australia/Darwin",
             ASIASEOUL: "Asia/Seoul",
             ASIATOKYO: "Asia/Tokyo",
@@ -1270,11 +1276,11 @@ export class User extends RestObject {
             ASIATASHKENT: "Asia/Tashkent",
             ASIAYEKATERINBURG: "Asia/Yekaterinburg",
             ASIAKABUL: "Asia/Kabul",
-            ASIATEHRAN: "Asia/Tehran",
             ASIABAKU: "Asia/Baku",
             ASIADUBAI: "Asia/Dubai",
             ASIATBILISI: "Asia/Tbilisi",
             ASIAYEREVAN: "Asia/Yerevan",
+            ASIATEHRAN: "Asia/Tehran",
             AFRICANAIROBI: "Africa/Nairobi",
             ASIABAGHDAD: "Asia/Baghdad",
             ASIABEIRUT: "Asia/Beirut",
@@ -1308,13 +1314,13 @@ export class User extends RestObject {
             AMERICAST_JOHNS: "America/St_Johns",
             AMERICAARGENTINABUENOS_AIRES: "America/Argentina/Buenos_Aires",
             AMERICAHALIFAX: "America/Halifax",
+            AMERICASANTIAGO: "America/Santiago",
             AMERICASAO_PAULO: "America/Sao_Paulo",
             ATLANTICBERMUDA: "Atlantic/Bermuda",
             AMERICACARACAS: "America/Caracas",
             AMERICAINDIANAINDIANAPOLIS: "America/Indiana/Indianapolis",
             AMERICANEW_YORK: "America/New_York",
             AMERICAPUERTO_RICO: "America/Puerto_Rico",
-            AMERICASANTIAGO: "America/Santiago",
             AMERICABOGOTA: "America/Bogota",
             AMERICACHICAGO: "America/Chicago",
             AMERICALIMA: "America/Lima",
