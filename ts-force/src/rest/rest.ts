@@ -19,11 +19,11 @@ export class Rest {
 
     /**
      * Constructor
-     * @param {BaseConfig} [config] Optional authenication configuration.   
+     * @param {BaseConfig} [config] Optional authentication configuration.   
      *     If not passed in will return a "singleton" client from the default config
      * @memberof Rest
      */
-    constructor(config?: BaseConfig) {
+    constructor (config?: BaseConfig) {
 
         this.config = config;
         // setup/get "singleton" if using default config
@@ -59,7 +59,7 @@ export class Rest {
      * @param  {string} apiName the object to get the describe for
      * @returns Promise<SObjectDescribe>
      */
-    public async getSObjectDescribe(apiName: string): Promise<SObjectDescribe> {
+    public async getSObjectDescribe (apiName: string): Promise<SObjectDescribe> {
         return (await this.request.get(`/services/data/${this.version}/sobjects/${apiName}/describe/`)).data;
     }
 
@@ -68,12 +68,12 @@ export class Rest {
      * @param  {string} query SOQL Query to execute
      * @returns Promise<QueryResponse<T>>
      */
-    public async query<T>(query: string): Promise<QueryResponse<T>> {
+    public async query<T> (query: string): Promise<QueryResponse<T>> {
         let qryString = encodeURIComponent(query);
         return (await this.request.get<QueryResponse<T>>(`/services/data/${this.version}/query?q=${qryString}`)).data;
     }
 
-    public async queryMore<T>(resp: QueryResponse<T>): Promise<QueryResponse<T>> {
+    public async queryMore<T> (resp: QueryResponse<T>): Promise<QueryResponse<T>> {
         return (await this.request.get<QueryResponse<T>>(resp.nextRecordsUrl)).data;
     }
 
@@ -85,7 +85,7 @@ export class Rest {
      * @returns {Promise<SearchResponse<T>>}
      * @memberof Rest
      */
-    public async search<T>(query: string): Promise<SearchResponse<T>> {
+    public async search<T> (query: string): Promise<SearchResponse<T>> {
         let qryString = encodeURIComponent(query);
         return (await this.request.get<SearchResponse<T>>(`/services/data/${this.version}/search?q=${qryString}`)).data;
     }
@@ -96,7 +96,7 @@ export class Rest {
      * @returns {Promise<Limits>}
      * @memberof Rest
      */
-    public async limits(): Promise<Limits> {
+    public async limits (): Promise<Limits> {
         return (await this.request.get<Limits>(`/services/data/${this.version}/limits`)).data;
     }
 
@@ -108,7 +108,7 @@ export class Rest {
      * @returns {Promise<InvokableResult<O>>}
      * @memberof Rest
      */
-    public async invokeAction<O>(action: string, inputs: any[]): Promise<InvokableResult<O>> {
+    public async invokeAction<O> (action: string, inputs: any[]): Promise<InvokableResult<O>> {
         return (
             await this.request.post<InvokableResult<O>>(
                 `/services/data/${this.version}/actions/custom/apex/${action}`,

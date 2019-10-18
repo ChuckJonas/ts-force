@@ -299,6 +299,7 @@ export class SObjectGenerator {
     }
 
     private generateChildrenProps (sobConfig: SObjectConfig, children: ChildRelationship[]): PropertyDeclarationStructure[] {
+        const uniqueNames = new Set<string>();
         let props = [];
         children.forEach(child => {
             try {
@@ -327,9 +328,11 @@ export class SObjectGenerator {
                     salesforceLabel: child.relationshipName,
                     salesforceType: SalesforceFieldType.REFERENCE
                 };
-
+                let propName = this.sanitizeProperty(sobConfig, child.relationshipName, false);
+                propName = this.makeNameUnquie(propName, uniqueNames);
+                uniqueNames.add(propName);
                 props.push({
-                    name: this.sanitizeProperty(sobConfig, child.relationshipName, false),
+                    name: propName,
                     type: `${referenceClass}[]`,
                     scope: Scope.Public,
                     decorators: [
@@ -345,6 +348,7 @@ export class SObjectGenerator {
 
     private generateFieldProps (sobConfig: SObjectConfig, fields: Field[]): PropertyDeclarationStructure[] {
         let props = [];
+        const uniqueNames = new Set<string>();
         // add members
         fields.forEach(field => {
 
@@ -394,9 +398,13 @@ export class SObjectGenerator {
                     });
                 }
 
+                let propName = this.sanitizeProperty(sobConfig, field.name, field.type === SalesforceFieldType.REFERENCE);
+                propName = this.makeNameUnquie(propName, uniqueNames);
+                uniqueNames.add(propName);
+
                 let prop: PropertyDeclarationStructure = {
                     kind: StructureKind.Property,
-                    name: this.sanitizeProperty(sobConfig, field.name, field.type === SalesforceFieldType.REFERENCE),
+                    name: propName,
                     type: this.mapSObjectType(field.type),
                     scope: Scope.Public,
                     isReadonly: !(field.createable || field.updateable),
