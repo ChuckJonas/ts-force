@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.0
+
+- Added default de-duping property name logic
+
+**NOTE** Must use typescript > 3.4.x to use classes generated with picklists!
+
+## 2.6.x
+
+- various type fixes
+- better multi-picklist support
+
 ## 2.5.0
 
 - Changed picklist away from namespaces to use `as const`
