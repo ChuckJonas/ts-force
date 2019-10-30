@@ -1,10 +1,14 @@
 # Changelog
 
+## 2.8.0
+
+- Treating empty reference objects as null instead of a empty RestObject
+- Treating empty queried properties as null instead of void 0
+
 ## 2.7.0
 
 - Added default de-duping property name logic
 
-**NOTE** Must use typescript > 3.4.x to use classes generated with picklists!
 
 ## 2.6.x
 
