@@ -31,7 +31,7 @@ describe('Generated Classes', () => {
 
     let contact2 = (await Contact.retrieve(`SELECT ${Contact.FIELDS.name}, ${Contact.FIELDS.account}.${Account.FIELDS.website} FROM ${Contact.API_NAME} WHERE Id = '${contact.id}'`))[0];
 
-    expect(contact2.account).to.not.be.undefined;
+    expect(contact2.account).not.to.be.empty;
     expect(contact2.account.website).to.equal(acc.website);
 
     let acc2 = (await Account.retrieve(f => ({
@@ -39,7 +39,7 @@ describe('Generated Classes', () => {
       where: [{ field: 'id', val: acc.id }]
     })))[0];
     // if the lookup rel isn't set it should be null
-    expect(acc2.parent).to.be.undefined;
+    expect(acc2.parent).to.be.null;
 
     await acc.delete();
   });

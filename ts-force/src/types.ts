@@ -9,7 +9,7 @@ export type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Functio
 
 export type ParentReferencePropNames<T> = { [K in keyof T]: T[K] extends RestObject ? K : never }[keyof T];
 
-export type NonReferencePropNames<T> = { [K in keyof T]: T[K] extends RestObject|Array<RestObject> ? never : K }[keyof T];
+export type NonReferencePropNames<T> = { [K in keyof T]: T[K] extends RestObject | Array<RestObject> ? never : K }[keyof T];
 
 export type RelationPropNames<T> = { [K in keyof T]: T[K] extends RestObject[] ? K : never }[keyof T];
 
@@ -24,5 +24,3 @@ export type FieldProps<T> = ExcludeNonFields<NonFunctionProperties<T>>;
 
 // for picklist generation
 export type PicklistConst<T extends any> = T[keyof T];
-
-export type CalenderDate = {year: number; month: number; day: number;};

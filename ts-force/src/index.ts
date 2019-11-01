@@ -14,4 +14,5 @@ export * from './streaming/stream';
 export * from './rest/utils';
 export * from './rest/errors';
 export * from './qry/index';
-export {FieldProps, QueryField, PicklistConst} from './types';
+export { FieldProps, QueryField, PicklistConst } from './types';
+export * from './utils/calendarDate';

@@ -4,7 +4,7 @@ import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObject
 import { SObject } from './sObject';
 import { CompositeError } from './errors';
 import { FieldProps } from '..';
-import { CalenderDate } from '@src/types';
+import { CalendarDate, calendarToString, getCalendarDate } from '../utils/calendarDate';
 
 export interface DMLResponse {
   id: string;
@@ -188,7 +188,7 @@ export abstract class RestObject extends SObject {
 
   /**
   * Gets JSON Object from RestObject
-  * TODO: Clean this up!
+  * TODO: Clean this up! Maybe candidate for worst code in this whole project.
   * @param type 'insert' | 'update' | 'update_all' | 'apex'  Determines which fields to include in payload and how to format them.
   * @returns {*} JSON representation of SObject (mapped using decorators)
   * @memberof RestObject
@@ -216,10 +216,9 @@ export abstract class RestObject extends SObject {
               data[sFieldProps.apiName] = {
                 records: (this[i] as any as RestObject[]).map(obj => obj.prepareFor('apex'))
               };
-            } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
-              data[sFieldProps.apiName] = (this[i] as any as string[]).join(';');
             } else {
-              data[sFieldProps.apiName] = this[i];
+              // copy with mapping
+              data[sFieldProps.apiName] = this.toSFValueFormat(sFieldProps, this[i]);
             }
           } else { // standard rest handling
             let canSend: boolean;
@@ -245,14 +244,9 @@ export abstract class RestObject extends SObject {
                 data[sFieldProps.apiName] = relatedSob.prepareAsRelationRecord();
               }
               continue;
-            } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
-              data[sFieldProps.apiName] = (this[i] as any as string[]).join(';');
-            } else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
-              let calDate = (this[i] as any as CalenderDate);
-              data[sFieldProps.apiName] = `${calDate.year}-${calDate.month + 1}-${calDate.day}`;
             } else {
               // copy with mapping
-              data[sFieldProps.apiName] = this[i];
+              data[sFieldProps.apiName] = this.toSFValueFormat(sFieldProps, this[i]);
             }
           }
         }
@@ -260,6 +254,17 @@ export abstract class RestObject extends SObject {
     }
 
     return data;
+  }
+
+  // helper to get values back in salesforce format
+  private toSFValueFormat(sFieldProps: SFieldProperties, value: any) {
+    if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
+      return (value as any as string[]).join(';');
+    } else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
+      return calendarToString(value as any as CalendarDate);
+    } else {
+      return value;
+    }
   }
 
   /**
@@ -323,9 +328,7 @@ export abstract class RestObject extends SObject {
           if (sFieldProps.salesforceType === SalesforceFieldType.DATETIME) {
             val = new Date(val);
           } else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
-            // no timezone information... date will always be whatever was stored
-            let parts = val.split('-');
-            val = { year: parts[0], month: parts[1] - 1, day: parts[2] } as CalenderDate;
+            val = getCalendarDate(val);
           } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
             val = val.split(';');
           }
