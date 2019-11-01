@@ -4,6 +4,7 @@ import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObject
 import { SObject } from './sObject';
 import { CompositeError } from './errors';
 import { FieldProps } from '..';
+import { CalenderDate } from '@src/types';
 
 export interface DMLResponse {
   id: string;
@@ -246,6 +247,9 @@ export abstract class RestObject extends SObject {
               continue;
             } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
               data[sFieldProps.apiName] = (this[i] as any as string[]).join(';');
+            } else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
+              let calDate = (this[i] as any as CalenderDate);
+              data[sFieldProps.apiName] = `${calDate.year}-${calDate.month + 1}-${calDate.day}`;
             } else {
               // copy with mapping
               data[sFieldProps.apiName] = this[i];
@@ -321,7 +325,7 @@ export abstract class RestObject extends SObject {
           } else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
             // no timezone information... date will always be whatever was stored
             let parts = val.split('-');
-            val = new Date(parts[0], parts[1] - 1, parts[2]);
+            val = { year: parts[0], month: parts[1] - 1, day: parts[2] } as CalenderDate;
           } else if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
             val = val.split(';');
           }

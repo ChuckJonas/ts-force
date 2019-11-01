@@ -19,7 +19,8 @@ export const TS_FORCE_IMPORTS: ImportDeclarationStructure = {
         { name: 'SOQLQueryParams' },
         { name: 'buildQuery' },
         { name: 'FieldProps' },
-        { name: 'PicklistConst' }
+        { name: 'PicklistConst' },
+        { name: 'CalendarDate' }
     ]
 };
 
@@ -453,14 +454,15 @@ export class SObjectGenerator {
     private mapSObjectType (sfType: string): string {
         switch (sfType) {
             case SalesforceFieldType.DATETIME:
-            case SalesforceFieldType.DATE:
                 return 'Date';
+            case SalesforceFieldType.DATE:
+                return 'CalenderDate';
             case SalesforceFieldType.BOOLEAN:
                 return 'boolean';
             case SalesforceFieldType.DOUBLE:
             case SalesforceFieldType.INTEGER:
             case SalesforceFieldType.CURRENCY:
-            case SalesforceFieldType.INT:   
+            case SalesforceFieldType.INT:
             case SalesforceFieldType.PERCENT:
                 return 'number';
             case SalesforceFieldType.LOCATION:

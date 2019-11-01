@@ -24,3 +24,5 @@ export type FieldProps<T> = ExcludeNonFields<NonFunctionProperties<T>>;
 
 // for picklist generation
 export type PicklistConst<T extends any> = T[keyof T];
+
+export type CalenderDate = {year: number; month: number; day: number;};
