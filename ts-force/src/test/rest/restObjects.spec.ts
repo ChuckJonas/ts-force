@@ -3,8 +3,10 @@ import 'mocha';
 
 import { expect } from 'chai';
 
-import { CompositeCollection, OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig } from '../..';
+import { CompositeCollection, OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig, compositeRetrieve } from '../..';
 import { Account, Contact, User } from '../assets/sobs';
+import { getCalendarDate } from '../../utils/calendarDate';
+import { isArray } from 'util';
 
 describe('Generated Classes', () => {
   before(async () => {
@@ -352,6 +354,56 @@ describe('Generated Classes', () => {
     expect(acc.contacts[0].firstName).to.deep.equal(retAcc.contacts[0].firstName);
     expect(acc.contacts[0].lastName).to.deep.equal(retAcc.contacts[0].lastName);
     expect(acc.owner.email).to.deep.equal(retAcc.owner.email);
+  });
+
+  it('composite retrieve', async () => {
+    let results = await compositeRetrieve(Contact, Account, User)(
+      f => ({ select: f.select('cleanStatus', 'email', 'accountId') }),
+      f => ({ select: f.select('numberOfEmployees', 'accountNumber', 'active') }),
+      'select x from blah'
+    );
+    let contactResults = results[0];
+    if (Array.isArray(contactResults)) {
+      expect(contactResults.length).to.be.greaterThan(0);
+      expect(contactResults[0] instanceof Contact).to.be.eq(true);
+    }else {
+      throw new Error('Expected results[0] to return Contact[]');
+    }
+
+    let accountResults = results[1];
+    if (Array.isArray(accountResults)) {
+      expect(accountResults.length).to.be.greaterThan(0);
+      expect(accountResults[0] instanceof Account).to.be.eq(true);
+    }else {
+      throw new Error('Expected results[1] to return Account[]');
+    }
+
+    let userResults = results[2];
+    if (!Array.isArray(userResults)) {
+      expect(userResults.statusCode).to.be.eq(400);
+      expect(Array.isArray(userResults.result)).to.be.eq(true);
+    }else {
+      throw new Error('Expected results[2] to return errors');
+    }
+  });
+
+  it('DML Date Consistency', async () => {
+    let c = new Contact({
+      firstName: 'test',
+      lastName: 'contact',
+      birthdate: getCalendarDate()
+    });
+    await c.insert();
+    expect(c.id).to.not.be.null;
+
+    let c2 = (await Contact.retrieve(f => ({
+      select: [f.select('birthdate')],
+      where: [{ field: 'id', val: c.id }]
+    })))[0];
+
+    expect(c2.birthdate).to.deep.equal(c.birthdate);
+
+    await c.delete();
   });
 
 });

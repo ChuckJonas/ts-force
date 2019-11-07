@@ -1,4 +1,4 @@
-import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst } from '../..';
+import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst, CalendarDate } from '../..';
 
 export type AccountFields = Partial<FieldProps<Account>>;
 
@@ -109,7 +109,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'SystemModstamp', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'System Modstamp', externalId: false })
     public readonly systemModstamp: Date;
     @sField({ apiName: 'LastActivityDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Last Activity', externalId: false })
-    public readonly lastActivityDate: Date;
+    public readonly lastActivityDate: CalendarDate;
     @sField({ apiName: 'LastViewedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Viewed Date', externalId: false })
     public readonly lastViewedDate: Date;
     @sField({ apiName: 'LastReferencedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Referenced Date', externalId: false })
@@ -149,7 +149,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'SLASerialNumber__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'SLA Serial Number', externalId: false })
     public sLASerialNumber: string;
     @sField({ apiName: 'SLAExpirationDate__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'SLA Expiration Date', externalId: false })
-    public sLAExpirationDate: Date;
+    public sLAExpirationDate: CalendarDate;
     @sField({ apiName: 'Test_External_Id__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Test External Id', externalId: true })
     public testExternalId: string;
     @sField({ apiName: 'MultiPick__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.MULTIPICKLIST, salesforceLabel: 'MultiPick', externalId: false })
@@ -471,7 +471,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'LeadSource', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Lead Source', externalId: false })
     public leadSource: PicklistConst<typeof Contact.PICKLIST.leadSource>;
     @sField({ apiName: 'Birthdate', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Birthdate', externalId: false })
-    public birthdate: Date;
+    public birthdate: CalendarDate;
     @sField({ apiName: 'Description', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Contact Description', externalId: false })
     public description: string;
     @sField({ apiName: 'Owner', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Owner ID', externalId: false })
@@ -493,7 +493,7 @@ export class Contact extends RestObject {
     @sField({ apiName: 'SystemModstamp', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'System Modstamp', externalId: false })
     public readonly systemModstamp: Date;
     @sField({ apiName: 'LastActivityDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Last Activity', externalId: false })
-    public readonly lastActivityDate: Date;
+    public readonly lastActivityDate: CalendarDate;
     @sField({ apiName: 'LastCURequestDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Stay-in-Touch Request Date', externalId: false })
     public readonly lastCURequestDate: Date;
     @sField({ apiName: 'LastCUUpdateDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Stay-in-Touch Save Date', externalId: false })
@@ -1283,32 +1283,32 @@ export class User extends RestObject {
             ASIATEHRAN: "Asia/Tehran",
             AFRICANAIROBI: "Africa/Nairobi",
             ASIABAGHDAD: "Asia/Baghdad",
-            ASIABEIRUT: "Asia/Beirut",
-            ASIAJERUSALEM: "Asia/Jerusalem",
             ASIAKUWAIT: "Asia/Kuwait",
             ASIARIYADH: "Asia/Riyadh",
-            EUROPEATHENS: "Europe/Athens",
-            EUROPEBUCHAREST: "Europe/Bucharest",
-            EUROPEHELSINKI: "Europe/Helsinki",
             EUROPEISTANBUL: "Europe/Istanbul",
             EUROPEMINSK: "Europe/Minsk",
             EUROPEMOSCOW: "Europe/Moscow",
             AFRICACAIRO: "Africa/Cairo",
             AFRICAJOHANNESBURG: "Africa/Johannesburg",
+            ASIABEIRUT: "Asia/Beirut",
+            ASIAJERUSALEM: "Asia/Jerusalem",
+            EUROPEATHENS: "Europe/Athens",
+            EUROPEBUCHAREST: "Europe/Bucharest",
+            EUROPEHELSINKI: "Europe/Helsinki",
+            AFRICAALGIERS: "Africa/Algiers",
+            AFRICACASABLANCA: "Africa/Casablanca",
             EUROPEAMSTERDAM: "Europe/Amsterdam",
             EUROPEBERLIN: "Europe/Berlin",
             EUROPEBRUSSELS: "Europe/Brussels",
             EUROPEPARIS: "Europe/Paris",
             EUROPEPRAGUE: "Europe/Prague",
             EUROPEROME: "Europe/Rome",
-            AFRICAALGIERS: "Africa/Algiers",
-            AFRICACASABLANCA: "Africa/Casablanca",
             EUROPEDUBLIN: "Europe/Dublin",
             EUROPELISBON: "Europe/Lisbon",
             EUROPELONDON: "Europe/London",
+            GMT: "GMT",
             AMERICASCORESBYSUND: "America/Scoresbysund",
             ATLANTICAZORES: "Atlantic/Azores",
-            GMT: "GMT",
             ATLANTICCAPE_VERDE: "Atlantic/Cape_Verde",
             ATLANTICSOUTH_GEORGIA: "Atlantic/South_Georgia",
             AMERICAST_JOHNS: "America/St_Johns",
@@ -1324,12 +1324,12 @@ export class User extends RestObject {
             AMERICABOGOTA: "America/Bogota",
             AMERICACHICAGO: "America/Chicago",
             AMERICALIMA: "America/Lima",
-            AMERICAMEXICO_CITY: "America/Mexico_City",
             AMERICAPANAMA: "America/Panama",
             AMERICADENVER: "America/Denver",
             AMERICAEL_SALVADOR: "America/El_Salvador",
-            AMERICAMAZATLAN: "America/Mazatlan",
+            AMERICAMEXICO_CITY: "America/Mexico_City",
             AMERICALOS_ANGELES: "America/Los_Angeles",
+            AMERICAMAZATLAN: "America/Mazatlan",
             AMERICAPHOENIX: "America/Phoenix",
             AMERICATIJUANA: "America/Tijuana",
             AMERICAANCHORAGE: "America/Anchorage",
