@@ -7,7 +7,7 @@ export interface AxiosErrorException {
 }
 
 export class CompositeError extends Error {
-    compositeResponses: CompositeBatchResult<any>[];
+    compositeResponses: CompositeBatchResult<any, any>[];
 }
 
 export interface CompositeErrorException {
