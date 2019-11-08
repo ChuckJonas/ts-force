@@ -57,7 +57,7 @@ export class SObjectGenerator {
     * @param {string[]} sObjectConfigs: Salesforce API Object Names to generate Classes for
     * @memberof SObjectGenerator
     */
-    constructor(out: string | SourceFile, sObjectConfig: SObjectConfig, allConfigs: SObjectConfig[]) {
+    constructor (out: string | SourceFile, sObjectConfig: SObjectConfig, allConfigs: SObjectConfig[]) {
         this.sObjectConfig = sObjectConfig;
         this.pickLists = new Map<string, [string, string][]>();
         if (typeof out === 'string') {
@@ -78,7 +78,7 @@ export class SObjectGenerator {
 
     }
 
-    public async generateFile() {
+    public async generateFile () {
 
         try {
             // add imports
@@ -110,7 +110,7 @@ export class SObjectGenerator {
     }
 
     // class generation
-    public async generateSObjectClass(sobConfig: SObjectConfig): Promise<void> {
+    public async generateSObjectClass (sobConfig: SObjectConfig): Promise<void> {
 
         let sobDescribe: SObjectDescribe;
         try {
@@ -194,11 +194,11 @@ export class SObjectGenerator {
         classDeclaration.forget();
     }
 
-    private async retrieveDescribe(apiName: string): Promise<SObjectDescribe> {
+    private async retrieveDescribe (apiName: string): Promise<SObjectDescribe> {
         return await this.client.getSObjectDescribe(apiName);
     }
 
-    private generateClass(sobConfig: SObjectConfig, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
+    private generateClass (sobConfig: SObjectConfig, className: string, props: PropertyDeclarationStructure[]): ClassDeclaration {
 
         let classDeclaration = this.sourceFile.addClass({
             name: className,
@@ -236,7 +236,7 @@ export class SObjectGenerator {
         return classDeclaration;
     }
 
-    private generatePickistConst(classDeclaration: ClassDeclaration) {
+    private generatePickistConst (classDeclaration: ClassDeclaration) {
         if (this.pickLists.size) {
             let picklistsConst = classDeclaration.addProperty({
                 name: 'PICKLIST',
@@ -263,7 +263,7 @@ export class SObjectGenerator {
         }
     }
 
-    private sanitizeProperty(sobConfig: SObjectConfig, apiName: string, reference: boolean): string {
+    private sanitizeProperty (sobConfig: SObjectConfig, apiName: string, reference: boolean): string {
         let fieldMapping;
         if (sobConfig.fieldMappings) {
             fieldMapping = sobConfig.fieldMappings.find(mapping => {
@@ -281,7 +281,7 @@ export class SObjectGenerator {
         }
     }
 
-    private sanatizePicklistName(picklistLabel: string, usedNames: Set<string>): string {
+    private sanatizePicklistName (picklistLabel: string, usedNames: Set<string>): string {
         let name = picklistLabel.split(' ').join('_');
         name = name.replace(/[^0-9a-z_]/gi, '');
         if (Number.isInteger(Number(name.charAt(0)))) {
@@ -292,14 +292,14 @@ export class SObjectGenerator {
         return name;
     }
 
-    private makeNameUnquie(name: string, usedNames: Set<string>): string {
+    private makeNameUnquie (name: string, usedNames: Set<string>): string {
         while (usedNames.has(name)) {
             name = `${name}_dup`;
         }
         return name;
     }
 
-    private generateChildrenProps(sobConfig: SObjectConfig, children: ChildRelationship[]): PropertyDeclarationStructure[] {
+    private generateChildrenProps (sobConfig: SObjectConfig, children: ChildRelationship[]): PropertyDeclarationStructure[] {
         const uniqueNames = new Set<string>();
         let props = [];
         children.forEach(child => {
@@ -347,7 +347,7 @@ export class SObjectGenerator {
         return props;
     }
 
-    private generateFieldProps(sobConfig: SObjectConfig, fields: Field[]): PropertyDeclarationStructure[] {
+    private generateFieldProps (sobConfig: SObjectConfig, fields: Field[]): PropertyDeclarationStructure[] {
         let props = [];
         const uniqueNames = new Set<string>();
         // add members
@@ -451,7 +451,7 @@ export class SObjectGenerator {
         return props;
     }
 
-    private mapSObjectType(sfType: string): string {
+    private mapSObjectType (sfType: string): string {
         switch (sfType) {
             case SalesforceFieldType.DATETIME:
                 return 'Date';
@@ -478,11 +478,11 @@ export class SObjectGenerator {
         }
     }
 
-    private mapTypeToEnum(sfType: string): string {
+    private mapTypeToEnum (sfType: string): string {
         return `SalesforceFieldType.${sfType.toUpperCase()}`;
     }
 
-    private getDecorator(field: Field): DecoratorStructure {
+    private getDecorator (field: Field): DecoratorStructure {
         let decoratorProps = {
             apiName: field.name,
             createable: field.createable,
@@ -498,7 +498,7 @@ export class SObjectGenerator {
         return this.generateDecorator(decoratorProps);
     }
 
-    private generateDecorator(decoratorProps: SalesforceDecoratorProps): DecoratorStructure {
+    private generateDecorator (decoratorProps: SalesforceDecoratorProps): DecoratorStructure {
         let ref = decoratorProps.reference != null ? `()=>{return ${decoratorProps.reference}}` : 'undefined';
         let sfType = decoratorProps.salesforceType ? `${this.mapTypeToEnum(decoratorProps.salesforceType)}` : 'undefined';
         let label = decoratorProps.salesforceLabel ? decoratorProps.salesforceLabel.replace(/'/g, "\\'") : '';
