@@ -1,5 +1,5 @@
-import { AxiosError } from "axios";
-import { CompositeBatchResult, InvokableResult } from "..";
+import { AxiosError } from 'axios';
+import { CompositeBatchResult, InvokableResult } from '..';
 
 export interface AxiosErrorException {
     type: 'axios';
@@ -7,7 +7,7 @@ export interface AxiosErrorException {
 }
 
 export class CompositeError extends Error {
-    compositeResponses: CompositeBatchResult[];
+    compositeResponses: CompositeBatchResult<any, any>[];
 }
 
 export interface CompositeErrorException {
@@ -57,7 +57,7 @@ export const getStandardError = (e: Error): TsForceException => {
                     type: 'invokable',
                     e: err.e.response.data,
                     errorDetails: invokableResults.reduce((result, e) => [...result, ...e.errors], []).map((e => {
-                        return { message: e.message, errorCode: e.statusCode }
+                        return { message: e.message, errorCode: e.statusCode };
                     }))
                 };
             } else {
@@ -110,5 +110,5 @@ export const isCompositeError = (error: any | CompositeError): error is Composit
 };
 
 export const isInvokableError = (error: any | InvokableResult<any>): error is InvokableResult<any> => {
-    return Array.isArray(error) && error.length > 0 && error[0].actionName !== undefined
+    return Array.isArray(error) && error.length > 0 && error[0].actionName !== undefined;
 };

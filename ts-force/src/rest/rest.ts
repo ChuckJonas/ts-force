@@ -19,7 +19,7 @@ export class Rest {
 
     /**
      * Constructor
-     * @param {BaseConfig} [config] Optional authentication configuration.   
+     * @param {BaseConfig} [config] Optional authentication configuration.
      *     If not passed in will return a "singleton" client from the default config
      * @memberof Rest
      */
