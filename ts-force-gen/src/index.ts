@@ -106,7 +106,7 @@ async function generateLoadConfig (): Promise<Config> {
   if (config.auth.accessToken === undefined) {
     // no username is set, try to pull default
     if (Object.keys(config.auth).length === 0) {
-      let org = await Org.create({ });
+      let org = await Org.create({});
       console.log(`User: ${org.getUsername()}`);
       await org.refreshAuth();
       let connection = org.getConnection();
@@ -182,6 +182,10 @@ async function generate (config: Config) {
     singleFileMode = true;
   }
 
+  if (config.stripNamespaces === undefined) {
+    config.stripNamespaces = true;
+  }
+
   let sobConfigs = config.sObjects.map(item => {
     let objConfig: SObjectConfig;
     if (typeof item === 'string') {
@@ -195,6 +199,10 @@ async function generate (config: Config) {
     }
 
     if (config.generatePicklists && objConfig.generatePicklists === undefined) {
+      objConfig.generatePicklists = true;
+    }
+
+    if (config.stripNamespaces && objConfig.stripNamespaces === undefined) {
       objConfig.generatePicklists = true;
     }
 
@@ -265,7 +273,7 @@ async function generate (config: Config) {
 
 function sanitizeClassName (sobConfig: SObjectConfig): string {
   if (sobConfig.autoConvertNames) {
-    return cleanAPIName(sobConfig.apiName);
+    return cleanAPIName(sobConfig.apiName, sobConfig.stripNamespaces);
   }
   return sobConfig.apiName;
 }
