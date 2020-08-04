@@ -51,15 +51,24 @@ export interface SObjectStatic<T> {
 }
 
 /**
+ * Generates a typesafe* query object using the metadata of the object provided
+ *
+ * @param from The SObject (generated class static) to generate the query for
+ * @param buildQuery A function which accepts a field resolver for the `from` SObject returns the query to build (SOQLQueryParams)
+ */
+export function buildQueryObject<T> (from: SObjectStatic<T>, buildQuery: (fields: FieldResolver<T>) => SOQLQueryParams): SOQLQuery {
+  let fields = new FieldResolver(from);
+  return {...buildQuery(fields), ...{from: from.API_NAME}};
+}
+
+/**
  * Generates a typesafe* query using the metadata of the object provided
  *
  * @param from The SObject (generated class static) to generate the query for
  * @param buildQuery A function which accepts a field resolver for the `from` SObject returns the query to build (SOQLQueryParams)
  */
 export function buildQuery<T> (from: SObjectStatic<T>, buildQuery: (fields: FieldResolver<T>) => SOQLQueryParams) {
-    let fields = new FieldResolver(from);
-    let qry = buildQuery(fields);
-    return composeSOQLQuery({...qry, ...{from: from.API_NAME}});
+    return composeSOQLQuery(buildQueryObject(from, buildQuery));
 }
 
 export function composeSOQLQuery (qry: SOQLQuery): string {
