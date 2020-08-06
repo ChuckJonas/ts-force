@@ -29,12 +29,12 @@ export abstract class RestObject extends SObject {
 
   public _modified = new Set<string>();
 
-  constructor (type: string, client?: Rest) {
+  constructor(type: string, client?: Rest) {
     super(type);
     this._client = client || new Rest();
   }
 
-  protected initObject (fields?: Partial<FieldProps<RestObject>>) {
+  protected initObject(fields?: Partial<FieldProps<RestObject>>) {
     if (fields) {
       if (fields instanceof RestObject) {
         this._modified = fields._modified;
@@ -60,7 +60,7 @@ export abstract class RestObject extends SObject {
   };
 
   // returns ALL records of a query
-  protected static async query<T extends RestObject> (type: { new(): T }, qry: string, restInstance?: Rest): Promise<T[]> {
+  protected static async query<T extends RestObject>(type: { new(): T }, qry: string, restInstance?: Rest): Promise<T[]> {
     let client = restInstance || new Rest();
     let response = await client.query<T>(qry);
     let records = response.records;
@@ -80,7 +80,7 @@ export abstract class RestObject extends SObject {
     return sobs;
   }
 
-  protected static getPropertiesMeta<S, T extends RestObject> (type: { new(): T }): { [P in keyof FieldProps<S>]: SFieldProperties; } {
+  protected static getPropertiesMeta<S, T extends RestObject>(type: { new(): T }): { [P in keyof FieldProps<S>]: SFieldProperties; } {
     let properties: any = {};
     let sob = new type();
     for (let i in sob) {
@@ -107,7 +107,7 @@ export abstract class RestObject extends SObject {
     this.mapFromQuery(result.result);
   }
 
-  public async refresh (): Promise<this> {
+  public async refresh(): Promise<this> {
     if (this.id == null) {
       throw new Error('Must have Id to refresh!');
     }
@@ -125,7 +125,7 @@ export abstract class RestObject extends SObject {
   * @returns {Promise<void>}
   * @memberof RestObject
   */
-  public async insert (refresh?: boolean): Promise<this> {
+  public async insert(refresh?: boolean): Promise<this> {
     let insertCompositeRef = 'newObject';
 
     let composite = new Composite(this._client).addRequest({
@@ -155,7 +155,7 @@ export abstract class RestObject extends SObject {
   * @returns {Promise<void>}
   * @memberof RestObject
   */
-  public async update (opts?: { refresh?: boolean, sendAllFields?: boolean }): Promise<this> {
+  public async update(opts?: { refresh?: boolean, sendAllFields?: boolean }): Promise<this> {
     opts = opts || {};
     if (this.id == null) {
       throw new Error('Must have Id to update!');
@@ -178,7 +178,7 @@ export abstract class RestObject extends SObject {
   * @returns {Promise<DMLResponse>}
   * @memberof RestObject
   */
-  public async delete (): Promise<DMLResponse> {
+  public async delete(): Promise<DMLResponse> {
     if (this.id == null) {
       throw new Error('Must have Id to Delete!');
     }
@@ -193,7 +193,7 @@ export abstract class RestObject extends SObject {
   * @returns {*} JSON representation of SObject (mapped using decorators)
   * @memberof RestObject
   */
-  public prepareFor (type: 'insert' | 'update' | 'update_all' | 'apex'): any {
+  public prepareFor(type: 'insert' | 'update' | 'update_all' | 'apex'): any {
     let data: { [key: string]: any } = {};
 
     // loop each property
@@ -257,7 +257,7 @@ export abstract class RestObject extends SObject {
   }
 
   // helper to get values back in salesforce format
-  private toSFValueFormat (sFieldProps: SFieldProperties, value: any) {
+  private toSFValueFormat(sFieldProps: SFieldProperties, value: any) {
     if (sFieldProps.salesforceType === SalesforceFieldType.MULTIPICKLIST) {
       return (value as any as string[]).join(';');
     } else if (sFieldProps.salesforceType === SalesforceFieldType.DATE) {
@@ -283,7 +283,7 @@ export abstract class RestObject extends SObject {
     });
   }
 
-  protected prepareAsRelationRecord () {
+  protected prepareAsRelationRecord() {
     let data: { [key: string]: any } = {};
     // otherwise, find first external Id field
     for (let i in this) {
@@ -300,7 +300,7 @@ export abstract class RestObject extends SObject {
   }
 
   // copies data from a json object to restobject
-  protected mapFromQuery (data: SObject): this {
+  protected mapFromQuery(data: SObject): this {
 
     // create a map of lowercase API names -> sob property names
     let apiNameMap = this.getNameMapping(); // should be cached properly
@@ -342,7 +342,8 @@ export abstract class RestObject extends SObject {
             // child type, map each record
             this[sobPropName] = [];
             if (data[i]) {
-              data[i].records.forEach(record => {
+              const records = Array.isArray(data[i]) ? data[i] : data[i].records;
+              records.forEach(record => {
                 let typeInstance = new type();
                 typeInstance._client = this._client;
                 this[sobPropName].push(typeInstance.mapFromQuery(record));
@@ -363,7 +364,7 @@ export abstract class RestObject extends SObject {
   }
 
   // returns a mapping of API Name (lower case) -> Property Name
-  private getNameMapping (): Map<string, string> {
+  private getNameMapping(): Map<string, string> {
     if (NAME_MAP_CACHE.has(this.attributes.type)) {
       return NAME_MAP_CACHE.get(this.attributes.type);
     }
@@ -384,7 +385,7 @@ export abstract class RestObject extends SObject {
     return apiNameMap;
   }
 
-  private handleCompositeErrors (compositeResult: CompositeResult) {
+  private handleCompositeErrors(compositeResult: CompositeResult) {
     let errors: CompositeBatchResult<any, StandardRestError[]>[] = [];
     compositeResult.compositeResponse.forEach(batchResult => {
       if (batchResult.httpStatusCode >= 300) {
@@ -403,7 +404,7 @@ export abstract class RestObject extends SObject {
     }
   }
 
-  private handleCompositeBatchErrors (batchResponse: BatchResponse) {
+  private handleCompositeBatchErrors(batchResponse: BatchResponse) {
     if (batchResponse.hasErrors) {
       let errors: CompositeBatchResult<any, StandardRestError[]>[] = [];
       batchResponse.results.forEach(batchResult => {
