@@ -391,6 +391,7 @@ export class SObjectGenerator {
                         name: this.sanitizeProperty(relatedSobConfig, field.relationshipName, false),
                         type: referenceClass,
                         scope: Scope.Public,
+                        hasExclamationToken: true,
                         decorators: [
                             this.generateDecorator(decoratorProps)
                         ],
