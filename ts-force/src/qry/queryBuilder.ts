@@ -1,7 +1,7 @@
 import { FieldResolver } from './fieldResolver';
 import { ConditionalClause, composeConditionalClause } from './conditional';
 import { SFieldProperties, FieldProps, SObject } from '..';
-import { QueryOpts } from '@src/rest/restObject';
+import { QueryOpts } from '../rest/restObject';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
