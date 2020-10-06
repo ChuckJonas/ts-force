@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.0.0-rc.x
+
+- Blank relationships will now be set `null` instead of as empty `RestObject` #72
+- Blank queried fields are set as `null` instead of `undefined` #73
+- `Date` is now represented as `CalendarDate` instead of js `Date` #69
+- generation can now use default sfdx-cli user #76
+- more consistent casing for name sanitation #82
+- ability to remove namespace #66
+- fixed relationships parsing when data comes from @remoteaction
+- removed limit on request size
+- fixed `Name` object imports in generation
+- added support for `queryAll` in retrieve methods
+- fixed various types
+
 ## 2.7.0
 
 - Added default de-duping property name logic
