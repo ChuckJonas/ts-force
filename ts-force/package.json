@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "3.0.0-rc.10",
+  "version": "3.0.0-rc.11",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
