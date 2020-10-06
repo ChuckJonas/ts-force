@@ -360,11 +360,6 @@ export class SObjectGenerator {
           docs.push({ kind: StructureKind.JSDoc, description: field.inlineHelpText });
         }
 
-        // only include reference types if we are also generating the referenced class
-        if (field.name.startsWith('Who')) {
-          console.log(field);
-        }
-
         const referenceTo = field.referenceTo.length > 1 ? 'name' :
           (
             field.referenceTo.length === 1 ? field.referenceTo[0].toLowerCase() : null
@@ -396,7 +391,6 @@ export class SObjectGenerator {
             name: this.sanitizeProperty(relatedSobConfig, field.relationshipName, false),
             type: referenceClass,
             scope: Scope.Public,
-            hasExclamationToken: true,
             decorators: [
               this.generateDecorator(decoratorProps)
             ],
