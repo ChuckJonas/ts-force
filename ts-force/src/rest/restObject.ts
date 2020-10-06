@@ -13,6 +13,11 @@ export interface DMLResponse {
   warnings: string[];
 }
 
+export interface QueryOpts {
+  restInstance?: Rest;
+  queryAll?: boolean;
+}
+
 const NAME_MAP_CACHE = new Map<string, Map<string, string>>();
 
 /**
@@ -60,9 +65,10 @@ export abstract class RestObject extends SObject {
   };
 
   // returns ALL records of a query
-  protected static async query<T extends RestObject>(type: { new(): T }, qry: string, restInstance?: Rest): Promise<T[]> {
+  protected static async query<T extends RestObject>(type: { new(): T }, qry: string, opts?: QueryOpts): Promise<T[]> {
+    const { restInstance, queryAll } = opts;
     let client = restInstance || new Rest();
-    let response = await client.query<T>(qry);
+    let response = await client.query<T>(qry, queryAll);
     let records = response.records;
 
     while (!response.done && response.nextRecordsUrl) {
