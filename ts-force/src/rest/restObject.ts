@@ -18,6 +18,8 @@ export interface QueryOpts {
   queryAll?: boolean;
 }
 
+// const NAME_MAP_CACHE = new Map<string, Map<string, string>>();
+
 /**
 * Abstract Base class which provides DML to Generated SObjects
 * TODO: Need some way to support multiple configurations
@@ -197,7 +199,7 @@ export abstract class RestObject extends SObject {
   * @returns {*} JSON representation of SObject (mapped using decorators)
   * @memberof RestObject
   */
-  public prepareFor(type: 'insert' | 'update' | 'update_all' | 'apex'): any {
+  public prepareFor(type: 'insert' | 'update' | 'update_all' | 'apex' | 'debug'): any {
     let data: { [key: string]: any } = {};
 
     // loop each property
@@ -213,13 +215,15 @@ export abstract class RestObject extends SObject {
 
           let isReference = sFieldProps.reference != null;
           let isChildArr = sFieldProps.childRelationship === true;
-          if (type === 'apex') {
+          if (type === 'apex' || type === 'debug') {
             if (isReference && !isChildArr) {
               data[sFieldProps.apiName] = (this[i] as any as RestObject).prepareFor('apex');
             } else if (isChildArr) {
-              data[sFieldProps.apiName] = {
-                records: (this[i] as any as RestObject[]).map(obj => obj.prepareFor('apex'))
-              };
+              if (type === 'apex') {
+                data[sFieldProps.apiName] = {
+                  records: (this[i] as any as RestObject[]).map(obj => obj.prepareFor('apex'))
+                };
+              }
             } else {
               // copy with mapping
               data[sFieldProps.apiName] = this.toSFValueFormat(sFieldProps, this[i]);
@@ -369,9 +373,9 @@ export abstract class RestObject extends SObject {
 
   // returns a mapping of API Name (lower case) -> Property Name
   private getNameMapping(): Map<string, string> {
-    if (NAME_MAP_CACHE.has(this.attributes.type)) {
-      return NAME_MAP_CACHE.get(this.attributes.type);
-    }
+    // if (NAME_MAP_CACHE.has(this.attributes.type)) {
+    //   return NAME_MAP_CACHE.get(this.attributes.type);
+    // }
 
     let apiNameMap = new Map<string, string>();
     for (let i in this) {
@@ -385,7 +389,7 @@ export abstract class RestObject extends SObject {
         }
       }
     }
-    NAME_MAP_CACHE.set(this.attributes.type, apiNameMap);
+    // NAME_MAP_CACHE.set(this.attributes.type, apiNameMap);
     return apiNameMap;
   }
 
