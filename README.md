@@ -2,6 +2,7 @@
 
 [![alt text](https://travis-ci.org/ChuckJonas/ts-force.svg?branch=master)](https://travis-ci.org/ChuckJonas/ts-force)
 [![alt text](https://img.shields.io/badge/license-BSD--3--CLAUSE-blue.svg)](https://github.com/ChuckJonas/ts-force/blob/master/LICENSE)
+[![Gitter](https://badges.gitter.im/ts-force/community.svg)](https://gitter.im/ts-force/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 `ts-force` is a light-weight Salesforce ORM (more like an "opinionated" REST API client), which uses code generation to bring type safety to `SObjects`.  It can be run both in browser or in `node.js`.
 

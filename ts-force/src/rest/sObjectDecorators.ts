@@ -34,7 +34,7 @@ export class SFieldProperties {
   public apiName: string;
   public updateable: boolean;
   public createable: boolean;
-  public reference: () => { new(): RestObject; };
+  public reference?: () => { new(): RestObject; };
   public required: boolean;
   public externalId: boolean;
   public childRelationship: boolean;
