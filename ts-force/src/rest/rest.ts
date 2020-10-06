@@ -67,11 +67,12 @@ export class Rest {
   /**
    * Executes any SOQL query
    * @param  {string} query SOQL Query to execute
+   * @param  {string} allRows Optional boolean to indicate use of `queryall` endpoint
    * @returns Promise<QueryResponse<T>>
    */
-  public async query<T>(query: string): Promise<QueryResponse<T>> {
+  public async query<T>(query: string, allRows?: boolean): Promise<QueryResponse<T>> {
     let qryString = encodeURIComponent(query);
-    return (await this.request.get<QueryResponse<T>>(`/services/data/${this.version}/query?q=${qryString}`)).data;
+    return (await this.request.get<QueryResponse<T>>(`/services/data/${this.version}/${allRows ? 'queryAll' : 'query'}?q=${qryString}`)).data;
   }
 
   public async queryMore<T>(resp: QueryResponse<T>): Promise<QueryResponse<T>> {
@@ -79,7 +80,7 @@ export class Rest {
   }
 
   /**
-   *  Run a SOQL query
+   *  Run a SOSL query
    *
    * @template T
    * @param {string} query

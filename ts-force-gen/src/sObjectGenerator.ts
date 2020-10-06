@@ -10,6 +10,7 @@ export const TS_FORCE_IMPORTS: ImportDeclarationStructure = {
   namedImports: [
     { name: 'Rest' },
     { name: 'RestObject' },
+    { name: 'QueryOpts'},
     { name: 'SObject' },
     { name: 'sField' },
     { name: 'SalesforceFieldType' },
@@ -166,13 +167,13 @@ export class SObjectGenerator {
       scope: Scope.Public,
       parameters: [
         { name: 'qryParam', type: `((fields: FieldResolver<${className}>) => SOQLQueryParams) | string` },
-        { name: 'restInstance', type: 'Rest', hasQuestionToken: true }
+        { name: 'opts', type: 'QueryOpts', hasQuestionToken: true }
       ],
       returnType: `Promise<${className}[]>`,
       isAsync: true,
       statements: `
             let qry = typeof qryParam === 'function' ? buildQuery(${className}, qryParam) : qryParam;
-            return await ${SUPER_CLASS}.query<${className}>(${className}, qry, restInstance);
+            return await ${SUPER_CLASS}.query<${className}>(${className}, qry, opts);
             `
     });
 
@@ -306,7 +307,6 @@ export class SObjectGenerator {
     children.forEach(child => {
       try {
         let relatedSobConfig = this.allConfigsMap.get(child.childSObject.toLowerCase());
-
         // don't generate if not in the list of types or ??
         if (!relatedSobConfig
           || child.childSObject === sobConfig.apiName
@@ -361,21 +361,24 @@ export class SObjectGenerator {
         }
 
         // only include reference types if we are also generating the referenced class
+        if(field.name.startsWith('Who')){
+          console.log(field);
+        }
+
+        const referenceTo = field.referenceTo.length > 1 ? 'name' :
+          (
+            field.referenceTo.length === 1 ? field.referenceTo[0].toLowerCase() : null
+          );
+
         if (
-          field.referenceTo.length > 0 &&
-          this.allConfigsMap.has(field.referenceTo[0].toLowerCase()) &&
+          referenceTo &&
+          this.allConfigsMap.has(referenceTo) &&
           field.type === SalesforceFieldType.REFERENCE &&
           field.relationshipName !== null
         ) {
-          let relatedSobConfig = this.allConfigsMap.get(field.referenceTo[0].toLowerCase());
+          let relatedSobConfig = this.allConfigsMap.get(referenceTo);
           this.dependsOn.add(relatedSobConfig.className);
-          let referenceClass: string;
-
-          if (field.referenceTo.length > 1) {
-            referenceClass = 'Name'; // polymorphic object
-          } else {
-            referenceClass = relatedSobConfig.className;
-          }
+          let referenceClass = relatedSobConfig.className;
 
           let decoratorProps: SalesforceDecoratorProps = {
             apiName: field.relationshipName,
