@@ -14,10 +14,11 @@
     "downlevelIteration": true,
     "sourceMap": true,
     "pretty": true,
-    "lib" : [
-      "es6"
+    "lib": [
+      "es6",
+      "DOM"
     ],
-    "types" : [
+    "types": [
       "node"
     ],
     "baseUrl": ".", // required for "paths"

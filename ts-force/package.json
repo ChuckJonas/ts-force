@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "3.0.0-rc.13",
+  "version": "3.0.0-rc.14",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@types/cometd": "^4.0.4",
-    "axios": "^0.19.0",
+    "axios": "^0.20.0",
     "cometd": "4.0.3",
     "qs": "^6.5.1",
     "reflect-metadata": "^0.1.10",

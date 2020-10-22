@@ -1,4 +1,4 @@
-import { BatchResponse, Composite, CompositeBatch, CompositeBatchResult, CompositeResponse, CompositeResult } from './composite';
+import { BatchResponse, Composite, CompositeBatch, CompositeBatchResult, CompositeResponse, CompositeResult, queryAllComposite } from './composite';
 import { Rest } from './rest';
 import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObjectDecorators';
 import { SObject } from './sObject';
@@ -15,7 +15,8 @@ export interface DMLResponse {
 
 export interface QueryOpts {
   restInstance?: Rest;
-  queryAll?: boolean;
+  allRows?: boolean;
+  highVolume?: boolean;
 }
 
 const NAME_MAP_CACHE = new Map<symbol, Map<string, string>>();
@@ -66,15 +67,23 @@ export abstract class RestObject extends SObject {
 
   // returns ALL records of a query
   protected static async query<T extends RestObject>(type: { new(): T }, qry: string, opts?: QueryOpts): Promise<T[]> {
-    const { restInstance, queryAll } = opts;
+    opts = opts || {};
+    const { restInstance, allRows, highVolume } = opts;
     let client = restInstance || new Rest();
-    let response = await client.query<T>(qry, queryAll);
-    let records = response.records;
+    let records = [];
 
-    while (!response.done && response.nextRecordsUrl) {
-      response = await client.queryMore<T>(response);
-      records = records.concat(response.records);
+    if (highVolume || true) {
+      records = await queryAllComposite(qry, { restInstance: client, allRows });
+    } else {
+      let response = await client.query<T>(qry, allRows);
+      let records = response.records;
+
+      while (!response.done && response.nextRecordsUrl) {
+        response = await client.queryMore<T>(response);
+        records = records.concat(response.records);
+      }
     }
+
     let sobs: Array<T> = records.map(rec => {
       let sob = new type();
       sob._client = client;
@@ -138,7 +147,7 @@ export abstract class RestObject extends SObject {
       method: 'POST',
       url: this.attributes.url,
       referenceId: insertCompositeRef,
-      body: this.prepareFor('insert')
+      body: this.toJson({ dmlMode: 'insert' })
     }, this.handleCompositeUpdateResult);
 
     if (refresh === true) {
@@ -192,14 +201,76 @@ export abstract class RestObject extends SObject {
     return response;
   }
 
+  public toJson(opts: {
+    dmlMode: 'all' | 'insert' | 'update' | 'update_modified_only'
+    hideAttributes?: boolean,
+    sendParentObj?: boolean,
+    sendChildObj?: boolean,
+  }): any {
+    const { hideAttributes, sendParentObj, sendChildObj, dmlMode } = opts;
+
+    let data: { [key: string]: any } = {};
+    // loop each property
+    for (let i in this) {
+      // clean properties
+      if (!this.hasOwnProperty(i) || this[i] === void 0) {
+        continue;
+      }
+
+      if (i.toLowerCase() === 'attributes' && !hideAttributes) {
+        data[i] = this[i];
+      }
+
+      let sFieldProps = getSFieldProps(this, i);
+      if (!sFieldProps) {
+        continue;
+      }
+
+      const fType = !sFieldProps.reference ? 'FIELD' : (sFieldProps.childRelationship === true ? 'CHILD' : 'PARENT');
+      switch (fType) {
+        case 'CHILD':
+          if (sendChildObj) {
+            data[sFieldProps.apiName] = {
+              records: (this[i] as any as RestObject[]).map(obj => obj.toJson(opts))
+            };
+          }
+          break;
+        case 'PARENT':
+          if (sendParentObj) {
+            data[sFieldProps.apiName] = this[i] ? (this[i] as any as RestObject).toJson(opts) : null;
+          } else {
+            // external ID relation support
+            if (this[i] && (this as any)[i + 'Id'] === void 0) {
+              let relatedSob = this[i] as any as RestObject;
+              data[sFieldProps.apiName] = relatedSob.prepareAsRelationRecord();
+            }
+          }
+          break;
+        case 'FIELD':
+          const canSend =
+            dmlMode === 'all'
+            || (dmlMode === 'insert' && sFieldProps.createable)
+            || (dmlMode === 'update' && sFieldProps.updateable)
+            || (dmlMode === 'update_modified_only' && sFieldProps.updateable && this._modified.has(sFieldProps.apiName));
+
+          if (canSend) {
+            data[sFieldProps.apiName] = this.toSFValueFormat(sFieldProps, this[i]);
+          }
+          break;
+      }
+    }
+    return data;
+  }
+
   /**
   * Gets JSON Object from RestObject
-  * TODO: Clean this up! Maybe candidate for worst code in this whole project.
+  * @deprecated USE to `toJson()` instead
   * @param type 'insert' | 'update' | 'update_all' | 'apex' | all_direct  Determines which fields to include in payload and how to format them.
   * @returns {*} JSON representation of SObject (mapped using decorators)
   * @memberof RestObject
   */
   public prepareFor(type: 'insert' | 'update' | 'update_all' | 'apex' | 'apex_no_children'): any {
+
     let data: { [key: string]: any } = {};
     // loop each property
     for (let i in this) {
@@ -215,8 +286,9 @@ export abstract class RestObject extends SObject {
           let isReference = sFieldProps.reference != null;
           let isChildArr = sFieldProps.childRelationship === true;
           if (type === 'apex' || type === 'apex_no_children') {
+
             if (isReference && !isChildArr) {
-              data[sFieldProps.apiName] = (this[i] as any as RestObject).prepareFor('apex');
+              data[sFieldProps.apiName] = this[i] ? (this[i] as any as RestObject).prepareFor('apex') : null;
             } else if (isChildArr) {
               if (type === 'apex') {
                 data[sFieldProps.apiName] = {

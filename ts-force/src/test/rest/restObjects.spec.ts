@@ -6,7 +6,6 @@ import { expect } from 'chai';
 import { CompositeCollection, OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig, compositeRetrieve } from '../..';
 import { Account, Contact, User } from '../assets/sobs';
 import { getCalendarDate } from '../../utils/calendarDate';
-import { isArray } from 'util';
 
 describe('Generated Classes', () => {
   before(async () => {
@@ -76,7 +75,7 @@ describe('Generated Classes', () => {
 
     let acc2 = (await Account.retrieve(`SELECT Id, Name, Website FROM Account WHERE Id = '${acc.id}'`))[0];
     expect(acc2.name).to.equal('stale name');
-    let sobDto = acc2.prepareFor('update');
+    let sobDto = acc2.toJson({ dmlMode: 'update_modified_only' });
     expect(sobDto['Website']).to.equal(undefined);
 
     acc2.name = 'new name';
@@ -120,7 +119,7 @@ describe('Generated Classes', () => {
 
     let acc2 = (await Account.retrieve(`SELECT Id, Name, CreatedDate FROM Account WHERE Id = '${acc.id}'`))[0];
 
-    let sob = acc2.prepareFor('update_all');
+    let sob = acc2.toJson({ dmlMode: 'update' });
 
     expect(sob['CreatedDate']).to.equal(undefined);
     expect(sob['Name']).to.equal(acc2.name);
@@ -144,7 +143,7 @@ describe('Generated Classes', () => {
     expect(acc2.multiPick.indexOf(multiPick.ONE)).to.be.greaterThan(-1);
     expect(acc2.multiPick.indexOf(multiPick.TWO)).to.be.greaterThan(-1);
 
-    let sob = acc2.prepareFor('apex');
+    let sob = acc2.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true });
 
     expect(sob.MultiPick__c).to.equal(`${multiPick.ONE};${multiPick.TWO}`);
 
@@ -247,6 +246,7 @@ describe('Generated Classes', () => {
   });
 
   it('should set relation by external id', async () => {
+    const extId = '123abcd';
     // setup account
     let accs = await Account.retrieve(f => {
       return {
@@ -254,17 +254,18 @@ describe('Generated Classes', () => {
           ...f.select('id', 'testExternalId')
         ],
         where: [
-          { field: f.select('testExternalId'), op: '=', val: '123abc' }
+          { field: f.select('testExternalId'), op: '=', val: extId }
         ]
       };
     });
+
     let acc: Account;
     if (accs.length) {
       acc = accs[0];
     } else {
       acc = new Account({
         name: 'test external id account',
-        testExternalId: '123abc'
+        testExternalId: extId
       });
       await acc.insert();
     }
@@ -272,7 +273,7 @@ describe('Generated Classes', () => {
     let contact = new Contact({
       firstName: 'john',
       lastName: 'doe',
-      account: new Account({ testExternalId: '123abc' })
+      account: new Account({ testExternalId: extId })
     });
 
     await contact.insert();
@@ -304,7 +305,7 @@ describe('Generated Classes', () => {
       })
     });
 
-    expect(c.prepareFor('apex')).to.deep.equal(
+    expect(c.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true })).to.deep.equal(
       {
         Id: '123',
         AccountId: 'abc',
@@ -324,7 +325,7 @@ describe('Generated Classes', () => {
       })]
     });
 
-    expect(acc.prepareFor('apex')).to.deep.equal(
+    expect(acc.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true })).to.deep.equal(
       {
         Id: '123',
         Contacts: { records: [{ FirstName: 'john', LastName: 'doe' }] }
@@ -344,7 +345,7 @@ describe('Generated Classes', () => {
       })
     });
 
-    const sfSob = acc.prepareFor('apex');
+    const sfSob = acc.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true });
     let data = (await new Rest().request.post<SObject>(
       '/services/apexrest/myservice',
       { acc: sfSob }
@@ -366,7 +367,7 @@ describe('Generated Classes', () => {
     if (Array.isArray(contactResults)) {
       expect(contactResults.length).to.be.greaterThan(0);
       expect(contactResults[0] instanceof Contact).to.be.eq(true);
-    }else {
+    } else {
       throw new Error('Expected results[0] to return Contact[]');
     }
 
@@ -374,7 +375,7 @@ describe('Generated Classes', () => {
     if (Array.isArray(accountResults)) {
       expect(accountResults.length).to.be.greaterThan(0);
       expect(accountResults[0] instanceof Account).to.be.eq(true);
-    }else {
+    } else {
       throw new Error('Expected results[1] to return Account[]');
     }
 
@@ -382,7 +383,7 @@ describe('Generated Classes', () => {
     if (!Array.isArray(userResults)) {
       expect(userResults.statusCode).to.be.eq(400);
       expect(Array.isArray(userResults.result)).to.be.eq(true);
-    }else {
+    } else {
       throw new Error('Expected results[2] to return errors');
     }
   });

@@ -1,27 +1,30 @@
 {
-    "compilerOptions": {
-        "baseUrl": "./", // enables relative imports to root
-        "paths": {
-            "@src/*": [
-                "src/*"
-            ]
-        },
-        "target": "es5",
-        "lib": ["es6"],
-        "module": "commonjs",
-        "outDir": "./build",
-        "moduleResolution": "node",
-        "declaration": true,
-        "experimentalDecorators": true,
-        "noImplicitAny": false,
-        "preserveConstEnums": true,
-        "suppressImplicitAnyIndexErrors": false,
-        "noResolve": false,
-        "noUnusedParameters": false,
-        "noUnusedLocals": false,
-        "strictNullChecks": false,
-        "strict": true,
-        "downlevelIteration": true,
-        "allowSyntheticDefaultImports": true
-    }
+  "compilerOptions": {
+    "baseUrl": "./", // enables relative imports to root
+    "paths": {
+      "@src/*": [
+        "src/*"
+      ]
+    },
+    "target": "es5",
+    "lib": [
+      "es6",
+      "DOM"
+    ],
+    "module": "commonjs",
+    "outDir": "./build",
+    "moduleResolution": "node",
+    "declaration": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": false,
+    "noResolve": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "strictNullChecks": false,
+    "strict": true,
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true
+  }
 }

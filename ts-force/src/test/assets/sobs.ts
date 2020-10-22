@@ -1,4 +1,4 @@
-import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst, CalendarDate } from '../..';
+import { Rest, RestObject, QueryOpts, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst, CalendarDate } from '../..';
 
 export type AccountFields = Partial<FieldProps<Account>>;
 
@@ -139,7 +139,7 @@ export class Account extends RestObject {
     @sField({ apiName: 'CustomerPriority__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Customer Priority', externalId: false })
     public customerPriority: PicklistConst<typeof Account.PICKLIST.customerPriority>;
     @sField({ apiName: 'SLA__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'SLA', externalId: false })
-    public sLA: string;
+    public sla: string;
     @sField({ apiName: 'Active__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Active', externalId: false })
     public active: string;
     @sField({ apiName: 'NumberofLocations__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Number of Locations', externalId: false })
@@ -147,9 +147,9 @@ export class Account extends RestObject {
     @sField({ apiName: 'UpsellOpportunity__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Upsell Opportunity', externalId: false })
     public upsellOpportunity: string;
     @sField({ apiName: 'SLASerialNumber__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'SLA Serial Number', externalId: false })
-    public sLASerialNumber: string;
+    public slaSerialNumber: string;
     @sField({ apiName: 'SLAExpirationDate__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'SLA Expiration Date', externalId: false })
-    public sLAExpirationDate: CalendarDate;
+    public slaExpirationDate: CalendarDate;
     @sField({ apiName: 'Test_External_Id__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Test External Id', externalId: true })
     public testExternalId: string;
     @sField({ apiName: 'MultiPick__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.MULTIPICKLIST, salesforceLabel: 'MultiPick', externalId: false })
@@ -223,30 +223,32 @@ export class Account extends RestObject {
         this.sicDesc = void 0;
         this.dandbCompanyId = void 0;
         this.customerPriority = void 0;
-        this.sLA = void 0;
+        this.sla = void 0;
         this.active = void 0;
         this.numberofLocations = void 0;
         this.upsellOpportunity = void 0;
-        this.sLASerialNumber = void 0;
-        this.sLAExpirationDate = void 0;
+        this.slaSerialNumber = void 0;
+        this.slaExpirationDate = void 0;
         this.testExternalId = void 0;
         this.multiPick = void 0;
+        this.__UUID = Account.__UUID;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'Account' = 'Account';
     public readonly _TYPE_: 'Account' = 'Account';
+    public static __UUID: symbol = Symbol();
     private static _fields: { [P in keyof FieldProps<Account>]: SFieldProperties; };
 
     public static get FIELDS() {
         return this._fields = this._fields ? this._fields : Account.getPropertiesMeta<FieldProps<Account>, Account>(Account)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<Account>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<Account[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<Account>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<Account[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(Account, qryParam) : qryParam;
-        return await RestObject.query<Account>(Account, qry, restInstance);
+        return await RestObject.query<Account>(Account, qry, opts);
 
     }
 
@@ -357,7 +359,7 @@ export class Account extends RestObject {
             LOW: "Low",
             MEDIUM: "Medium"
         },
-        sLA: {
+        sla: {
             GOLD: "Gold",
             SILVER: "Silver",
             PLATINUM: "Platinum",
@@ -495,9 +497,9 @@ export class Contact extends RestObject {
     @sField({ apiName: 'LastActivityDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Last Activity', externalId: false })
     public readonly lastActivityDate: CalendarDate;
     @sField({ apiName: 'LastCURequestDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Stay-in-Touch Request Date', externalId: false })
-    public readonly lastCURequestDate: Date;
+    public readonly lastCuRequestDate: Date;
     @sField({ apiName: 'LastCUUpdateDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Stay-in-Touch Save Date', externalId: false })
-    public readonly lastCUUpdateDate: Date;
+    public readonly lastCuUpdateDate: Date;
     @sField({ apiName: 'LastViewedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Viewed Date', externalId: false })
     public readonly lastViewedDate: Date;
     @sField({ apiName: 'LastReferencedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Referenced Date', externalId: false })
@@ -579,8 +581,8 @@ export class Contact extends RestObject {
         this.lastModifiedById = void 0;
         this.systemModstamp = void 0;
         this.lastActivityDate = void 0;
-        this.lastCURequestDate = void 0;
-        this.lastCUUpdateDate = void 0;
+        this.lastCuRequestDate = void 0;
+        this.lastCuUpdateDate = void 0;
         this.lastViewedDate = void 0;
         this.lastReferencedDate = void 0;
         this.emailBouncedReason = void 0;
@@ -593,22 +595,24 @@ export class Contact extends RestObject {
         this.individualId = void 0;
         this.level = void 0;
         this.languages = void 0;
+        this.__UUID = Contact.__UUID;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'Contact' = 'Contact';
     public readonly _TYPE_: 'Contact' = 'Contact';
+    public static __UUID: symbol = Symbol();
     private static _fields: { [P in keyof FieldProps<Contact>]: SFieldProperties; };
 
     public static get FIELDS() {
         return this._fields = this._fields ? this._fields : Contact.getPropertiesMeta<FieldProps<Contact>, Contact>(Contact)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<Contact>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<Contact[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<Contact>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<Contact[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(Contact, qryParam) : qryParam;
-        return await RestObject.query<Contact>(Contact, qry, restInstance);
+        return await RestObject.query<Contact>(Contact, qry, opts);
 
     }
 
@@ -808,7 +812,7 @@ export class User extends RestObject {
     @sField({ apiName: 'UserPermissionsMobileUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Apex Mobile User', externalId: false })
     public userPermissionsMobileUser: boolean;
     @sField({ apiName: 'UserPermissionsSFContentUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Salesforce CRM Content User', externalId: false })
-    public userPermissionsSFContentUser: boolean;
+    public userPermissionsSfContentUser: boolean;
     @sField({ apiName: 'UserPermissionsKnowledgeUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Knowledge User', externalId: false })
     public userPermissionsKnowledgeUser: boolean;
     @sField({ apiName: 'UserPermissionsInteractionUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Flow User', externalId: false })
@@ -821,7 +825,7 @@ export class User extends RestObject {
     public userPermissionsSiteforceContributorUser: boolean;
     @sField({ apiName: 'UserPermissionsSiteforcePublisherUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Site.com Publisher User', externalId: false })
     public userPermissionsSiteforcePublisherUser: boolean;
-    @sField({ apiName: 'UserPermissionsWorkDotComUserFeature', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Work.com User', externalId: false })
+    @sField({ apiName: 'UserPermissionsWorkDotComUserFeature', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'WDC User', externalId: false })
     public userPermissionsWorkDotComUserFeature: boolean;
     @sField({ apiName: 'ForecastEnabled', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Allow Forecasting', externalId: false })
     public forecastEnabled: boolean;
@@ -852,13 +856,13 @@ export class User extends RestObject {
     @sField({ apiName: 'UserPreferencesApexPagesDeveloperMode', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ApexPagesDeveloperMode', externalId: false })
     public userPreferencesApexPagesDeveloperMode: boolean;
     @sField({ apiName: 'UserPreferencesHideCSNGetChatterMobileTask', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideCSNGetChatterMobileTask', externalId: false })
-    public userPreferencesHideCSNGetChatterMobileTask: boolean;
+    public userPreferencesHideCsnGetChatterMobileTask: boolean;
     @sField({ apiName: 'UserPreferencesDisableMentionsPostEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableMentionsPostEmail', externalId: false })
     public userPreferencesDisableMentionsPostEmail: boolean;
     @sField({ apiName: 'UserPreferencesDisMentionsCommentEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisMentionsCommentEmail', externalId: false })
     public userPreferencesDisMentionsCommentEmail: boolean;
     @sField({ apiName: 'UserPreferencesHideCSNDesktopTask', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideCSNDesktopTask', externalId: false })
-    public userPreferencesHideCSNDesktopTask: boolean;
+    public userPreferencesHideCsnDesktopTask: boolean;
     @sField({ apiName: 'UserPreferencesHideChatterOnboardingSplash', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideChatterOnboardingSplash', externalId: false })
     public userPreferencesHideChatterOnboardingSplash: boolean;
     @sField({ apiName: 'UserPreferencesHideSecondChatterOnboardingSplash', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideSecondChatterOnboardingSplash', externalId: false })
@@ -922,7 +926,7 @@ export class User extends RestObject {
     @sField({ apiName: 'UserPreferencesPipelineViewHideHelpPopover', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PipelineViewHideHelpPopover', externalId: false })
     public userPreferencesPipelineViewHideHelpPopover: boolean;
     @sField({ apiName: 'UserPreferencesHideS1BrowserUI', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideS1BrowserUI', externalId: false })
-    public userPreferencesHideS1BrowserUI: boolean;
+    public userPreferencesHideS1BrowserUi: boolean;
     @sField({ apiName: 'UserPreferencesDisableEndorsementEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableEndorsementEmail', externalId: false })
     public userPreferencesDisableEndorsementEmail: boolean;
     @sField({ apiName: 'UserPreferencesPathAssistantCollapsed', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PathAssistantCollapsed', externalId: false })
@@ -954,25 +958,25 @@ export class User extends RestObject {
     @sField({ apiName: 'UserPreferencesHideBiggerPhotoCallout', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideBiggerPhotoCallout', externalId: false })
     public userPreferencesHideBiggerPhotoCallout: boolean;
     @sField({ apiName: 'UserPreferencesGlobalNavBarWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'GlobalNavBarWTShown', externalId: false })
-    public userPreferencesGlobalNavBarWTShown: boolean;
+    public userPreferencesGlobalNavBarWtShown: boolean;
     @sField({ apiName: 'UserPreferencesGlobalNavGridMenuWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'GlobalNavGridMenuWTShown', externalId: false })
-    public userPreferencesGlobalNavGridMenuWTShown: boolean;
+    public userPreferencesGlobalNavGridMenuWtShown: boolean;
     @sField({ apiName: 'UserPreferencesCreateLEXAppsWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'CreateLEXAppsWTShown', externalId: false })
-    public userPreferencesCreateLEXAppsWTShown: boolean;
+    public userPreferencesCreateLexAppsWtShown: boolean;
     @sField({ apiName: 'UserPreferencesFavoritesWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'FavoritesWTShown', externalId: false })
-    public userPreferencesFavoritesWTShown: boolean;
+    public userPreferencesFavoritesWtShown: boolean;
     @sField({ apiName: 'UserPreferencesRecordHomeSectionCollapseWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'RecordHomeSectionCollapseWTShown', externalId: false })
-    public userPreferencesRecordHomeSectionCollapseWTShown: boolean;
+    public userPreferencesRecordHomeSectionCollapseWtShown: boolean;
     @sField({ apiName: 'UserPreferencesRecordHomeReservedWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'RecordHomeReservedWTShown', externalId: false })
-    public userPreferencesRecordHomeReservedWTShown: boolean;
+    public userPreferencesRecordHomeReservedWtShown: boolean;
     @sField({ apiName: 'UserPreferencesFavoritesShowTopFavorites', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'FavoritesShowTopFavorites', externalId: false })
     public userPreferencesFavoritesShowTopFavorites: boolean;
     @sField({ apiName: 'UserPreferencesExcludeMailAppAttachments', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ExcludeMailAppAttachments', externalId: false })
     public userPreferencesExcludeMailAppAttachments: boolean;
     @sField({ apiName: 'UserPreferencesSuppressTaskSFXReminders', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'SuppressTaskSFXReminders', externalId: false })
-    public userPreferencesSuppressTaskSFXReminders: boolean;
+    public userPreferencesSuppressTaskSfxReminders: boolean;
     @sField({ apiName: 'UserPreferencesSuppressEventSFXReminders', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'SuppressEventSFXReminders', externalId: false })
-    public userPreferencesSuppressEventSFXReminders: boolean;
+    public userPreferencesSuppressEventSfxReminders: boolean;
     @sField({ apiName: 'UserPreferencesPreviewCustomTheme', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PreviewCustomTheme', externalId: false })
     public userPreferencesPreviewCustomTheme: boolean;
     @sField({ apiName: 'UserPreferencesHasCelebrationBadge', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HasCelebrationBadge', externalId: false })
@@ -1093,7 +1097,7 @@ export class User extends RestObject {
         this.userPermissionsOfflineUser = void 0;
         this.userPermissionsCallCenterAutoLogin = void 0;
         this.userPermissionsMobileUser = void 0;
-        this.userPermissionsSFContentUser = void 0;
+        this.userPermissionsSfContentUser = void 0;
         this.userPermissionsKnowledgeUser = void 0;
         this.userPermissionsInteractionUser = void 0;
         this.userPermissionsSupportUser = void 0;
@@ -1115,10 +1119,10 @@ export class User extends RestObject {
         this.userPreferencesContentNoEmail = void 0;
         this.userPreferencesContentEmailAsAndWhen = void 0;
         this.userPreferencesApexPagesDeveloperMode = void 0;
-        this.userPreferencesHideCSNGetChatterMobileTask = void 0;
+        this.userPreferencesHideCsnGetChatterMobileTask = void 0;
         this.userPreferencesDisableMentionsPostEmail = void 0;
         this.userPreferencesDisMentionsCommentEmail = void 0;
-        this.userPreferencesHideCSNDesktopTask = void 0;
+        this.userPreferencesHideCsnDesktopTask = void 0;
         this.userPreferencesHideChatterOnboardingSplash = void 0;
         this.userPreferencesHideSecondChatterOnboardingSplash = void 0;
         this.userPreferencesDisCommentAfterLikeEmail = void 0;
@@ -1150,7 +1154,7 @@ export class User extends RestObject {
         this.userPreferencesDisableFeedbackEmail = void 0;
         this.userPreferencesDisableWorkEmail = void 0;
         this.userPreferencesPipelineViewHideHelpPopover = void 0;
-        this.userPreferencesHideS1BrowserUI = void 0;
+        this.userPreferencesHideS1BrowserUi = void 0;
         this.userPreferencesDisableEndorsementEmail = void 0;
         this.userPreferencesPathAssistantCollapsed = void 0;
         this.userPreferencesCacheDiagnostics = void 0;
@@ -1166,16 +1170,16 @@ export class User extends RestObject {
         this.userPreferencesHideLightningMigrationModal = void 0;
         this.userPreferencesHideSfxWelcomeMat = void 0;
         this.userPreferencesHideBiggerPhotoCallout = void 0;
-        this.userPreferencesGlobalNavBarWTShown = void 0;
-        this.userPreferencesGlobalNavGridMenuWTShown = void 0;
-        this.userPreferencesCreateLEXAppsWTShown = void 0;
-        this.userPreferencesFavoritesWTShown = void 0;
-        this.userPreferencesRecordHomeSectionCollapseWTShown = void 0;
-        this.userPreferencesRecordHomeReservedWTShown = void 0;
+        this.userPreferencesGlobalNavBarWtShown = void 0;
+        this.userPreferencesGlobalNavGridMenuWtShown = void 0;
+        this.userPreferencesCreateLexAppsWtShown = void 0;
+        this.userPreferencesFavoritesWtShown = void 0;
+        this.userPreferencesRecordHomeSectionCollapseWtShown = void 0;
+        this.userPreferencesRecordHomeReservedWtShown = void 0;
         this.userPreferencesFavoritesShowTopFavorites = void 0;
         this.userPreferencesExcludeMailAppAttachments = void 0;
-        this.userPreferencesSuppressTaskSFXReminders = void 0;
-        this.userPreferencesSuppressEventSFXReminders = void 0;
+        this.userPreferencesSuppressTaskSfxReminders = void 0;
+        this.userPreferencesSuppressEventSfxReminders = void 0;
         this.userPreferencesPreviewCustomTheme = void 0;
         this.userPreferencesHasCelebrationBadge = void 0;
         this.userPreferencesUserDebugModePref = void 0;
@@ -1203,22 +1207,24 @@ export class User extends RestObject {
         this.mediumBannerPhotoUrl = void 0;
         this.isProfilePhotoActive = void 0;
         this.individualId = void 0;
+        this.__UUID = User.__UUID;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'User' = 'User';
     public readonly _TYPE_: 'User' = 'User';
+    public static __UUID: symbol = Symbol();
     private static _fields: { [P in keyof FieldProps<User>]: SFieldProperties; };
 
     public static get FIELDS() {
         return this._fields = this._fields ? this._fields : User.getPropertiesMeta<FieldProps<User>, User>(User)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<User[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<User[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(User, qryParam) : qryParam;
-        return await RestObject.query<User>(User, qry, restInstance);
+        return await RestObject.query<User>(User, qry, opts);
 
     }
 
@@ -1245,9 +1251,9 @@ export class User extends RestObject {
             PACIFICCHATHAM: "Pacific/Chatham",
             PACIFICAUCKLAND: "Pacific/Auckland",
             PACIFICENDERBURY: "Pacific/Enderbury",
-            PACIFICFIJI: "Pacific/Fiji",
             PACIFICTONGATAPU: "Pacific/Tongatapu",
             ASIAKAMCHATKA: "Asia/Kamchatka",
+            PACIFICFIJI: "Pacific/Fiji",
             PACIFICNORFOLK: "Pacific/Norfolk",
             AUSTRALIALORD_HOWE: "Australia/Lord_Howe",
             AUSTRALIASYDNEY: "Australia/Sydney",
@@ -1283,60 +1289,60 @@ export class User extends RestObject {
             ASIATEHRAN: "Asia/Tehran",
             AFRICANAIROBI: "Africa/Nairobi",
             ASIABAGHDAD: "Asia/Baghdad",
+            ASIABEIRUT: "Asia/Beirut",
+            ASIAJERUSALEM: "Asia/Jerusalem",
             ASIAKUWAIT: "Asia/Kuwait",
             ASIARIYADH: "Asia/Riyadh",
+            EUROPEATHENS: "Europe/Athens",
+            EUROPEBUCHAREST: "Europe/Bucharest",
+            EUROPEHELSINKI: "Europe/Helsinki",
             EUROPEISTANBUL: "Europe/Istanbul",
             EUROPEMINSK: "Europe/Minsk",
             EUROPEMOSCOW: "Europe/Moscow",
             AFRICACAIRO: "Africa/Cairo",
             AFRICAJOHANNESBURG: "Africa/Johannesburg",
-            ASIABEIRUT: "Asia/Beirut",
-            ASIAJERUSALEM: "Asia/Jerusalem",
-            EUROPEATHENS: "Europe/Athens",
-            EUROPEBUCHAREST: "Europe/Bucharest",
-            EUROPEHELSINKI: "Europe/Helsinki",
-            AFRICAALGIERS: "Africa/Algiers",
-            AFRICACASABLANCA: "Africa/Casablanca",
             EUROPEAMSTERDAM: "Europe/Amsterdam",
             EUROPEBERLIN: "Europe/Berlin",
             EUROPEBRUSSELS: "Europe/Brussels",
             EUROPEPARIS: "Europe/Paris",
             EUROPEPRAGUE: "Europe/Prague",
             EUROPEROME: "Europe/Rome",
+            AFRICAALGIERS: "Africa/Algiers",
+            AFRICACASABLANCA: "Africa/Casablanca",
             EUROPEDUBLIN: "Europe/Dublin",
             EUROPELISBON: "Europe/Lisbon",
             EUROPELONDON: "Europe/London",
-            GMT: "GMT",
             AMERICASCORESBYSUND: "America/Scoresbysund",
             ATLANTICAZORES: "Atlantic/Azores",
+            GMT: "GMT",
             ATLANTICCAPE_VERDE: "Atlantic/Cape_Verde",
             ATLANTICSOUTH_GEORGIA: "Atlantic/South_Georgia",
+            AMERICAST_JOHNS: "America/St_Johns",
             AMERICAARGENTINABUENOS_AIRES: "America/Argentina/Buenos_Aires",
+            AMERICAHALIFAX: "America/Halifax",
             AMERICASANTIAGO: "America/Santiago",
             AMERICASAO_PAULO: "America/Sao_Paulo",
-            AMERICAST_JOHNS: "America/St_Johns",
-            AMERICACARACAS: "America/Caracas",
-            AMERICAHALIFAX: "America/Halifax",
-            AMERICAPUERTO_RICO: "America/Puerto_Rico",
             ATLANTICBERMUDA: "Atlantic/Bermuda",
-            AMERICABOGOTA: "America/Bogota",
+            AMERICACARACAS: "America/Caracas",
             AMERICAINDIANAINDIANAPOLIS: "America/Indiana/Indianapolis",
-            AMERICALIMA: "America/Lima",
             AMERICANEW_YORK: "America/New_York",
-            AMERICAPANAMA: "America/Panama",
+            AMERICAPUERTO_RICO: "America/Puerto_Rico",
+            AMERICABOGOTA: "America/Bogota",
             AMERICACHICAGO: "America/Chicago",
-            AMERICAEL_SALVADOR: "America/El_Salvador",
+            AMERICALIMA: "America/Lima",
             AMERICAMEXICO_CITY: "America/Mexico_City",
+            AMERICAPANAMA: "America/Panama",
             AMERICADENVER: "America/Denver",
+            AMERICAEL_SALVADOR: "America/El_Salvador",
             AMERICAMAZATLAN: "America/Mazatlan",
-            AMERICAPHOENIX: "America/Phoenix",
             AMERICALOS_ANGELES: "America/Los_Angeles",
+            AMERICAPHOENIX: "America/Phoenix",
             AMERICATIJUANA: "America/Tijuana",
-            PACIFICPITCAIRN: "Pacific/Pitcairn",
             AMERICAANCHORAGE: "America/Anchorage",
+            PACIFICPITCAIRN: "Pacific/Pitcairn",
+            AMERICAADAK: "America/Adak",
             PACIFICGAMBIER: "Pacific/Gambier",
             PACIFICMARQUESAS: "Pacific/Marquesas",
-            AMERICAADAK: "America/Adak",
             PACIFICHONOLULU: "Pacific/Honolulu",
             PACIFICNIUE: "Pacific/Niue",
             PACIFICPAGO_PAGO: "Pacific/Pago_Pago"
@@ -1397,6 +1403,7 @@ export class User extends RestObject {
             EN_CA: "en_CA",
             EN_KY: "en_KY",
             EN_ER: "en_ER",
+            EN_SZ: "en_SZ",
             EN_FK: "en_FK",
             EN_FJ: "en_FJ",
             EN_GM: "en_GM",
@@ -1429,7 +1436,6 @@ export class User extends RestObject {
             EN_SB: "en_SB",
             EN_ZA: "en_ZA",
             EN_SH: "en_SH",
-            EN_SZ: "en_SZ",
             EN_TZ: "en_TZ",
             EN_TO: "en_TO",
             EN_TT: "en_TT",
@@ -1667,22 +1673,24 @@ export class PushTopic extends RestObject {
         this.lastModifiedBy = void 0;
         this.lastModifiedById = void 0;
         this.systemModstamp = void 0;
+        this.__UUID = PushTopic.__UUID;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'PushTopic' = 'PushTopic';
     public readonly _TYPE_: 'PushTopic' = 'PushTopic';
+    public static __UUID: symbol = Symbol();
     private static _fields: { [P in keyof FieldProps<PushTopic>]: SFieldProperties; };
 
     public static get FIELDS() {
         return this._fields = this._fields ? this._fields : PushTopic.getPropertiesMeta<FieldProps<PushTopic>, PushTopic>(PushTopic)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<PushTopic>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<PushTopic[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<PushTopic>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<PushTopic[]> {
 
         let qry = typeof qryParam === 'function' ? buildQuery(PushTopic, qryParam) : qryParam;
-        return await RestObject.query<PushTopic>(PushTopic, qry, restInstance);
+        return await RestObject.query<PushTopic>(PushTopic, qry, opts);
 
     }
 
