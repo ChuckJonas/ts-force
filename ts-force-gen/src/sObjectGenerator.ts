@@ -283,7 +283,7 @@ export class SObjectGenerator {
     if (fieldMapping) {
       return fieldMapping.propName;
     } else if (sobConfig.autoConvertNames) {
-      let s = cleanAPIName(apiName, sobConfig.stripNamespaces);
+      let s = cleanAPIName(apiName, sobConfig.keepNamespaces);
       s += reference && !apiName.endsWith('Id') ? 'Id' : '';
       return camelCase(s);
     } else {

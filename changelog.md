@@ -7,7 +7,8 @@
 - Added support for `queryAll` (`ALL ROWS`) in retrieve methods
 - Added "High Volume" retrieve mode for better performance and efficiency 
 - generation can now use default sfdx-cli user #76
-- ability to remove namespace #66
+- `keepNamespace` config #66
+- `ts-force-gen --init` command to initialize `ts-force-config.json`  
 
 ### Changed
 
@@ -16,7 +17,8 @@
 - `Date` is now represented as `CalendarDate` instead of js `Date` #69
 - types to work with `strict:true`
 - more consistent casing for name sanitation #82
-- Namespaces removed from variables by default
+- Namespaces removed from SObjects & Properties by default
+- `ts-force-gen` now defaults the config path to `ts-force-config.json` if not set
 
 ### Fixed
 

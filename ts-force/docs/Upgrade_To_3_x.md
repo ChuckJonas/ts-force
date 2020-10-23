@@ -17,9 +17,11 @@ API NAME: `SLA_Date__c`
 2.x: `sLADate`
 3.x: `slaDate`
 
-API NAME: `NSP__My_Field__c`
-2.x: `nSPMyField`
-3.x: `myField`
+API NAME: `Zendesk__Domain_Mapping__c`
+2.x: `zendeskCreateInZendesk`
+3.x: `createInZendesk`
+
+*NOTE: Namespaces can be kept by setting `keepNamespaces` in `ts-force-config.json`*
 
 ## `prepareFor()`
 

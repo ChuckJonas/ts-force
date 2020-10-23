@@ -10,6 +10,7 @@ import { SObjectConfig, Config } from './config';
 import { cleanAPIName, replaceSource } from './util';
 import { Spinner } from 'cli-spinner';
 import { Org, Connection, AuthInfo, Aliases } from '@salesforce/core';
+import { writeFileSync } from 'fs';
 
 // execute
 run();
@@ -17,7 +18,11 @@ run();
 function run () {
   checkVersion()
     .then(generateLoadConfig)
-    .then((config) => generate(config))
+    .then((config) => {
+      if(config){
+        return generate(config);
+      }
+    })
     .catch(e => {
       console.log('Failed to Generate!  Check config or cmd params!');
       console.log(e);
@@ -49,16 +54,51 @@ async function checkVersion () {
   }
 }
 
-// init the configuration, either from a json file, command line augs or both
+const baseConfig = `
+{
+  "$schema": "https://raw.githubusercontent.com/ChuckJonas/ts-force/master/ts-force-gen/ts-force-config.schema.json",
+  "sObjects": [
+    "Account",
+    "Contact"
+  ],
+  "auth": {
+    "username": "sfdxuser@example.com"
+  },
+  "outPath": "./src/generated/"
+}
+`;
+const DEFAULT_TS_CONFIG_PATH = 'ts-force-config.json';
+async function createConfig () {
+  if(!fs.existsSync(DEFAULT_TS_CONFIG_PATH)) {
+    writeFileSync(DEFAULT_TS_CONFIG_PATH, baseConfig);
+  }
+}
+
+// init the configuration, either from a json file, command line augs or bo
 async function generateLoadConfig (): Promise<Config> {
 
   let args = minimist(process.argv.slice(2));
 
+  if(args.init){
+    await createConfig();
+    return null;
+  }
+
   let config: Config = {};
 
-  let configPath = args.config || args.j;
+  let configPath = args.config || args.j || DEFAULT_TS_CONFIG_PATH;
   if (configPath) {
-    config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    try{
+      if(fs.existsSync(configPath)){
+        config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      }else{
+        console.warn('No Config File Found');
+      }
+    }catch(e){
+      console.log(`Failed to Parse config file`);
+      console.error(e);
+      return null;
+    }
   }
   if (!config.auth) {
     config.auth = {};
@@ -182,8 +222,8 @@ async function generate (config: Config) {
     singleFileMode = true;
   }
 
-  if (config.stripNamespaces === undefined) {
-    config.stripNamespaces = true;
+  if (config.keepNamespaces === undefined) {
+    config.keepNamespaces = false;
   }
 
   let sobConfigs = config.sObjects.map(item => {
@@ -202,8 +242,8 @@ async function generate (config: Config) {
       objConfig.generatePicklists = true;
     }
 
-    if (config.stripNamespaces && objConfig.stripNamespaces === undefined) {
-      objConfig.generatePicklists = true;
+    if (config.keepNamespaces && objConfig.keepNamespaces === undefined) {
+      objConfig.keepNamespaces = true;
     }
 
     if (config.enforcePicklistValues && objConfig.enforcePicklistValues === undefined) {
@@ -273,7 +313,7 @@ async function generate (config: Config) {
 
 function sanitizeClassName (sobConfig: SObjectConfig): string {
   if (sobConfig.autoConvertNames) {
-    return cleanAPIName(sobConfig.apiName, sobConfig.stripNamespaces);
+    return cleanAPIName(sobConfig.apiName, sobConfig.keepNamespaces);
   }
   return sobConfig.apiName;
 }

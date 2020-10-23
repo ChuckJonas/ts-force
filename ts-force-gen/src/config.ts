@@ -43,10 +43,11 @@ export interface Config {
    *   If not set, class output will be logged to `stdout`
    */
   outPath?: string;
+
   /**
-   *  Removes namespace prefixes from object and fields.  Defaults to true
+   *  Keeps namespace prefixes on object and fields.  Defaults to false
    */
-  stripNamespaces?: boolean;
+  keepNamespaces?: boolean;
 }
 
 /**
@@ -87,9 +88,9 @@ export interface SObjectConfig {
   enforcePicklistValues?: PicklistRestrictionOptions;
 
   /**
-   *  Removes namespace prefixes from object and fields.  Defaults to true
+   *  Keeps namespace prefixes from object and fields.  Defaults to true
    */
-  stripNamespaces?: boolean;
+  keepNamespaces?: boolean;
 }
 
 export type PicklistRestrictionOptions = false | 'ALL' | 'RESTRICTED';
