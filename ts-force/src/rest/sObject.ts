@@ -10,7 +10,7 @@ export class SObjectAttributes {
 export abstract class SObject {
 
   @sField({ apiName: 'Id', createable: false, updateable: false, required: false, externalId: false, reference: null, childRelationship: false, salesforceType: SalesforceFieldType.ID })
-  public id: string | undefined;
+  public id?: string | null;
   public attributes: SObjectAttributes;
   public __UUID?: symbol;
 

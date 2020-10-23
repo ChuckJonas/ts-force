@@ -299,11 +299,11 @@ export class SObjectGenerator {
       name = '_' + name;
     }
     name = name.toUpperCase();
-    name = this.makeNameUnquie(name, usedNames);
+    name = this.makeNameUnique(name, usedNames);
     return name;
   }
 
-  private makeNameUnquie(name: string, usedNames: Set<string>): string {
+  private makeNameUnique(name: string, usedNames: Set<string>): string {
     while (usedNames.has(name)) {
       name = `${name}_dup`;
     }
@@ -312,7 +312,7 @@ export class SObjectGenerator {
 
   private generateChildrenProps(sobConfig: SObjectConfig, children: ChildRelationship[]): PropertyDeclarationStructure[] {
     const uniqueNames = new Set<string>();
-    let props = [];
+    let props:PropertyDeclarationStructure[] = [];
     children.forEach(child => {
       try {
         let relatedSobConfig = this.allConfigsMap.get(child.childSObject.toLowerCase());
@@ -340,15 +340,17 @@ export class SObjectGenerator {
           salesforceType: SalesforceFieldType.REFERENCE
         };
         let propName = this.sanitizeProperty(sobConfig, child.relationshipName, false);
-        propName = this.makeNameUnquie(propName, uniqueNames);
+        propName = this.makeNameUnique(propName, uniqueNames);
         uniqueNames.add(propName);
         props.push({
           name: propName,
+          kind: StructureKind.Property,
           type: `${referenceClass}[]`,
           scope: Scope.Public,
           decorators: [
             this.generateDecorator(decoratorProps)
-          ]
+          ],
+          hasQuestionToken: true
         });
       } catch (e) {
         throw e;
@@ -358,7 +360,7 @@ export class SObjectGenerator {
   }
 
   private generateFieldProps(sobConfig: SObjectConfig, fields: Field[]): PropertyDeclarationStructure[] {
-    let props = [];
+    let props:PropertyDeclarationStructure[]  = [];
     const uniqueNames = new Set<string>();
     // add members
     fields.forEach(field => {
@@ -400,24 +402,27 @@ export class SObjectGenerator {
             name: this.sanitizeProperty(relatedSobConfig, field.relationshipName, false),
             type: referenceClass,
             scope: Scope.Public,
+            kind: StructureKind.Property,
             decorators: [
               this.generateDecorator(decoratorProps)
             ],
+            hasQuestionToken: true,
             docs: docs
           });
         }
 
         let propName = this.sanitizeProperty(sobConfig, field.name, field.type === SalesforceFieldType.REFERENCE);
-        propName = this.makeNameUnquie(propName, uniqueNames);
+        propName = this.makeNameUnique(propName, uniqueNames);
         uniqueNames.add(propName);
 
         let prop: PropertyDeclarationStructure = {
           kind: StructureKind.Property,
           name: propName,
-          type: this.mapSObjectType(field.type),
+          type: this.mapSObjectType(field.type) + '| null',
           scope: Scope.Public,
           isReadonly: !(field.createable || field.updateable),
           decorators: [this.getDecorator(field)],
+          hasQuestionToken: true,
           docs: docs
         };
 

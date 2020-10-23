@@ -2,6 +2,8 @@
 
 ## 3.0.0-rc.x
 
+- Added support for `queryAll` (`ALL ROWS`) in retrieve methods
+- Added "High Volume" retrieve mode for better performance and efficiency 
 - Blank relationships will now be set `null` instead of as empty `RestObject` #72
 - Blank queried fields are set as `null` instead of `undefined` #73
 - `Date` is now represented as `CalendarDate` instead of js `Date` #69
@@ -11,7 +13,6 @@
 - fixed relationships parsing when data comes from @remoteaction
 - removed limit on request size
 - fixed `Name` object imports in generation
-- added support for `queryAll` in retrieve methods
 - fixed various types
 
 ## 2.7.0
