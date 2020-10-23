@@ -2,15 +2,10 @@
   "compilerOptions": {
     "baseUrl": "./", // enables relative imports to root
     "paths": {
-      "@src/*": [
-        "src/*"
-      ]
+      "@src/*": ["src/*"]
     },
     "target": "es5",
-    "lib": [
-      "es6",
-      "DOM"
-    ],
+    "lib": ["es6"],
     "module": "commonjs",
     "outDir": "./build",
     "moduleResolution": "node",
