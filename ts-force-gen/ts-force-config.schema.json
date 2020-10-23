@@ -82,8 +82,8 @@
                     "description": "*Overrides Global Setting*\nMake picklist fields strongly typed to generated enums. `generatePicklists` must also be `true`\n  `ALL`: for all picklist fields, regardless of salesforce enforcement\n  `RESTRICTED`: only on fields where the values are restricted on Salesforce",
                     "type": "boolean"
                 },
-                "stripNamespaces": {
-                    "description": "Removes namespace prefixes from object and fields.  Defaults to true",
+                "keepNamespaces": {
+                    "description": "Keeps namespace prefixes from object and fields.  Defaults to true",
                     "type": "boolean"
                 }
             },
@@ -110,6 +110,10 @@
             "description": "Flag to generate enums for picklist fields.  Defaulted to false",
             "type": "boolean"
         },
+        "keepNamespaces": {
+            "description": "Keeps namespace prefixes on object and fields.  Defaults to false",
+            "type": "boolean"
+        },
         "outPath": {
             "description": "The path to generate files to.\n   If the destination is a folder, it will generate one file per object.\n   If the destination is a `.ts` file, a single file will be generated.\n   If not set, class output will be logged to `stdout`",
             "type": "string"
@@ -127,10 +131,6 @@
                 ]
             },
             "type": "array"
-        },
-        "stripNamespaces": {
-            "description": "Removes namespace prefixes from object and fields.  Defaults to true",
-            "type": "boolean"
         }
     },
     "type": "object"
