@@ -36,12 +36,61 @@ describe('Generated Classes', () => {
     expect(contact2.account.website).to.equal(acc.website);
 
     let acc2 = (await Account.retrieve(f => ({
-      select: f.parent('parent').select('id', 'accountNumber'),
+      select: [
+        ...f.select('name', 'accountNumber'),
+        ...f.parent('parent').select('id', 'accountNumber')
+      ],
       where: [{ field: 'id', val: acc.id }]
     })))[0];
-    // if the lookup rel isn't set it should be null
+    // if the lookup rel is blank, it should be null
     expect(acc2.parent).to.be.null;
+    expect(acc2.name).to.not.be.null;
+    // queried, but blank
 
+    expect(acc2.accountNumber).to.be.null;
+    // not queried
+    expect(acc2.accountSource).to.be.undefined;
+
+    await acc.delete();
+  });
+
+  it('Child Relationship', async () => {
+    let acc = new Account({
+      name: 'test account',
+      website: 'example.com'
+    });
+
+    await acc.insert();
+    expect(acc.id).to.not.be.null;
+
+    let acc2 = (await Account.retrieve(f => ({
+      select: [
+        ...f.select('name', 'accountNumber'),
+        f.subQuery('contacts', cf => ({ select: cf.select('id', 'firstName') }))
+      ],
+      where: [{ field: 'id', val: acc.id }]
+    })))[0];
+
+    expect(acc2.contacts).to.not.be.null;
+    expect(acc2.contacts.length).to.eq(0);
+
+    let contact = new Contact({
+      accountId: acc.id,
+      firstName: `test`,
+      lastName: `contact`
+    });
+    await contact.insert();
+
+    acc2 = (await Account.retrieve(f => ({
+      select: [
+        ...f.select('name', 'accountNumber'),
+        f.subQuery('contacts', cf => ({ select: cf.select('id', 'firstName') }))
+      ],
+      where: [{ field: 'id', val: acc.id }]
+    })))[0];
+    // if the lookup rel is blank, it should be null
+    expect(acc2.contacts.length).to.eq(1);
+    expect(acc2.contacts[0].firstName).to.eq(contact.firstName);
     await acc.delete();
   });
 

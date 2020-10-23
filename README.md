@@ -30,3 +30,7 @@ For additional information, see the individual packages readme:
 
 - [ts-force](./ts-force)
 - [ts-force-gen](./ts-force-gen)
+
+### Upgrading to 3.x
+
+3.x introduces several breaking changes.  Please [read the upgrade guide](./ts-force/docs/Upgrade_To_3_x.md).

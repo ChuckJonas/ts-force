@@ -9,7 +9,13 @@ export const cleanAPIName = (sfName: string, stripNamespace: boolean) => {
     throw new Error('NO MATCH FOUND FOR ' + sfName);
   }
   let name = (!stripNamespace && match[1] ? match[1] : '') + match[2];
-  return name.replace(/_/g, '');
+  const parts = name.split('_');
+  return parts.map((p, i) => {
+    if(i > 0 && p.length) {
+      return p.charAt(0).toUpperCase() + p.slice(1);
+    }
+    return p;
+  }).join('');
 };
 
 export const replaceSource = (path: string): SourceFile => {

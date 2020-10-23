@@ -2,18 +2,29 @@
 
 ## 3.0.0-rc.x
 
+### Added
+
 - Added support for `queryAll` (`ALL ROWS`) in retrieve methods
 - Added "High Volume" retrieve mode for better performance and efficiency 
+- generation can now use default sfdx-cli user #76
+- ability to remove namespace #66
+
+### Changed
+
 - Blank relationships will now be set `null` instead of as empty `RestObject` #72
 - Blank queried fields are set as `null` instead of `undefined` #73
 - `Date` is now represented as `CalendarDate` instead of js `Date` #69
-- generation can now use default sfdx-cli user #76
+- types to work with `strict:true`
 - more consistent casing for name sanitation #82
-- ability to remove namespace #66
-- fixed relationships parsing when data comes from @remoteaction
-- removed limit on request size
+- Namespaces removed from variables by default
+
+### Fixed
+
+- relationships parsing when data comes from `@RemoteAction`
+- removed limit on axios request size
 - fixed `Name` object imports in generation
 - fixed various types
+- mapping cache when generating objects from multiple ORGS
 
 ## 2.7.0
 
@@ -76,15 +87,6 @@
 - added support for multiple connections to generated objects
 - better support for custom rest services
 
-### upgrading from 1.x.x
-
-- Regenerate Classes
-- change any refresh update calls from `sob.update(true)` to `sob.update({refresh: true})`
-- change any `CompositeBatch.addUpdate` calls with callback params to `{callback:()=>{}}`
-- if you want to include fields returned from query in update request use `sob.update({sendAllFields: true})`
-- Changed Batch to accept
-- change any references from `prepareForDML` to new `prepareFor` method
-- if running on IE11, you must [polyfill-proxy](https://www.npmjs.com/package/proxy-polyfill)
 
 ## 1.x
 

@@ -150,7 +150,6 @@ export class SObjectGenerator {
       name: '__UUID',
       scope: Scope.Public,
       isStatic: true,
-      type: `symbol`,
       initializer: `Symbol()`
     });
 
@@ -180,7 +179,7 @@ export class SObjectGenerator {
       returnType: `Promise<${className}[]>`,
       isAsync: true,
       statements: `
-            let qry = typeof qryParam === 'function' ? buildQuery(${className}, qryParam) : qryParam;
+            const qry = typeof qryParam === 'function' ? buildQuery(${className}, qryParam) : qryParam;
             return await ${SUPER_CLASS}.query<${className}>(${className}, qry, opts);
             `
     });

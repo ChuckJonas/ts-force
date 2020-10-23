@@ -1,5 +1,6 @@
 /** Mapping type & helpers for converting Salesforce Date types into a object that's easier to work with.
- *    The format was chosen to be as compatible as possible with the standard Date object and other popular libraries
+ *  This format was chosen to be as compatible as possible with the standard Date object and other popular libraries
+ *   Note: Month is 0 based... Year and Date are 1 based
 */
 
 export type CalendarDate = { year: number; month: number; date: number; };
