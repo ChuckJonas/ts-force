@@ -5,7 +5,7 @@ import { SObjectStatic, FieldResolver, SOQLQueryParams, QueryResponse, buildQuer
 /**
  * Uses Composite chaining to retrieve up to 10k records in a single request.
  *    Much more efficient for large queries.  Minor performance hit for single queries returning
- *
+ * @experimental
  * @param qry: The query, or the next URL to retrieve
  * @param restInstance: Optional rest instance to run query against
  */
@@ -20,7 +20,7 @@ export const queryAllComposite = async (query: string, opts: { restInstance?: Re
     // bit of a hack... should work but refactor ASAP
     reqUri = nextUrl;
   } else {
-    reqUri = `/services/data/v${restInstance.config.version.toFixed(1)}/${opts.allRows ? 'queryAll' : 'query'}?q=${encodeURI(query)}`;
+    reqUri = `/services/data/v42.0/${opts.allRows ? 'queryAll' : 'query'}?q=${encodeURI(query)}`;
   }
 
   comp.addRequest({

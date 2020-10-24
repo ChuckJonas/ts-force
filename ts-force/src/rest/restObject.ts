@@ -16,7 +16,7 @@ export interface DMLResponse {
 export interface QueryOpts {
   restInstance?: Rest;
   allRows?: boolean;
-  highVolume?: boolean;
+  useComposite?: boolean;
 }
 
 const NAME_MAP_CACHE = new Map<symbol, Map<string, string>>();
@@ -68,16 +68,15 @@ export abstract class RestObject extends SObject {
   // returns ALL records of a query
   protected static async query<T extends RestObject>(type: { new(): T }, qry: string, opts?: QueryOpts): Promise<T[]> {
     opts = opts || {};
-    const { restInstance, allRows, highVolume } = opts;
+    const { restInstance, allRows, useComposite: highVolume } = opts;
     let client = restInstance || new Rest();
     let records = [];
 
-    if (highVolume || true) {
+    if (highVolume) {
       records = await queryAllComposite(qry, { restInstance: client, allRows });
     } else {
       let response = await client.query<T>(qry, allRows);
-      let records = response.records;
-
+      records = response.records;
       while (!response.done && response.nextRecordsUrl) {
         response = await client.queryMore<T>(response);
         records = records.concat(response.records);

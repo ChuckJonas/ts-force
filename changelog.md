@@ -4,11 +4,11 @@
 
 ### Added
 
-- Added support for `queryAll` (`ALL ROWS`) in retrieve methods
-- Added "High Volume" retrieve mode for better performance and efficiency 
+- Added support for `queryAll` (`ALL ROWS`) in retrieve methods 
 - generation can now use default sfdx-cli user #76
 - `keepNamespace` config #66
-- `ts-force-gen --init` command to initialize `ts-force-config.json`  
+- `ts-force-gen --init` command to initialize `ts-force-config.json`
+- Added `useComposite` retrieve mode for better efficiency (experimental)
 
 ### Changed
 
