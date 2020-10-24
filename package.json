@@ -1,6 +1,6 @@
 {
   "name": "ts-force-project",
-  "version": "3.0.0-rc.19",
+  "version": "3.0.0-rc.20",
   "description": "",
   "scripts": {
     "postinstall": "cd ts-force && npm install && npm run build && cd ../ts-force-gen && npm install",
