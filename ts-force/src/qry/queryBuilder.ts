@@ -76,7 +76,7 @@ export function buildQuery<T>(from: SObjectStatic<T>, buildQuery: (fields: Field
 export function composeSOQLQuery(qry: SOQLQuery): string {
   let { from, select, where, limit, offset, groupBy, orderBy, for: forClause, update } = qry;
 
-  let ret = `SELECT ${select.join(', ')} FROM ${from}`;
+  let ret = `SELECT ${select.filter((item, i, ar) => ar.indexOf(item) === i).join(', ')} FROM ${from}`;
   if (where) {
     ret += ` WHERE ${composeConditionalClause(where)}`;
   }

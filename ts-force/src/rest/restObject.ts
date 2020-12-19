@@ -253,7 +253,7 @@ export abstract class RestObject extends SObject {
             || (dmlMode === 'update_modified_only' && sFieldProps.updateable && this._modified.has(sFieldProps.apiName));
 
           if (canSend) {
-            data[sFieldProps.apiName] = this.toSFValueFormat(sFieldProps, this[i]);
+            data[sFieldProps.apiName] = this[i] ? this.toSFValueFormat(sFieldProps, this[i]) : this[i];
           }
           break;
       }

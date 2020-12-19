@@ -9,6 +9,7 @@
 - `keepNamespace` config #66
 - `ts-force-gen --init` command to initialize `ts-force-config.json`
 - Added `useComposite` retrieve mode for better efficiency (experimental)
+- `getAuthorizationUrl` & `requestAccessToken` methods to support oAuth2 web server flow
 
 ### Changed
 
@@ -17,6 +18,7 @@
 - `Date` is now represented as `CalendarDate` instead of js `Date` #69
 - types to work with `strict:true`
 - more consistent casing for name sanitation #82
+- query builder now filters out duplicate fields
 - Namespaces removed from SObjects & Properties by default
 - `ts-force-gen` now defaults the config path to `ts-force-config.json` if not set
 
@@ -26,7 +28,7 @@
 - removed limit on axios request size
 - fixed `Name` object imports in generation
 - fixed various types
-- mapping cache when generating objects from multiple ORGS
+- mapping cache when generating objects for multiple orgs
 
 ## 2.7.0
 

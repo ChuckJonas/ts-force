@@ -16,6 +16,17 @@ describe('Select Tests', () => {
     expect(qry).to.equal('SELECT AccountNumber FROM Account');
   });
 
+  it('select duplicate', () => {
+    let qry = buildQuery(Account, fields => {
+        return {
+            select: [
+                'Id', 'Id', fields.select('accountNumber')
+            ]
+        };
+    });
+    expect(qry).to.equal('SELECT Id, AccountNumber FROM Account');
+  });
+
   it('select x, y', () => {
     let qry = buildQuery(Account, fields => {
         return {
