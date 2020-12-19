@@ -73,7 +73,7 @@ let otherConnBulk = new CompositeCollection(otherClient);
 
 ### Getting an Access Token
 
-#### OAuth
+#### OAuth Username / Password flow
 
 If you don't already have a accessToken, you can use the "username & password flow" in the `OAuth` module:
 
@@ -90,6 +90,41 @@ let config = new UsernamePasswordConfig(
   let config = await oAuth.initialize();
   setDefaultConfig(config);
 ```
+
+#### OAuth Web-Server Flow
+Some helper methods have been included to make it easier to setup a ["web-server" oAuth2 flow](https://help.salesforce.com/articleView?id=remoteaccess_oauth_web_server_flow.htm&type=5).
+
+1: Create 'Authorization Url' and redirect user
+```ts
+getAuthorizationUrl(instanceUrl as string, {
+   client_id: process.env.CLIENT_ID,
+   redirect_uri: `${process.env.SITE_URL}/api/token`,
+   prompt: 'login',
+});
+```
+
+2: Get token with redircted `authorization_code`
+```ts
+app.get('/api/token', function(req, res) {
+    const code = req.param('code');
+    const resp = await requestAccessToken(req.headers.referer, {
+        grant_type: 'authorization_code',
+        code: code as string,
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
+        redirect_uri: `${process.env.SITE_URL}/api/token`,
+     });
+     
+     //typically you would now store token & instanceUrl in user session (via jwt).  Then you can later create a ts-force client like so:
+     
+     const client = new Rest({instanceUrl: session.instanceUrl, acessToken: session.accessToken});
+     const anAccount = await Account.retrieve((f) => ({
+        select: f.select('id', 'name', 'myCustomField'),
+        limit: 1
+     }));
+});
+```
+
 
 #### hosted on salesforce (visualforce)
 
