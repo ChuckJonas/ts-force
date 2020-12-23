@@ -1,3 +1,9 @@
+---
+description: >-
+  This tutorial will walk you through setting up a simple node project,
+  generating code and making requests against the API.
+---
+
 # Getting Started
 
 ## Prerequisites
