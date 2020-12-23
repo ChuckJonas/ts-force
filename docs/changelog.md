@@ -21,7 +21,7 @@
 - query builder now filters out duplicate fields
 - Namespaces removed from SObjects & Properties by default
 - `ts-force-gen` now defaults the config path to `ts-force-config.json` if not set
-
+- replaced `OAuth` classes simpler & more flexible functions
 ### Fixed
 
 - relationships parsing when data comes from `@RemoteAction`

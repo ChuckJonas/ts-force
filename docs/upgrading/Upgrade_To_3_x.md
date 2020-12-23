@@ -72,3 +72,36 @@ Queried child relationships with no results will result in an empty (`[]`) array
 ## Queried fields that are blank are set as `null` instead of `undefined`
 
 In 2.x if a queried field was blank, it was set as `undefined`.  In 3.x, the field will now be set as `null` to differate between "not queried" (`undefined`) and "queried but blank" (`null`)
+
+
+## Replace OAuth with `requestAuthToken()`
+
+The `OAuth` class which was used to generate a token from the "username/password oAuth flow" token has been replaced with a function that is much more flexible.
+
+
+Replace: 
+
+```ts
+  const passwordConfig = new UsernamePasswordConfig(
+    process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD
+  );
+  let oAuth = new OAuth(passwordConfig);
+  await oAuth.initialize();
+  setDefaultConfig(await oAuth.initialize());
+```
+
+With:
+
+```ts
+ const resp = await requestAccessToken({
+    grant_type: 'password'
+    instanceUrl: process.env.HOST,
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+  });
+
+  setDefaultConfig(resp);
+
+```

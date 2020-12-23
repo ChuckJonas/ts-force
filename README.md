@@ -34,3 +34,30 @@ For additional information, see the individual packages readme:
 ### Upgrading to 3.x
 
 3.x introduces several breaking changes.  Please [read the upgrade guide](./ts-force/docs/Upgrade_To_3_x.md).
+
+Replace: 
+
+```ts
+  const passwordConfig = new UsernamePasswordConfig(
+    process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD
+  );
+  let oAuth = new OAuth(passwordConfig);
+  await oAuth.initialize();
+  setDefaultConfig(await oAuth.initialize());
+```
+
+With:
+
+```ts
+ const resp = await requestAccessToken({
+    grant_type: 'password'
+    instanceUrl: process.env.HOST,
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+  });
+
+  setDefaultConfig(resp);
+
+```
