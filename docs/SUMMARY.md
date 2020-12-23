@@ -1,7 +1,8 @@
 # Table of contents
 
-* [Getting Started](README.md)
-* [Guides](guides/README.md)
+* [Overview](README.md)
+* [Getting Started](getting-started.md)
+* [Documentation](guides/README.md)
   * [SOQL Builder](guides/query-builder/README.md)
     * [Resolving Fields](guides/query-builder/resolving-fields.md)
     * [WHERE & HAVING](guides/query-builder/where-and-having/README.md)
