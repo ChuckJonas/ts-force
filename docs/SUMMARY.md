@@ -2,7 +2,10 @@
 
 * [Getting Started](README.md)
 * [Guides](guides/README.md)
-  * [Building Queries](guides/query-builder.md)
+  * [SOQL Builder](guides/query-builder/README.md)
+    * [Resolving Fields](guides/query-builder/resolving-fields.md)
+    * [WHERE & HAVING](guides/query-builder/where-and-having.md)
+    * [Sub Queries](guides/query-builder/sub-queries.md)
   * [Connecting with Salesforce](guides/connecting-with-salesforce/README.md)
     * [Visualforce](guides/connecting-with-salesforce/visualforce.md)
     * [oAuth](guides/connecting-with-salesforce/oauth/README.md)
