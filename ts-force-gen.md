@@ -14,7 +14,7 @@ Files can be generated using the following command:
 
 `ts-force-gen`
 
-***NOTE: Because these generated files control serialization of read-only properties, you should generated the classes using a user that as the same permissions as the end user.***
+_**NOTE: Because these generated files control serialization of read-only properties, you should generated the classes using a user that as the same permissions as the end user.**_
 
 #### Configuration file
 
@@ -22,9 +22,9 @@ A json configuration file can be passed in via the `-j` arg:
 
 `ts-force-gen -j ./config/ts-force-config.json`
 
-*Username/Pass configuration:*
+_Username/Pass configuration:_
 
-``` json
+```javascript
 {
   "auth": {
     "username": "john@example.com",
@@ -49,46 +49,44 @@ A json configuration file can be passed in via the `-j` arg:
 }
 ```
 
-*sfdx configuration:*
+_sfdx configuration:_
 
-If you only pass the `username`, the code generator will attempt to auth using `sfdx force:org:display -u [username]` (this means you can also pass the org alias).
+If you only pass the `username`, the code generator will attempt to auth using `sfdx force:org:display -u [username]` \(this means you can also pass the org alias\).
 
-``` json
+```javascript
 "auth": {
     "username": "john@example.com",
   },
 ```
 
-*access token configuration:*
+_access token configuration:_
 
 You can also pass the access token and instance url in directly
 
-``` json
+```javascript
 "auth": {
     "accessToken": "12312321",
     "instanceUrl": "https://na31.salesforce.com",
   },
 ```
 
-*environment configuration:*
+_environment configuration:_
 
-You can also authenticate via Username/Password via environment variables by setting the `-e` flag (helpful for CI or build processes):
+You can also authenticate via Username/Password via environment variables by setting the `-e` flag \(helpful for CI or build processes\):
 
-`ts-force-gen -e
+\`ts-force-gen -e
 
 The following variables must be set on in your environment:
 
-```bat
-
+```text
 CLIENT_ID =
 CLIENT_SECRET =
 USERNAME =
 PASSWORD =
 HOST =
-
 ```
 
-A JSON Schema is available to make editing the config file as easy as possible.  Simply add this line to the top of your `ts-force-config.json` file
+A JSON Schema is available to make editing the config file as easy as possible. Simply add this line to the top of your `ts-force-config.json` file
 
 `"$schema": "https://raw.githubusercontent.com/ChuckJonas/ts-force/master/ts-force-gen/ts-force-config.schema.json",`
 
@@ -101,3 +99,4 @@ Properties will be transformed from api names to the standard javascript convent
 #### extending generated classes
 
 It is not recommended that you edit the generated classes directly.
+
