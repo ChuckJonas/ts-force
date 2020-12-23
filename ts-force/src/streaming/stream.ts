@@ -179,7 +179,7 @@ export class Streaming {
      * @memberof Streaming
      */
     public disconnect = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.listener.disconnect(m => {
                 if (m.successful) {
                     resolve();

@@ -70,9 +70,9 @@ export class FieldResolver<T>{
      * @param relation: a parent SObject relation key of the current SObject
      * @returns a new FieldResolver for the selected parent relation, with information to track the traversed relationships
      */
-    public parent<K extends ParentReferencePropNames<T>> (relation: K) {
+    public parent<K extends ParentReferencePropNames<Required<T>>> (relation: K) {
         let rel1Meta = this._obj.FIELDS[relation as string];
-        let rel1 = rel1Meta.reference() as any as SObjectStatic<T[K]>;
+        let rel1 = rel1Meta.reference() as any as SObjectStatic<Required<T>[K]>;
         return new FieldResolver(rel1, [...this.traversed, ...[rel1Meta]]);
     }
 
@@ -83,7 +83,7 @@ export class FieldResolver<T>{
      * @param relationship The child relationships key to generate the subquery for
      * @param func a function, which accepts a FieldResolver and returns the a Subquery
      */
-    public subQuery<K extends RelationPropNames<T>, T2 extends T[K] extends (infer U)[] ? U : never> (relationship: K, func: (fields: FieldResolver<T2>) => SOQLQueryParams): string {
+    public subQuery<K extends RelationPropNames<Required<T>>, T2 extends Required<T>[K] extends (infer U)[] ? U : never> (relationship: K, func: (fields: FieldResolver<T2>) => SOQLQueryParams): string {
         let relationMeta = this._obj.FIELDS[relationship as string];
         let fields = new FieldResolver(relationMeta.reference() as any as SObjectStatic<T2>);
         let subQuery = func(fields);

@@ -7,153 +7,153 @@ export type AccountFields = Partial<FieldProps<Account>>;
  */
 export class Account extends RestObject {
     @sField({ apiName: 'Contacts', createable: false, updateable: false, required: false, reference: () => { return Contact }, childRelationship: true, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contacts', externalId: false })
-    public contacts: Contact[];
+    public contacts?: Contact[];
     @sField({ apiName: 'Users', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: true, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Users', externalId: false })
-    public users: User[];
+    public users?: User[];
     @sField({ apiName: 'Id', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ID, salesforceLabel: 'Account ID', externalId: false })
-    public readonly id: string;
+    public readonly id?: string | null;
     @sField({ apiName: 'IsDeleted', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Deleted', externalId: false })
-    public readonly isDeleted: boolean;
+    public readonly isDeleted?: boolean | null;
     @sField({ apiName: 'MasterRecord', createable: false, updateable: false, required: false, reference: () => { return Account }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Master Record ID', externalId: false })
-    public masterRecord: Account;
+    public masterRecord?: Account;
     @sField({ apiName: 'MasterRecordId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Master Record ID', externalId: false })
-    public readonly masterRecordId: string;
+    public readonly masterRecordId?: string | null;
     @sField({ apiName: 'Name', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Account Name', externalId: false })
-    public name: string;
+    public name?: string | null;
     @sField({ apiName: 'Type', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Account Type', externalId: false })
-    public type: string;
+    public type?: string | null;
     @sField({ apiName: 'Parent', createable: false, updateable: false, required: false, reference: () => { return Account }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Parent Account ID', externalId: false })
-    public parent: Account;
+    public parent?: Account;
     @sField({ apiName: 'ParentId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Parent Account ID', externalId: false })
-    public parentId: string;
+    public parentId?: string | null;
     @sField({ apiName: 'BillingStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Billing Street', externalId: false })
-    public billingStreet: string;
+    public billingStreet?: string | null;
     @sField({ apiName: 'BillingCity', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Billing City', externalId: false })
-    public billingCity: string;
+    public billingCity?: string | null;
     @sField({ apiName: 'BillingState', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Billing State/Province', externalId: false })
-    public billingState: string;
+    public billingState?: string | null;
     @sField({ apiName: 'BillingPostalCode', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Billing Zip/Postal Code', externalId: false })
-    public billingPostalCode: string;
+    public billingPostalCode?: string | null;
     @sField({ apiName: 'BillingCountry', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Billing Country', externalId: false })
-    public billingCountry: string;
+    public billingCountry?: string | null;
     @sField({ apiName: 'BillingLatitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Billing Latitude', externalId: false })
-    public billingLatitude: number;
+    public billingLatitude?: number | null;
     @sField({ apiName: 'BillingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Billing Longitude', externalId: false })
-    public billingLongitude: number;
+    public billingLongitude?: number | null;
     @sField({ apiName: 'BillingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Billing Geocode Accuracy', externalId: false })
-    public billingGeocodeAccuracy: PicklistConst<typeof Account.PICKLIST.billingGeocodeAccuracy>;
+    public billingGeocodeAccuracy?: PicklistConst<typeof Account.PICKLIST.billingGeocodeAccuracy>;
     @sField({ apiName: 'BillingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Billing Address', externalId: false })
-    public readonly billingAddress: string;
+    public readonly billingAddress?: string | null;
     @sField({ apiName: 'ShippingStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Shipping Street', externalId: false })
-    public shippingStreet: string;
+    public shippingStreet?: string | null;
     @sField({ apiName: 'ShippingCity', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Shipping City', externalId: false })
-    public shippingCity: string;
+    public shippingCity?: string | null;
     @sField({ apiName: 'ShippingState', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Shipping State/Province', externalId: false })
-    public shippingState: string;
+    public shippingState?: string | null;
     @sField({ apiName: 'ShippingPostalCode', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Shipping Zip/Postal Code', externalId: false })
-    public shippingPostalCode: string;
+    public shippingPostalCode?: string | null;
     @sField({ apiName: 'ShippingCountry', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Shipping Country', externalId: false })
-    public shippingCountry: string;
+    public shippingCountry?: string | null;
     @sField({ apiName: 'ShippingLatitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Shipping Latitude', externalId: false })
-    public shippingLatitude: number;
+    public shippingLatitude?: number | null;
     @sField({ apiName: 'ShippingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Shipping Longitude', externalId: false })
-    public shippingLongitude: number;
+    public shippingLongitude?: number | null;
     @sField({ apiName: 'ShippingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Shipping Geocode Accuracy', externalId: false })
-    public shippingGeocodeAccuracy: PicklistConst<typeof Account.PICKLIST.shippingGeocodeAccuracy>;
+    public shippingGeocodeAccuracy?: PicklistConst<typeof Account.PICKLIST.shippingGeocodeAccuracy>;
     @sField({ apiName: 'ShippingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Shipping Address', externalId: false })
-    public readonly shippingAddress: string;
+    public readonly shippingAddress?: string | null;
     @sField({ apiName: 'Phone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Account Phone', externalId: false })
-    public phone: string;
+    public phone?: string | null;
     @sField({ apiName: 'Fax', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Account Fax', externalId: false })
-    public fax: string;
+    public fax?: string | null;
     @sField({ apiName: 'AccountNumber', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Account Number', externalId: false })
-    public accountNumber: string;
+    public accountNumber?: string | null;
     @sField({ apiName: 'Website', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Website', externalId: false })
-    public website: string;
+    public website?: string | null;
     @sField({ apiName: 'PhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Photo URL', externalId: false })
-    public readonly photoUrl: string;
+    public readonly photoUrl?: string | null;
     @sField({ apiName: 'Sic', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'SIC Code', externalId: false })
-    public sic: string;
+    public sic?: string | null;
     @sField({ apiName: 'Industry', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Industry', externalId: false })
-    public industry: string;
+    public industry?: string | null;
     @sField({ apiName: 'AnnualRevenue', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.CURRENCY, salesforceLabel: 'Annual Revenue', externalId: false })
-    public annualRevenue: number;
+    public annualRevenue?: number | null;
     @sField({ apiName: 'NumberOfEmployees', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.INT, salesforceLabel: 'Employees', externalId: false })
-    public numberOfEmployees: number;
+    public numberOfEmployees?: number | null;
     @sField({ apiName: 'Ownership', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Ownership', externalId: false })
-    public ownership: string;
+    public ownership?: string | null;
     @sField({ apiName: 'TickerSymbol', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Ticker Symbol', externalId: false })
-    public tickerSymbol: string;
+    public tickerSymbol?: string | null;
     @sField({ apiName: 'Description', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Account Description', externalId: false })
-    public description: string;
+    public description?: string | null;
     @sField({ apiName: 'Rating', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Account Rating', externalId: false })
-    public rating: string;
+    public rating?: string | null;
     @sField({ apiName: 'Site', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Account Site', externalId: false })
-    public site: string;
+    public site?: string | null;
     @sField({ apiName: 'Owner', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Owner ID', externalId: false })
-    public owner: User;
+    public owner?: User;
     @sField({ apiName: 'OwnerId', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Owner ID', externalId: false })
-    public ownerId: string;
+    public ownerId?: string | null;
     @sField({ apiName: 'CreatedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Created Date', externalId: false })
-    public readonly createdDate: Date;
+    public readonly createdDate?: Date | null;
     @sField({ apiName: 'CreatedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public createdBy: User;
+    public createdBy?: User;
     @sField({ apiName: 'CreatedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public readonly createdById: string;
+    public readonly createdById?: string | null;
     @sField({ apiName: 'LastModifiedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Modified Date', externalId: false })
-    public readonly lastModifiedDate: Date;
+    public readonly lastModifiedDate?: Date | null;
     @sField({ apiName: 'LastModifiedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public lastModifiedBy: User;
+    public lastModifiedBy?: User;
     @sField({ apiName: 'LastModifiedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public readonly lastModifiedById: string;
+    public readonly lastModifiedById?: string | null;
     @sField({ apiName: 'SystemModstamp', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'System Modstamp', externalId: false })
-    public readonly systemModstamp: Date;
+    public readonly systemModstamp?: Date | null;
     @sField({ apiName: 'LastActivityDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Last Activity', externalId: false })
-    public readonly lastActivityDate: CalendarDate;
+    public readonly lastActivityDate?: CalendarDate | null;
     @sField({ apiName: 'LastViewedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Viewed Date', externalId: false })
-    public readonly lastViewedDate: Date;
+    public readonly lastViewedDate?: Date | null;
     @sField({ apiName: 'LastReferencedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Referenced Date', externalId: false })
-    public readonly lastReferencedDate: Date;
+    public readonly lastReferencedDate?: Date | null;
     @sField({ apiName: 'Jigsaw', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Data.com Key', externalId: false })
-    public jigsaw: string;
+    public jigsaw?: string | null;
     @sField({ apiName: 'JigsawCompanyId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Jigsaw Company ID', externalId: false })
-    public readonly jigsawCompanyId: string;
+    public readonly jigsawCompanyId?: string | null;
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
-    public cleanStatus: PicklistConst<typeof Account.PICKLIST.cleanStatus>;
+    public cleanStatus?: PicklistConst<typeof Account.PICKLIST.cleanStatus>;
     @sField({ apiName: 'AccountSource', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Account Source', externalId: false })
-    public accountSource: string;
+    public accountSource?: string | null;
     @sField({ apiName: 'DunsNumber', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'D-U-N-S Number', externalId: false })
-    public dunsNumber: string;
+    public dunsNumber?: string | null;
     @sField({ apiName: 'Tradestyle', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Tradestyle', externalId: false })
-    public tradestyle: string;
+    public tradestyle?: string | null;
     @sField({ apiName: 'NaicsCode', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'NAICS Code', externalId: false })
-    public naicsCode: string;
+    public naicsCode?: string | null;
     @sField({ apiName: 'NaicsDesc', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'NAICS Description', externalId: false })
-    public naicsDesc: string;
+    public naicsDesc?: string | null;
     @sField({ apiName: 'YearStarted', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Year Started', externalId: false })
-    public yearStarted: string;
+    public yearStarted?: string | null;
     @sField({ apiName: 'SicDesc', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'SIC Description', externalId: false })
-    public sicDesc: string;
+    public sicDesc?: string | null;
     @sField({ apiName: 'DandbCompanyId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'D&B Company ID', externalId: false })
-    public dandbCompanyId: string;
+    public dandbCompanyId?: string | null;
     @sField({ apiName: 'CustomerPriority__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Customer Priority', externalId: false })
-    public customerPriority: PicklistConst<typeof Account.PICKLIST.customerPriority>;
+    public customerPriority?: PicklistConst<typeof Account.PICKLIST.customerPriority>;
     @sField({ apiName: 'SLA__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'SLA', externalId: false })
-    public sla: string;
+    public sla?: string | null;
     @sField({ apiName: 'Active__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Active', externalId: false })
-    public active: string;
+    public active?: string | null;
     @sField({ apiName: 'NumberofLocations__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Number of Locations', externalId: false })
-    public numberofLocations: number;
+    public numberofLocations?: number | null;
     @sField({ apiName: 'UpsellOpportunity__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Upsell Opportunity', externalId: false })
-    public upsellOpportunity: string;
+    public upsellOpportunity?: string | null;
     @sField({ apiName: 'SLASerialNumber__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'SLA Serial Number', externalId: false })
-    public slaSerialNumber: string;
+    public slaSerialNumber?: string | null;
     @sField({ apiName: 'SLAExpirationDate__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'SLA Expiration Date', externalId: false })
-    public slaExpirationDate: CalendarDate;
+    public slaExpirationDate?: CalendarDate | null;
     @sField({ apiName: 'Test_External_Id__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Test External Id', externalId: true })
-    public testExternalId: string;
+    public testExternalId?: string | null;
     @sField({ apiName: 'MultiPick__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.MULTIPICKLIST, salesforceLabel: 'MultiPick', externalId: false })
-    public multiPick: PicklistConst<typeof Account.PICKLIST.multiPick>[];
+    public multiPick?: PicklistConst<typeof Account.PICKLIST.multiPick>[];
 
     constructor(fields?: AccountFields, restInstance?: Rest) {
         super('Account', restInstance);
@@ -238,7 +238,7 @@ export class Account extends RestObject {
 
     public static API_NAME: 'Account' = 'Account';
     public readonly _TYPE_: 'Account' = 'Account';
-    public static __UUID: symbol = Symbol();
+    public static __UUID = Symbol();
     private static _fields: { [P in keyof FieldProps<Account>]: SFieldProperties; };
 
     public static get FIELDS() {
@@ -247,7 +247,7 @@ export class Account extends RestObject {
 
     public static async retrieve(qryParam: ((fields: FieldResolver<Account>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<Account[]> {
 
-        let qry = typeof qryParam === 'function' ? buildQuery(Account, qryParam) : qryParam;
+        const qry = typeof qryParam === 'function' ? buildQuery(Account, qryParam) : qryParam;
         return await RestObject.query<Account>(Account, qry, opts);
 
     }
@@ -389,141 +389,141 @@ export type ContactFields = Partial<FieldProps<Contact>>;
  */
 export class Contact extends RestObject {
     @sField({ apiName: 'Users', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: true, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Users', externalId: false })
-    public users: User[];
+    public users?: User[];
     @sField({ apiName: 'Id', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ID, salesforceLabel: 'Contact ID', externalId: false })
-    public readonly id: string;
+    public readonly id?: string | null;
     @sField({ apiName: 'IsDeleted', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Deleted', externalId: false })
-    public readonly isDeleted: boolean;
+    public readonly isDeleted?: boolean | null;
     @sField({ apiName: 'MasterRecord', createable: false, updateable: false, required: false, reference: () => { return Contact }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Master Record ID', externalId: false })
-    public masterRecord: Contact;
+    public masterRecord?: Contact;
     @sField({ apiName: 'MasterRecordId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Master Record ID', externalId: false })
-    public readonly masterRecordId: string;
+    public readonly masterRecordId?: string | null;
     @sField({ apiName: 'Account', createable: false, updateable: false, required: false, reference: () => { return Account }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
-    public account: Account;
+    public account?: Account;
     @sField({ apiName: 'AccountId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
-    public accountId: string;
+    public accountId?: string | null;
     @sField({ apiName: 'LastName', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Last Name', externalId: false })
-    public lastName: string;
+    public lastName?: string | null;
     @sField({ apiName: 'FirstName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'First Name', externalId: false })
-    public firstName: string;
+    public firstName?: string | null;
     @sField({ apiName: 'Salutation', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Salutation', externalId: false })
-    public salutation: PicklistConst<typeof Contact.PICKLIST.salutation>;
+    public salutation?: PicklistConst<typeof Contact.PICKLIST.salutation>;
     @sField({ apiName: 'Name', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Full Name', externalId: false })
-    public readonly name: string;
+    public readonly name?: string | null;
     @sField({ apiName: 'OtherStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Other Street', externalId: false })
-    public otherStreet: string;
+    public otherStreet?: string | null;
     @sField({ apiName: 'OtherCity', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Other City', externalId: false })
-    public otherCity: string;
+    public otherCity?: string | null;
     @sField({ apiName: 'OtherState', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Other State/Province', externalId: false })
-    public otherState: string;
+    public otherState?: string | null;
     @sField({ apiName: 'OtherPostalCode', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Other Zip/Postal Code', externalId: false })
-    public otherPostalCode: string;
+    public otherPostalCode?: string | null;
     @sField({ apiName: 'OtherCountry', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Other Country', externalId: false })
-    public otherCountry: string;
+    public otherCountry?: string | null;
     @sField({ apiName: 'OtherLatitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Other Latitude', externalId: false })
-    public otherLatitude: number;
+    public otherLatitude?: number | null;
     @sField({ apiName: 'OtherLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Other Longitude', externalId: false })
-    public otherLongitude: number;
+    public otherLongitude?: number | null;
     @sField({ apiName: 'OtherGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Other Geocode Accuracy', externalId: false })
-    public otherGeocodeAccuracy: PicklistConst<typeof Contact.PICKLIST.otherGeocodeAccuracy>;
+    public otherGeocodeAccuracy?: PicklistConst<typeof Contact.PICKLIST.otherGeocodeAccuracy>;
     @sField({ apiName: 'OtherAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Other Address', externalId: false })
-    public readonly otherAddress: string;
+    public readonly otherAddress?: string | null;
     @sField({ apiName: 'MailingStreet', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Mailing Street', externalId: false })
-    public mailingStreet: string;
+    public mailingStreet?: string | null;
     @sField({ apiName: 'MailingCity', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Mailing City', externalId: false })
-    public mailingCity: string;
+    public mailingCity?: string | null;
     @sField({ apiName: 'MailingState', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Mailing State/Province', externalId: false })
-    public mailingState: string;
+    public mailingState?: string | null;
     @sField({ apiName: 'MailingPostalCode', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Mailing Zip/Postal Code', externalId: false })
-    public mailingPostalCode: string;
+    public mailingPostalCode?: string | null;
     @sField({ apiName: 'MailingCountry', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Mailing Country', externalId: false })
-    public mailingCountry: string;
+    public mailingCountry?: string | null;
     @sField({ apiName: 'MailingLatitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Mailing Latitude', externalId: false })
-    public mailingLatitude: number;
+    public mailingLatitude?: number | null;
     @sField({ apiName: 'MailingLongitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Mailing Longitude', externalId: false })
-    public mailingLongitude: number;
+    public mailingLongitude?: number | null;
     @sField({ apiName: 'MailingGeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Mailing Geocode Accuracy', externalId: false })
-    public mailingGeocodeAccuracy: PicklistConst<typeof Contact.PICKLIST.mailingGeocodeAccuracy>;
+    public mailingGeocodeAccuracy?: PicklistConst<typeof Contact.PICKLIST.mailingGeocodeAccuracy>;
     @sField({ apiName: 'MailingAddress', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Mailing Address', externalId: false })
-    public readonly mailingAddress: string;
+    public readonly mailingAddress?: string | null;
     @sField({ apiName: 'Phone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Business Phone', externalId: false })
-    public phone: string;
+    public phone?: string | null;
     @sField({ apiName: 'Fax', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Business Fax', externalId: false })
-    public fax: string;
+    public fax?: string | null;
     @sField({ apiName: 'MobilePhone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Mobile Phone', externalId: false })
-    public mobilePhone: string;
+    public mobilePhone?: string | null;
     @sField({ apiName: 'HomePhone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Home Phone', externalId: false })
-    public homePhone: string;
+    public homePhone?: string | null;
     @sField({ apiName: 'OtherPhone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Other Phone', externalId: false })
-    public otherPhone: string;
+    public otherPhone?: string | null;
     @sField({ apiName: 'AssistantPhone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Asst. Phone', externalId: false })
-    public assistantPhone: string;
+    public assistantPhone?: string | null;
     @sField({ apiName: 'ReportsTo', createable: false, updateable: false, required: false, reference: () => { return Contact }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Reports To ID', externalId: false })
-    public reportsTo: Contact;
+    public reportsTo?: Contact;
     @sField({ apiName: 'ReportsToId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Reports To ID', externalId: false })
-    public reportsToId: string;
+    public reportsToId?: string | null;
     @sField({ apiName: 'Email', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.EMAIL, salesforceLabel: 'Email', externalId: false })
-    public email: string;
+    public email?: string | null;
     @sField({ apiName: 'Title', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Title', externalId: false })
-    public title: string;
+    public title?: string | null;
     @sField({ apiName: 'Department', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Department', externalId: false })
-    public department: string;
+    public department?: string | null;
     @sField({ apiName: 'AssistantName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Assistant\'s Name', externalId: false })
-    public assistantName: string;
+    public assistantName?: string | null;
     @sField({ apiName: 'LeadSource', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Lead Source', externalId: false })
-    public leadSource: PicklistConst<typeof Contact.PICKLIST.leadSource>;
+    public leadSource?: PicklistConst<typeof Contact.PICKLIST.leadSource>;
     @sField({ apiName: 'Birthdate', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Birthdate', externalId: false })
-    public birthdate: CalendarDate;
+    public birthdate?: CalendarDate | null;
     @sField({ apiName: 'Description', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Contact Description', externalId: false })
-    public description: string;
+    public description?: string | null;
     @sField({ apiName: 'Owner', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Owner ID', externalId: false })
-    public owner: User;
+    public owner?: User;
     @sField({ apiName: 'OwnerId', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Owner ID', externalId: false })
-    public ownerId: string;
+    public ownerId?: string | null;
     @sField({ apiName: 'CreatedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Created Date', externalId: false })
-    public readonly createdDate: Date;
+    public readonly createdDate?: Date | null;
     @sField({ apiName: 'CreatedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public createdBy: User;
+    public createdBy?: User;
     @sField({ apiName: 'CreatedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public readonly createdById: string;
+    public readonly createdById?: string | null;
     @sField({ apiName: 'LastModifiedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Modified Date', externalId: false })
-    public readonly lastModifiedDate: Date;
+    public readonly lastModifiedDate?: Date | null;
     @sField({ apiName: 'LastModifiedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public lastModifiedBy: User;
+    public lastModifiedBy?: User;
     @sField({ apiName: 'LastModifiedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public readonly lastModifiedById: string;
+    public readonly lastModifiedById?: string | null;
     @sField({ apiName: 'SystemModstamp', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'System Modstamp', externalId: false })
-    public readonly systemModstamp: Date;
+    public readonly systemModstamp?: Date | null;
     @sField({ apiName: 'LastActivityDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATE, salesforceLabel: 'Last Activity', externalId: false })
-    public readonly lastActivityDate: CalendarDate;
+    public readonly lastActivityDate?: CalendarDate | null;
     @sField({ apiName: 'LastCURequestDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Stay-in-Touch Request Date', externalId: false })
-    public readonly lastCuRequestDate: Date;
+    public readonly lastCuRequestDate?: Date | null;
     @sField({ apiName: 'LastCUUpdateDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Stay-in-Touch Save Date', externalId: false })
-    public readonly lastCuUpdateDate: Date;
+    public readonly lastCuUpdateDate?: Date | null;
     @sField({ apiName: 'LastViewedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Viewed Date', externalId: false })
-    public readonly lastViewedDate: Date;
+    public readonly lastViewedDate?: Date | null;
     @sField({ apiName: 'LastReferencedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Referenced Date', externalId: false })
-    public readonly lastReferencedDate: Date;
+    public readonly lastReferencedDate?: Date | null;
     @sField({ apiName: 'EmailBouncedReason', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Email Bounced Reason', externalId: false })
-    public emailBouncedReason: string;
+    public emailBouncedReason?: string | null;
     @sField({ apiName: 'EmailBouncedDate', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Email Bounced Date', externalId: false })
-    public emailBouncedDate: Date;
+    public emailBouncedDate?: Date | null;
     @sField({ apiName: 'IsEmailBounced', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Is Email Bounced', externalId: false })
-    public readonly isEmailBounced: boolean;
+    public readonly isEmailBounced?: boolean | null;
     @sField({ apiName: 'PhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Photo URL', externalId: false })
-    public readonly photoUrl: string;
+    public readonly photoUrl?: string | null;
     @sField({ apiName: 'Jigsaw', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Data.com Key', externalId: false })
-    public jigsaw: string;
+    public jigsaw?: string | null;
     @sField({ apiName: 'JigsawContactId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Jigsaw Contact ID', externalId: false })
-    public readonly jigsawContactId: string;
+    public readonly jigsawContactId?: string | null;
     @sField({ apiName: 'CleanStatus', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Clean Status', externalId: false })
-    public cleanStatus: PicklistConst<typeof Contact.PICKLIST.cleanStatus>;
+    public cleanStatus?: PicklistConst<typeof Contact.PICKLIST.cleanStatus>;
     @sField({ apiName: 'IndividualId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Individual ID', externalId: false })
-    public individualId: string;
+    public individualId?: string | null;
     @sField({ apiName: 'Level__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Level', externalId: false })
-    public level: PicklistConst<typeof Contact.PICKLIST.level>;
+    public level?: PicklistConst<typeof Contact.PICKLIST.level>;
     @sField({ apiName: 'Languages__c', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Languages', externalId: false })
-    public languages: string;
+    public languages?: string | null;
 
     constructor(fields?: ContactFields, restInstance?: Rest) {
         super('Contact', restInstance);
@@ -602,7 +602,7 @@ export class Contact extends RestObject {
 
     public static API_NAME: 'Contact' = 'Contact';
     public readonly _TYPE_: 'Contact' = 'Contact';
-    public static __UUID: symbol = Symbol();
+    public static __UUID = Symbol();
     private static _fields: { [P in keyof FieldProps<Contact>]: SFieldProperties; };
 
     public static get FIELDS() {
@@ -611,7 +611,7 @@ export class Contact extends RestObject {
 
     public static async retrieve(qryParam: ((fields: FieldResolver<Contact>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<Contact[]> {
 
-        let qry = typeof qryParam === 'function' ? buildQuery(Contact, qryParam) : qryParam;
+        const qry = typeof qryParam === 'function' ? buildQuery(Contact, qryParam) : qryParam;
         return await RestObject.query<Contact>(Contact, qry, opts);
 
     }
@@ -686,351 +686,359 @@ export type UserFields = Partial<FieldProps<User>>;
  */
 export class User extends RestObject {
     @sField({ apiName: 'Id', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ID, salesforceLabel: 'User ID', externalId: false })
-    public readonly id: string;
+    public readonly id?: string | null;
     @sField({ apiName: 'Username', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Username', externalId: false })
-    public username: string;
+    public username?: string | null;
     @sField({ apiName: 'LastName', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Last Name', externalId: false })
-    public lastName: string;
+    public lastName?: string | null;
     @sField({ apiName: 'FirstName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'First Name', externalId: false })
-    public firstName: string;
+    public firstName?: string | null;
     @sField({ apiName: 'Name', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Full Name', externalId: false })
-    public readonly name: string;
+    public readonly name?: string | null;
     @sField({ apiName: 'CompanyName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Company Name', externalId: false })
-    public companyName: string;
+    public companyName?: string | null;
     @sField({ apiName: 'Division', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Division', externalId: false })
-    public division: string;
+    public division?: string | null;
     @sField({ apiName: 'Department', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Department', externalId: false })
-    public department: string;
+    public department?: string | null;
     @sField({ apiName: 'Title', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Title', externalId: false })
-    public title: string;
+    public title?: string | null;
     @sField({ apiName: 'Street', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Street', externalId: false })
-    public street: string;
+    public street?: string | null;
     @sField({ apiName: 'City', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'City', externalId: false })
-    public city: string;
+    public city?: string | null;
     @sField({ apiName: 'State', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'State/Province', externalId: false })
-    public state: string;
+    public state?: string | null;
     @sField({ apiName: 'PostalCode', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Zip/Postal Code', externalId: false })
-    public postalCode: string;
+    public postalCode?: string | null;
     @sField({ apiName: 'Country', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Country', externalId: false })
-    public country: string;
+    public country?: string | null;
     @sField({ apiName: 'Latitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Latitude', externalId: false })
-    public latitude: number;
+    public latitude?: number | null;
     @sField({ apiName: 'Longitude', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'Longitude', externalId: false })
-    public longitude: number;
+    public longitude?: number | null;
     @sField({ apiName: 'GeocodeAccuracy', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Geocode Accuracy', externalId: false })
-    public geocodeAccuracy: PicklistConst<typeof User.PICKLIST.geocodeAccuracy>;
+    public geocodeAccuracy?: PicklistConst<typeof User.PICKLIST.geocodeAccuracy>;
     @sField({ apiName: 'Address', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ADDRESS, salesforceLabel: 'Address', externalId: false })
-    public readonly address: string;
+    public readonly address?: string | null;
     @sField({ apiName: 'Email', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.EMAIL, salesforceLabel: 'Email', externalId: false })
-    public email: string;
+    public email?: string | null;
     @sField({ apiName: 'EmailPreferencesAutoBcc', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'AutoBcc', externalId: false })
-    public emailPreferencesAutoBcc: boolean;
+    public emailPreferencesAutoBcc?: boolean | null;
     @sField({ apiName: 'EmailPreferencesAutoBccStayInTouch', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'AutoBccStayInTouch', externalId: false })
-    public emailPreferencesAutoBccStayInTouch: boolean;
+    public emailPreferencesAutoBccStayInTouch?: boolean | null;
     @sField({ apiName: 'EmailPreferencesStayInTouchReminder', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'StayInTouchReminder', externalId: false })
-    public emailPreferencesStayInTouchReminder: boolean;
+    public emailPreferencesStayInTouchReminder?: boolean | null;
     @sField({ apiName: 'SenderEmail', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.EMAIL, salesforceLabel: 'Email Sender Address', externalId: false })
-    public senderEmail: string;
+    public senderEmail?: string | null;
     @sField({ apiName: 'SenderName', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Email Sender Name', externalId: false })
-    public senderName: string;
+    public senderName?: string | null;
     @sField({ apiName: 'Signature', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Email Signature', externalId: false })
-    public signature: string;
+    public signature?: string | null;
     @sField({ apiName: 'StayInTouchSubject', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Stay-in-Touch Email Subject', externalId: false })
-    public stayInTouchSubject: string;
+    public stayInTouchSubject?: string | null;
     @sField({ apiName: 'StayInTouchSignature', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Stay-in-Touch Email Signature', externalId: false })
-    public stayInTouchSignature: string;
+    public stayInTouchSignature?: string | null;
     @sField({ apiName: 'StayInTouchNote', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Stay-in-Touch Email Note', externalId: false })
-    public stayInTouchNote: string;
+    public stayInTouchNote?: string | null;
     @sField({ apiName: 'Phone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Phone', externalId: false })
-    public phone: string;
+    public phone?: string | null;
     @sField({ apiName: 'Fax', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Fax', externalId: false })
-    public fax: string;
+    public fax?: string | null;
     @sField({ apiName: 'MobilePhone', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Mobile', externalId: false })
-    public mobilePhone: string;
+    public mobilePhone?: string | null;
     @sField({ apiName: 'Alias', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Alias', externalId: false })
-    public alias: string;
+    public alias?: string | null;
     @sField({ apiName: 'CommunityNickname', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Nickname', externalId: false })
-    public communityNickname: string;
+    public communityNickname?: string | null;
     @sField({ apiName: 'BadgeText', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'User Photo badge text overlay', externalId: false })
-    public readonly badgeText: string;
+    public readonly badgeText?: string | null;
     @sField({ apiName: 'IsActive', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Active', externalId: false })
-    public isActive: boolean;
+    public isActive?: boolean | null;
     @sField({ apiName: 'TimeZoneSidKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Time Zone', externalId: false })
-    public timeZoneSidKey: PicklistConst<typeof User.PICKLIST.timeZoneSidKey>;
+    public timeZoneSidKey?: PicklistConst<typeof User.PICKLIST.timeZoneSidKey>;
     @sField({ apiName: 'UserRoleId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Role ID', externalId: false })
-    public userRoleId: string;
+    public userRoleId?: string | null;
     @sField({ apiName: 'LocaleSidKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Locale', externalId: false })
-    public localeSidKey: PicklistConst<typeof User.PICKLIST.localeSidKey>;
+    public localeSidKey?: PicklistConst<typeof User.PICKLIST.localeSidKey>;
     @sField({ apiName: 'ReceivesInfoEmails', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Info Emails', externalId: false })
-    public receivesInfoEmails: boolean;
+    public receivesInfoEmails?: boolean | null;
     @sField({ apiName: 'ReceivesAdminInfoEmails', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Admin Info Emails', externalId: false })
-    public receivesAdminInfoEmails: boolean;
+    public receivesAdminInfoEmails?: boolean | null;
     @sField({ apiName: 'EmailEncodingKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Email Encoding', externalId: false })
-    public emailEncodingKey: PicklistConst<typeof User.PICKLIST.emailEncodingKey>;
+    public emailEncodingKey?: PicklistConst<typeof User.PICKLIST.emailEncodingKey>;
     @sField({ apiName: 'ProfileId', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Profile ID', externalId: false })
-    public profileId: string;
+    public profileId?: string | null;
     @sField({ apiName: 'UserType', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'User Type', externalId: false })
-    public readonly userType: PicklistConst<typeof User.PICKLIST.userType>;
+    public readonly userType?: PicklistConst<typeof User.PICKLIST.userType>;
     @sField({ apiName: 'LanguageLocaleKey', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Language', externalId: false })
-    public languageLocaleKey: PicklistConst<typeof User.PICKLIST.languageLocaleKey>;
+    public languageLocaleKey?: PicklistConst<typeof User.PICKLIST.languageLocaleKey>;
     @sField({ apiName: 'EmployeeNumber', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Employee Number', externalId: false })
-    public employeeNumber: string;
+    public employeeNumber?: string | null;
     @sField({ apiName: 'DelegatedApproverId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Delegated Approver ID', externalId: false })
-    public delegatedApproverId: string;
+    public delegatedApproverId?: string | null;
     @sField({ apiName: 'Manager', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Manager ID', externalId: false })
-    public manager: User;
+    public manager?: User;
     @sField({ apiName: 'ManagerId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Manager ID', externalId: false })
-    public managerId: string;
+    public managerId?: string | null;
     @sField({ apiName: 'LastLoginDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Login', externalId: false })
-    public readonly lastLoginDate: Date;
+    public readonly lastLoginDate?: Date | null;
     @sField({ apiName: 'LastPasswordChangeDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Password Change or Reset', externalId: false })
-    public readonly lastPasswordChangeDate: Date;
+    public readonly lastPasswordChangeDate?: Date | null;
     @sField({ apiName: 'CreatedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Created Date', externalId: false })
-    public readonly createdDate: Date;
+    public readonly createdDate?: Date | null;
     @sField({ apiName: 'CreatedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public createdBy: User;
+    public createdBy?: User;
     @sField({ apiName: 'CreatedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public readonly createdById: string;
+    public readonly createdById?: string | null;
     @sField({ apiName: 'LastModifiedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Modified Date', externalId: false })
-    public readonly lastModifiedDate: Date;
+    public readonly lastModifiedDate?: Date | null;
     @sField({ apiName: 'LastModifiedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public lastModifiedBy: User;
+    public lastModifiedBy?: User;
     @sField({ apiName: 'LastModifiedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public readonly lastModifiedById: string;
+    public readonly lastModifiedById?: string | null;
     @sField({ apiName: 'SystemModstamp', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'System Modstamp', externalId: false })
-    public readonly systemModstamp: Date;
+    public readonly systemModstamp?: Date | null;
+    @sField({ apiName: 'NumberOfFailedLogins', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.INT, salesforceLabel: 'Failed Login Attempts', externalId: false })
+    public readonly numberOfFailedLogins?: number | null;
     @sField({ apiName: 'OfflineTrialExpirationDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Offline Edition Trial Expiration Date', externalId: false })
-    public readonly offlineTrialExpirationDate: Date;
+    public readonly offlineTrialExpirationDate?: Date | null;
     @sField({ apiName: 'OfflinePdaTrialExpirationDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Sales Anywhere Trial Expiration Date', externalId: false })
-    public readonly offlinePdaTrialExpirationDate: Date;
+    public readonly offlinePdaTrialExpirationDate?: Date | null;
     @sField({ apiName: 'UserPermissionsMarketingUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Marketing User', externalId: false })
-    public userPermissionsMarketingUser: boolean;
+    public userPermissionsMarketingUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsOfflineUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Offline User', externalId: false })
-    public userPermissionsOfflineUser: boolean;
+    public userPermissionsOfflineUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsCallCenterAutoLogin', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Auto-login To Call Center', externalId: false })
-    public userPermissionsCallCenterAutoLogin: boolean;
-    @sField({ apiName: 'UserPermissionsMobileUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Apex Mobile User', externalId: false })
-    public userPermissionsMobileUser: boolean;
+    public userPermissionsCallCenterAutoLogin?: boolean | null;
     @sField({ apiName: 'UserPermissionsSFContentUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Salesforce CRM Content User', externalId: false })
-    public userPermissionsSfContentUser: boolean;
+    public userPermissionsSfContentUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsKnowledgeUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Knowledge User', externalId: false })
-    public userPermissionsKnowledgeUser: boolean;
+    public userPermissionsKnowledgeUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsInteractionUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Flow User', externalId: false })
-    public userPermissionsInteractionUser: boolean;
+    public userPermissionsInteractionUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsSupportUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Service Cloud User', externalId: false })
-    public userPermissionsSupportUser: boolean;
+    public userPermissionsSupportUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsJigsawProspectingUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Data.com User', externalId: false })
-    public userPermissionsJigsawProspectingUser: boolean;
+    public userPermissionsJigsawProspectingUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsSiteforceContributorUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Site.com Contributor User', externalId: false })
-    public userPermissionsSiteforceContributorUser: boolean;
+    public userPermissionsSiteforceContributorUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsSiteforcePublisherUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Site.com Publisher User', externalId: false })
-    public userPermissionsSiteforcePublisherUser: boolean;
+    public userPermissionsSiteforcePublisherUser?: boolean | null;
     @sField({ apiName: 'UserPermissionsWorkDotComUserFeature', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'WDC User', externalId: false })
-    public userPermissionsWorkDotComUserFeature: boolean;
+    public userPermissionsWorkDotComUserFeature?: boolean | null;
     @sField({ apiName: 'ForecastEnabled', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Allow Forecasting', externalId: false })
-    public forecastEnabled: boolean;
+    public forecastEnabled?: boolean | null;
     @sField({ apiName: 'UserPreferencesActivityRemindersPopup', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ActivityRemindersPopup', externalId: false })
-    public userPreferencesActivityRemindersPopup: boolean;
+    public userPreferencesActivityRemindersPopup?: boolean | null;
     @sField({ apiName: 'UserPreferencesEventRemindersCheckboxDefault', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'EventRemindersCheckboxDefault', externalId: false })
-    public userPreferencesEventRemindersCheckboxDefault: boolean;
+    public userPreferencesEventRemindersCheckboxDefault?: boolean | null;
     @sField({ apiName: 'UserPreferencesTaskRemindersCheckboxDefault', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'TaskRemindersCheckboxDefault', externalId: false })
-    public userPreferencesTaskRemindersCheckboxDefault: boolean;
+    public userPreferencesTaskRemindersCheckboxDefault?: boolean | null;
     @sField({ apiName: 'UserPreferencesReminderSoundOff', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ReminderSoundOff', externalId: false })
-    public userPreferencesReminderSoundOff: boolean;
+    public userPreferencesReminderSoundOff?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableAllFeedsEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableAllFeedsEmail', externalId: false })
-    public userPreferencesDisableAllFeedsEmail: boolean;
+    public userPreferencesDisableAllFeedsEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableFollowersEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableFollowersEmail', externalId: false })
-    public userPreferencesDisableFollowersEmail: boolean;
+    public userPreferencesDisableFollowersEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableProfilePostEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableProfilePostEmail', externalId: false })
-    public userPreferencesDisableProfilePostEmail: boolean;
+    public userPreferencesDisableProfilePostEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableChangeCommentEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableChangeCommentEmail', externalId: false })
-    public userPreferencesDisableChangeCommentEmail: boolean;
+    public userPreferencesDisableChangeCommentEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableLaterCommentEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableLaterCommentEmail', externalId: false })
-    public userPreferencesDisableLaterCommentEmail: boolean;
+    public userPreferencesDisableLaterCommentEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisProfPostCommentEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisProfPostCommentEmail', externalId: false })
-    public userPreferencesDisProfPostCommentEmail: boolean;
+    public userPreferencesDisProfPostCommentEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesContentNoEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ContentNoEmail', externalId: false })
-    public userPreferencesContentNoEmail: boolean;
+    public userPreferencesContentNoEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesContentEmailAsAndWhen', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ContentEmailAsAndWhen', externalId: false })
-    public userPreferencesContentEmailAsAndWhen: boolean;
+    public userPreferencesContentEmailAsAndWhen?: boolean | null;
     @sField({ apiName: 'UserPreferencesApexPagesDeveloperMode', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ApexPagesDeveloperMode', externalId: false })
-    public userPreferencesApexPagesDeveloperMode: boolean;
+    public userPreferencesApexPagesDeveloperMode?: boolean | null;
+    @sField({ apiName: 'UserPreferencesReceiveNoNotificationsAsApprover', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ReceiveNoNotificationsAsApprover', externalId: false })
+    public userPreferencesReceiveNoNotificationsAsApprover?: boolean | null;
+    @sField({ apiName: 'UserPreferencesReceiveNotificationsAsDelegatedApprover', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ReceiveNotificationsAsDelegatedApprover', externalId: false })
+    public userPreferencesReceiveNotificationsAsDelegatedApprover?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideCSNGetChatterMobileTask', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideCSNGetChatterMobileTask', externalId: false })
-    public userPreferencesHideCsnGetChatterMobileTask: boolean;
+    public userPreferencesHideCsnGetChatterMobileTask?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableMentionsPostEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableMentionsPostEmail', externalId: false })
-    public userPreferencesDisableMentionsPostEmail: boolean;
+    public userPreferencesDisableMentionsPostEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisMentionsCommentEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisMentionsCommentEmail', externalId: false })
-    public userPreferencesDisMentionsCommentEmail: boolean;
+    public userPreferencesDisMentionsCommentEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideCSNDesktopTask', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideCSNDesktopTask', externalId: false })
-    public userPreferencesHideCsnDesktopTask: boolean;
+    public userPreferencesHideCsnDesktopTask?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideChatterOnboardingSplash', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideChatterOnboardingSplash', externalId: false })
-    public userPreferencesHideChatterOnboardingSplash: boolean;
+    public userPreferencesHideChatterOnboardingSplash?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideSecondChatterOnboardingSplash', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideSecondChatterOnboardingSplash', externalId: false })
-    public userPreferencesHideSecondChatterOnboardingSplash: boolean;
+    public userPreferencesHideSecondChatterOnboardingSplash?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisCommentAfterLikeEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisCommentAfterLikeEmail', externalId: false })
-    public userPreferencesDisCommentAfterLikeEmail: boolean;
+    public userPreferencesDisCommentAfterLikeEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableLikeEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableLikeEmail', externalId: false })
-    public userPreferencesDisableLikeEmail: boolean;
+    public userPreferencesDisableLikeEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesSortFeedByComment', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'SortFeedByComment', externalId: false })
-    public userPreferencesSortFeedByComment: boolean;
+    public userPreferencesSortFeedByComment?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableMessageEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableMessageEmail', externalId: false })
-    public userPreferencesDisableMessageEmail: boolean;
+    public userPreferencesDisableMessageEmail?: boolean | null;
+    @sField({ apiName: 'UserPreferencesHideLegacyRetirementModal', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideLegacyRetirementModal', externalId: false })
+    public userPreferencesHideLegacyRetirementModal?: boolean | null;
     @sField({ apiName: 'UserPreferencesJigsawListUser', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'JigsawListUser', externalId: false })
-    public userPreferencesJigsawListUser: boolean;
+    public userPreferencesJigsawListUser?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableBookmarkEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableBookmarkEmail', externalId: false })
-    public userPreferencesDisableBookmarkEmail: boolean;
+    public userPreferencesDisableBookmarkEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableSharePostEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableSharePostEmail', externalId: false })
-    public userPreferencesDisableSharePostEmail: boolean;
+    public userPreferencesDisableSharePostEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesEnableAutoSubForFeeds', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'EnableAutoSubForFeeds', externalId: false })
-    public userPreferencesEnableAutoSubForFeeds: boolean;
+    public userPreferencesEnableAutoSubForFeeds?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableFileShareNotificationsForApi', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableFileShareNotificationsForApi', externalId: false })
-    public userPreferencesDisableFileShareNotificationsForApi: boolean;
+    public userPreferencesDisableFileShareNotificationsForApi?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowTitleToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowTitleToExternalUsers', externalId: false })
-    public userPreferencesShowTitleToExternalUsers: boolean;
+    public userPreferencesShowTitleToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowManagerToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowManagerToExternalUsers', externalId: false })
-    public userPreferencesShowManagerToExternalUsers: boolean;
+    public userPreferencesShowManagerToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowEmailToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowEmailToExternalUsers', externalId: false })
-    public userPreferencesShowEmailToExternalUsers: boolean;
+    public userPreferencesShowEmailToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowWorkPhoneToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowWorkPhoneToExternalUsers', externalId: false })
-    public userPreferencesShowWorkPhoneToExternalUsers: boolean;
+    public userPreferencesShowWorkPhoneToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowMobilePhoneToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowMobilePhoneToExternalUsers', externalId: false })
-    public userPreferencesShowMobilePhoneToExternalUsers: boolean;
+    public userPreferencesShowMobilePhoneToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowFaxToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowFaxToExternalUsers', externalId: false })
-    public userPreferencesShowFaxToExternalUsers: boolean;
+    public userPreferencesShowFaxToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowStreetAddressToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowStreetAddressToExternalUsers', externalId: false })
-    public userPreferencesShowStreetAddressToExternalUsers: boolean;
+    public userPreferencesShowStreetAddressToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowCityToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowCityToExternalUsers', externalId: false })
-    public userPreferencesShowCityToExternalUsers: boolean;
+    public userPreferencesShowCityToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowStateToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowStateToExternalUsers', externalId: false })
-    public userPreferencesShowStateToExternalUsers: boolean;
+    public userPreferencesShowStateToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowPostalCodeToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowPostalCodeToExternalUsers', externalId: false })
-    public userPreferencesShowPostalCodeToExternalUsers: boolean;
+    public userPreferencesShowPostalCodeToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowCountryToExternalUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowCountryToExternalUsers', externalId: false })
-    public userPreferencesShowCountryToExternalUsers: boolean;
+    public userPreferencesShowCountryToExternalUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowProfilePicToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowProfilePicToGuestUsers', externalId: false })
-    public userPreferencesShowProfilePicToGuestUsers: boolean;
+    public userPreferencesShowProfilePicToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowTitleToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowTitleToGuestUsers', externalId: false })
-    public userPreferencesShowTitleToGuestUsers: boolean;
+    public userPreferencesShowTitleToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowCityToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowCityToGuestUsers', externalId: false })
-    public userPreferencesShowCityToGuestUsers: boolean;
+    public userPreferencesShowCityToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowStateToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowStateToGuestUsers', externalId: false })
-    public userPreferencesShowStateToGuestUsers: boolean;
+    public userPreferencesShowStateToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowPostalCodeToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowPostalCodeToGuestUsers', externalId: false })
-    public userPreferencesShowPostalCodeToGuestUsers: boolean;
+    public userPreferencesShowPostalCodeToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowCountryToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowCountryToGuestUsers', externalId: false })
-    public userPreferencesShowCountryToGuestUsers: boolean;
+    public userPreferencesShowCountryToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableFeedbackEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableFeedbackEmail', externalId: false })
-    public userPreferencesDisableFeedbackEmail: boolean;
+    public userPreferencesDisableFeedbackEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableWorkEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableWorkEmail', externalId: false })
-    public userPreferencesDisableWorkEmail: boolean;
-    @sField({ apiName: 'UserPreferencesPipelineViewHideHelpPopover', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PipelineViewHideHelpPopover', externalId: false })
-    public userPreferencesPipelineViewHideHelpPopover: boolean;
+    public userPreferencesDisableWorkEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideS1BrowserUI', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideS1BrowserUI', externalId: false })
-    public userPreferencesHideS1BrowserUi: boolean;
+    public userPreferencesHideS1BrowserUi?: boolean | null;
     @sField({ apiName: 'UserPreferencesDisableEndorsementEmail', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'DisableEndorsementEmail', externalId: false })
-    public userPreferencesDisableEndorsementEmail: boolean;
+    public userPreferencesDisableEndorsementEmail?: boolean | null;
     @sField({ apiName: 'UserPreferencesPathAssistantCollapsed', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PathAssistantCollapsed', externalId: false })
-    public userPreferencesPathAssistantCollapsed: boolean;
+    public userPreferencesPathAssistantCollapsed?: boolean | null;
     @sField({ apiName: 'UserPreferencesCacheDiagnostics', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'CacheDiagnostics', externalId: false })
-    public userPreferencesCacheDiagnostics: boolean;
+    public userPreferencesCacheDiagnostics?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowEmailToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowEmailToGuestUsers', externalId: false })
-    public userPreferencesShowEmailToGuestUsers: boolean;
+    public userPreferencesShowEmailToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowManagerToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowManagerToGuestUsers', externalId: false })
-    public userPreferencesShowManagerToGuestUsers: boolean;
+    public userPreferencesShowManagerToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowWorkPhoneToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowWorkPhoneToGuestUsers', externalId: false })
-    public userPreferencesShowWorkPhoneToGuestUsers: boolean;
+    public userPreferencesShowWorkPhoneToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowMobilePhoneToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowMobilePhoneToGuestUsers', externalId: false })
-    public userPreferencesShowMobilePhoneToGuestUsers: boolean;
+    public userPreferencesShowMobilePhoneToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowFaxToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowFaxToGuestUsers', externalId: false })
-    public userPreferencesShowFaxToGuestUsers: boolean;
+    public userPreferencesShowFaxToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesShowStreetAddressToGuestUsers', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ShowStreetAddressToGuestUsers', externalId: false })
-    public userPreferencesShowStreetAddressToGuestUsers: boolean;
+    public userPreferencesShowStreetAddressToGuestUsers?: boolean | null;
     @sField({ apiName: 'UserPreferencesLightningExperiencePreferred', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'LightningExperiencePreferred', externalId: false })
-    public userPreferencesLightningExperiencePreferred: boolean;
+    public userPreferencesLightningExperiencePreferred?: boolean | null;
     @sField({ apiName: 'UserPreferencesPreviewLightning', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PreviewLightning', externalId: false })
-    public userPreferencesPreviewLightning: boolean;
+    public userPreferencesPreviewLightning?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideEndUserOnboardingAssistantModal', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideEndUserOnboardingAssistantModal', externalId: false })
-    public userPreferencesHideEndUserOnboardingAssistantModal: boolean;
+    public userPreferencesHideEndUserOnboardingAssistantModal?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideLightningMigrationModal', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideLightningMigrationModal', externalId: false })
-    public userPreferencesHideLightningMigrationModal: boolean;
+    public userPreferencesHideLightningMigrationModal?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideSfxWelcomeMat', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideSfxWelcomeMat', externalId: false })
-    public userPreferencesHideSfxWelcomeMat: boolean;
+    public userPreferencesHideSfxWelcomeMat?: boolean | null;
     @sField({ apiName: 'UserPreferencesHideBiggerPhotoCallout', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HideBiggerPhotoCallout', externalId: false })
-    public userPreferencesHideBiggerPhotoCallout: boolean;
+    public userPreferencesHideBiggerPhotoCallout?: boolean | null;
     @sField({ apiName: 'UserPreferencesGlobalNavBarWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'GlobalNavBarWTShown', externalId: false })
-    public userPreferencesGlobalNavBarWtShown: boolean;
+    public userPreferencesGlobalNavBarWtShown?: boolean | null;
     @sField({ apiName: 'UserPreferencesGlobalNavGridMenuWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'GlobalNavGridMenuWTShown', externalId: false })
-    public userPreferencesGlobalNavGridMenuWtShown: boolean;
+    public userPreferencesGlobalNavGridMenuWtShown?: boolean | null;
     @sField({ apiName: 'UserPreferencesCreateLEXAppsWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'CreateLEXAppsWTShown', externalId: false })
-    public userPreferencesCreateLexAppsWtShown: boolean;
+    public userPreferencesCreateLexAppsWtShown?: boolean | null;
     @sField({ apiName: 'UserPreferencesFavoritesWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'FavoritesWTShown', externalId: false })
-    public userPreferencesFavoritesWtShown: boolean;
+    public userPreferencesFavoritesWtShown?: boolean | null;
     @sField({ apiName: 'UserPreferencesRecordHomeSectionCollapseWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'RecordHomeSectionCollapseWTShown', externalId: false })
-    public userPreferencesRecordHomeSectionCollapseWtShown: boolean;
+    public userPreferencesRecordHomeSectionCollapseWtShown?: boolean | null;
     @sField({ apiName: 'UserPreferencesRecordHomeReservedWTShown', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'RecordHomeReservedWTShown', externalId: false })
-    public userPreferencesRecordHomeReservedWtShown: boolean;
+    public userPreferencesRecordHomeReservedWtShown?: boolean | null;
     @sField({ apiName: 'UserPreferencesFavoritesShowTopFavorites', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'FavoritesShowTopFavorites', externalId: false })
-    public userPreferencesFavoritesShowTopFavorites: boolean;
+    public userPreferencesFavoritesShowTopFavorites?: boolean | null;
     @sField({ apiName: 'UserPreferencesExcludeMailAppAttachments', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'ExcludeMailAppAttachments', externalId: false })
-    public userPreferencesExcludeMailAppAttachments: boolean;
+    public userPreferencesExcludeMailAppAttachments?: boolean | null;
     @sField({ apiName: 'UserPreferencesSuppressTaskSFXReminders', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'SuppressTaskSFXReminders', externalId: false })
-    public userPreferencesSuppressTaskSfxReminders: boolean;
+    public userPreferencesSuppressTaskSfxReminders?: boolean | null;
     @sField({ apiName: 'UserPreferencesSuppressEventSFXReminders', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'SuppressEventSFXReminders', externalId: false })
-    public userPreferencesSuppressEventSfxReminders: boolean;
+    public userPreferencesSuppressEventSfxReminders?: boolean | null;
     @sField({ apiName: 'UserPreferencesPreviewCustomTheme', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'PreviewCustomTheme', externalId: false })
-    public userPreferencesPreviewCustomTheme: boolean;
+    public userPreferencesPreviewCustomTheme?: boolean | null;
     @sField({ apiName: 'UserPreferencesHasCelebrationBadge', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'HasCelebrationBadge', externalId: false })
-    public userPreferencesHasCelebrationBadge: boolean;
+    public userPreferencesHasCelebrationBadge?: boolean | null;
     @sField({ apiName: 'UserPreferencesUserDebugModePref', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'UserDebugModePref', externalId: false })
-    public userPreferencesUserDebugModePref: boolean;
+    public userPreferencesUserDebugModePref?: boolean | null;
+    @sField({ apiName: 'UserPreferencesSRHOverrideActivities', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'SRHOverrideActivities', externalId: false })
+    public userPreferencesSrhOverrideActivities?: boolean | null;
     @sField({ apiName: 'UserPreferencesNewLightningReportRunPageEnabled', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'NewLightningReportRunPageEnabled', externalId: false })
-    public userPreferencesNewLightningReportRunPageEnabled: boolean;
+    public userPreferencesNewLightningReportRunPageEnabled?: boolean | null;
+    @sField({ apiName: 'UserPreferencesNativeEmailClient', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'NativeEmailClient', externalId: false })
+    public userPreferencesNativeEmailClient?: boolean | null;
     @sField({ apiName: 'Contact', createable: false, updateable: false, required: false, reference: () => { return Contact }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
-    public contact: Contact;
+    public contact?: Contact;
     @sField({ apiName: 'ContactId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Contact ID', externalId: false })
-    public contactId: string;
+    public contactId?: string | null;
     @sField({ apiName: 'Account', createable: false, updateable: false, required: false, reference: () => { return Account }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
-    public account: Account;
+    public account?: Account;
     @sField({ apiName: 'AccountId', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Account ID', externalId: false })
-    public readonly accountId: string;
+    public readonly accountId?: string | null;
     @sField({ apiName: 'CallCenterId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Call Center ID', externalId: false })
-    public callCenterId: string;
+    public callCenterId?: string | null;
     @sField({ apiName: 'Extension', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PHONE, salesforceLabel: 'Extension', externalId: false })
-    public extension: string;
+    public extension?: string | null;
     @sField({ apiName: 'FederationIdentifier', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'SAML Federation ID', externalId: false })
-    public federationIdentifier: string;
+    public federationIdentifier?: string | null;
     @sField({ apiName: 'AboutMe', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'About Me', externalId: false })
-    public aboutMe: string;
+    public aboutMe?: string | null;
     @sField({ apiName: 'FullPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Url for full-sized Photo', externalId: false })
-    public readonly fullPhotoUrl: string;
+    public readonly fullPhotoUrl?: string | null;
     @sField({ apiName: 'SmallPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Photo', externalId: false })
-    public readonly smallPhotoUrl: string;
+    public readonly smallPhotoUrl?: string | null;
     @sField({ apiName: 'IsExtIndicatorVisible', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Show external indicator', externalId: false })
-    public readonly isExtIndicatorVisible: boolean;
+    public readonly isExtIndicatorVisible?: boolean | null;
     @sField({ apiName: 'OutOfOfficeMessage', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Out of office message', externalId: false })
-    public readonly outOfOfficeMessage: string;
+    public readonly outOfOfficeMessage?: string | null;
     @sField({ apiName: 'MediumPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Url for medium profile photo', externalId: false })
-    public readonly mediumPhotoUrl: string;
+    public readonly mediumPhotoUrl?: string | null;
     @sField({ apiName: 'DigestFrequency', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Chatter Email Highlights Frequency', externalId: false })
-    public digestFrequency: PicklistConst<typeof User.PICKLIST.digestFrequency>;
+    public digestFrequency?: PicklistConst<typeof User.PICKLIST.digestFrequency>;
     @sField({ apiName: 'DefaultGroupNotificationFrequency', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Default Notification Frequency when Joining Groups', externalId: false })
-    public defaultGroupNotificationFrequency: PicklistConst<typeof User.PICKLIST.defaultGroupNotificationFrequency>;
+    public defaultGroupNotificationFrequency?: PicklistConst<typeof User.PICKLIST.defaultGroupNotificationFrequency>;
     @sField({ apiName: 'JigsawImportLimitOverride', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.INT, salesforceLabel: 'Data.com Monthly Addition Limit', externalId: false })
-    public jigsawImportLimitOverride: number;
+    public jigsawImportLimitOverride?: number | null;
     @sField({ apiName: 'LastViewedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Viewed Date', externalId: false })
-    public readonly lastViewedDate: Date;
+    public readonly lastViewedDate?: Date | null;
     @sField({ apiName: 'LastReferencedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Referenced Date', externalId: false })
-    public readonly lastReferencedDate: Date;
+    public readonly lastReferencedDate?: Date | null;
     @sField({ apiName: 'BannerPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Url for banner photo', externalId: false })
-    public readonly bannerPhotoUrl: string;
+    public readonly bannerPhotoUrl?: string | null;
     @sField({ apiName: 'SmallBannerPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Url for IOS banner photo', externalId: false })
-    public readonly smallBannerPhotoUrl: string;
+    public readonly smallBannerPhotoUrl?: string | null;
     @sField({ apiName: 'MediumBannerPhotoUrl', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.URL, salesforceLabel: 'Url for Android banner photo', externalId: false })
-    public readonly mediumBannerPhotoUrl: string;
+    public readonly mediumBannerPhotoUrl?: string | null;
     @sField({ apiName: 'IsProfilePhotoActive', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Has Profile Photo', externalId: false })
-    public readonly isProfilePhotoActive: boolean;
+    public readonly isProfilePhotoActive?: boolean | null;
     @sField({ apiName: 'IndividualId', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Individual ID', externalId: false })
-    public individualId: string;
+    public individualId?: string | null;
 
     constructor(fields?: UserFields, restInstance?: Rest) {
         super('User', restInstance);
@@ -1091,12 +1099,12 @@ export class User extends RestObject {
         this.lastModifiedBy = void 0;
         this.lastModifiedById = void 0;
         this.systemModstamp = void 0;
+        this.numberOfFailedLogins = void 0;
         this.offlineTrialExpirationDate = void 0;
         this.offlinePdaTrialExpirationDate = void 0;
         this.userPermissionsMarketingUser = void 0;
         this.userPermissionsOfflineUser = void 0;
         this.userPermissionsCallCenterAutoLogin = void 0;
-        this.userPermissionsMobileUser = void 0;
         this.userPermissionsSfContentUser = void 0;
         this.userPermissionsKnowledgeUser = void 0;
         this.userPermissionsInteractionUser = void 0;
@@ -1119,6 +1127,8 @@ export class User extends RestObject {
         this.userPreferencesContentNoEmail = void 0;
         this.userPreferencesContentEmailAsAndWhen = void 0;
         this.userPreferencesApexPagesDeveloperMode = void 0;
+        this.userPreferencesReceiveNoNotificationsAsApprover = void 0;
+        this.userPreferencesReceiveNotificationsAsDelegatedApprover = void 0;
         this.userPreferencesHideCsnGetChatterMobileTask = void 0;
         this.userPreferencesDisableMentionsPostEmail = void 0;
         this.userPreferencesDisMentionsCommentEmail = void 0;
@@ -1129,6 +1139,7 @@ export class User extends RestObject {
         this.userPreferencesDisableLikeEmail = void 0;
         this.userPreferencesSortFeedByComment = void 0;
         this.userPreferencesDisableMessageEmail = void 0;
+        this.userPreferencesHideLegacyRetirementModal = void 0;
         this.userPreferencesJigsawListUser = void 0;
         this.userPreferencesDisableBookmarkEmail = void 0;
         this.userPreferencesDisableSharePostEmail = void 0;
@@ -1153,7 +1164,6 @@ export class User extends RestObject {
         this.userPreferencesShowCountryToGuestUsers = void 0;
         this.userPreferencesDisableFeedbackEmail = void 0;
         this.userPreferencesDisableWorkEmail = void 0;
-        this.userPreferencesPipelineViewHideHelpPopover = void 0;
         this.userPreferencesHideS1BrowserUi = void 0;
         this.userPreferencesDisableEndorsementEmail = void 0;
         this.userPreferencesPathAssistantCollapsed = void 0;
@@ -1183,7 +1193,9 @@ export class User extends RestObject {
         this.userPreferencesPreviewCustomTheme = void 0;
         this.userPreferencesHasCelebrationBadge = void 0;
         this.userPreferencesUserDebugModePref = void 0;
+        this.userPreferencesSrhOverrideActivities = void 0;
         this.userPreferencesNewLightningReportRunPageEnabled = void 0;
+        this.userPreferencesNativeEmailClient = void 0;
         this.contact = void 0;
         this.contactId = void 0;
         this.account = void 0;
@@ -1214,7 +1226,7 @@ export class User extends RestObject {
 
     public static API_NAME: 'User' = 'User';
     public readonly _TYPE_: 'User' = 'User';
-    public static __UUID: symbol = Symbol();
+    public static __UUID = Symbol();
     private static _fields: { [P in keyof FieldProps<User>]: SFieldProperties; };
 
     public static get FIELDS() {
@@ -1223,7 +1235,7 @@ export class User extends RestObject {
 
     public static async retrieve(qryParam: ((fields: FieldResolver<User>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<User[]> {
 
-        let qry = typeof qryParam === 'function' ? buildQuery(User, qryParam) : qryParam;
+        const qry = typeof qryParam === 'function' ? buildQuery(User, qryParam) : qryParam;
         return await RestObject.query<User>(User, qry, opts);
 
     }
@@ -1251,9 +1263,9 @@ export class User extends RestObject {
             PACIFICCHATHAM: "Pacific/Chatham",
             PACIFICAUCKLAND: "Pacific/Auckland",
             PACIFICENDERBURY: "Pacific/Enderbury",
+            PACIFICFIJI: "Pacific/Fiji",
             PACIFICTONGATAPU: "Pacific/Tongatapu",
             ASIAKAMCHATKA: "Asia/Kamchatka",
-            PACIFICFIJI: "Pacific/Fiji",
             PACIFICNORFOLK: "Pacific/Norfolk",
             AUSTRALIALORD_HOWE: "Australia/Lord_Howe",
             AUSTRALIASYDNEY: "Australia/Sydney",
@@ -1289,65 +1301,66 @@ export class User extends RestObject {
             ASIATEHRAN: "Asia/Tehran",
             AFRICANAIROBI: "Africa/Nairobi",
             ASIABAGHDAD: "Asia/Baghdad",
-            ASIABEIRUT: "Asia/Beirut",
-            ASIAJERUSALEM: "Asia/Jerusalem",
             ASIAKUWAIT: "Asia/Kuwait",
             ASIARIYADH: "Asia/Riyadh",
-            EUROPEATHENS: "Europe/Athens",
-            EUROPEBUCHAREST: "Europe/Bucharest",
-            EUROPEHELSINKI: "Europe/Helsinki",
             EUROPEISTANBUL: "Europe/Istanbul",
             EUROPEMINSK: "Europe/Minsk",
             EUROPEMOSCOW: "Europe/Moscow",
             AFRICACAIRO: "Africa/Cairo",
             AFRICAJOHANNESBURG: "Africa/Johannesburg",
+            ASIABEIRUT: "Asia/Beirut",
+            ASIAJERUSALEM: "Asia/Jerusalem",
+            EUROPEATHENS: "Europe/Athens",
+            EUROPEBUCHAREST: "Europe/Bucharest",
+            EUROPEHELSINKI: "Europe/Helsinki",
+            AFRICAALGIERS: "Africa/Algiers",
+            AFRICACASABLANCA: "Africa/Casablanca",
             EUROPEAMSTERDAM: "Europe/Amsterdam",
             EUROPEBERLIN: "Europe/Berlin",
             EUROPEBRUSSELS: "Europe/Brussels",
             EUROPEPARIS: "Europe/Paris",
             EUROPEPRAGUE: "Europe/Prague",
             EUROPEROME: "Europe/Rome",
-            AFRICAALGIERS: "Africa/Algiers",
-            AFRICACASABLANCA: "Africa/Casablanca",
             EUROPEDUBLIN: "Europe/Dublin",
             EUROPELISBON: "Europe/Lisbon",
             EUROPELONDON: "Europe/London",
+            GMT: "GMT",
             AMERICASCORESBYSUND: "America/Scoresbysund",
             ATLANTICAZORES: "Atlantic/Azores",
-            GMT: "GMT",
             ATLANTICCAPE_VERDE: "Atlantic/Cape_Verde",
             ATLANTICSOUTH_GEORGIA: "Atlantic/South_Georgia",
-            AMERICAST_JOHNS: "America/St_Johns",
             AMERICAARGENTINABUENOS_AIRES: "America/Argentina/Buenos_Aires",
-            AMERICAHALIFAX: "America/Halifax",
             AMERICASANTIAGO: "America/Santiago",
             AMERICASAO_PAULO: "America/Sao_Paulo",
-            ATLANTICBERMUDA: "Atlantic/Bermuda",
+            AMERICAST_JOHNS: "America/St_Johns",
             AMERICACARACAS: "America/Caracas",
-            AMERICAINDIANAINDIANAPOLIS: "America/Indiana/Indianapolis",
-            AMERICANEW_YORK: "America/New_York",
+            AMERICAHALIFAX: "America/Halifax",
             AMERICAPUERTO_RICO: "America/Puerto_Rico",
+            ATLANTICBERMUDA: "Atlantic/Bermuda",
             AMERICABOGOTA: "America/Bogota",
-            AMERICACHICAGO: "America/Chicago",
+            AMERICAINDIANAINDIANAPOLIS: "America/Indiana/Indianapolis",
             AMERICALIMA: "America/Lima",
-            AMERICAMEXICO_CITY: "America/Mexico_City",
+            AMERICANEW_YORK: "America/New_York",
             AMERICAPANAMA: "America/Panama",
-            AMERICADENVER: "America/Denver",
+            AMERICACHICAGO: "America/Chicago",
             AMERICAEL_SALVADOR: "America/El_Salvador",
+            AMERICAMEXICO_CITY: "America/Mexico_City",
+            AMERICADENVER: "America/Denver",
             AMERICAMAZATLAN: "America/Mazatlan",
-            AMERICALOS_ANGELES: "America/Los_Angeles",
             AMERICAPHOENIX: "America/Phoenix",
+            AMERICALOS_ANGELES: "America/Los_Angeles",
             AMERICATIJUANA: "America/Tijuana",
-            AMERICAANCHORAGE: "America/Anchorage",
             PACIFICPITCAIRN: "Pacific/Pitcairn",
-            AMERICAADAK: "America/Adak",
+            AMERICAANCHORAGE: "America/Anchorage",
             PACIFICGAMBIER: "Pacific/Gambier",
             PACIFICMARQUESAS: "Pacific/Marquesas",
+            AMERICAADAK: "America/Adak",
             PACIFICHONOLULU: "Pacific/Honolulu",
             PACIFICNIUE: "Pacific/Niue",
             PACIFICPAGO_PAGO: "Pacific/Pago_Pago"
         },
         localeSidKey: {
+            AF_ZA: "af_ZA",
             SQ_AL: "sq_AL",
             AR_DZ: "ar_DZ",
             AR_BH: "ar_BH",
@@ -1369,6 +1382,7 @@ export class User extends RestObject {
             HY_AM: "hy_AM",
             AZ_AZ: "az_AZ",
             BN_BD: "bn_BD",
+            BN_IN: "bn_IN",
             EU_ES: "eu_ES",
             BE_BY: "be_BY",
             BS_BA: "bs_BA",
@@ -1463,6 +1477,7 @@ export class User extends RestObject {
             DE_LU: "de_LU",
             DE_CH: "de_CH",
             EL_GR: "el_GR",
+            GU_IN: "gu_IN",
             IW_IL: "iw_IL",
             HI_IN: "hi_IN",
             HU_HU: "hu_HU",
@@ -1472,6 +1487,7 @@ export class User extends RestObject {
             IT_IT: "it_IT",
             IT_CH: "it_CH",
             JA_JP: "ja_JP",
+            KN_IN: "kn_IN",
             KK_KZ: "kk_KZ",
             KM_KH: "km_KH",
             KO_KP: "ko_KP",
@@ -1485,7 +1501,10 @@ export class User extends RestObject {
             MK_MK: "mk_MK",
             MS_BN: "ms_BN",
             MS_MY: "ms_MY",
+            ML_IN: "ml_IN",
             MT_MT: "mt_MT",
+            MR_IN: "mr_IN",
+            SH_ME_USD: "sh_ME_USD",
             SH_ME: "sh_ME",
             NE_NP: "ne_NP",
             NO_NO: "no_NO",
@@ -1502,6 +1521,7 @@ export class User extends RestObject {
             RO_RO: "ro_RO",
             RM_CH: "rm_CH",
             RN_BI: "rn_BI",
+            RU_KZ: "ru_KZ",
             RU_RU: "ru_RU",
             SR_BA: "sr_BA",
             SR_CS: "sr_CS",
@@ -1533,11 +1553,14 @@ export class User extends RestObject {
             ES_US: "es_US",
             ES_UY: "es_UY",
             ES_VE: "es_VE",
+            SW_KE: "sw_KE",
             SV_SE: "sv_SE",
             TL_PH: "tl_PH",
             TG_TJ: "tg_TJ",
             TA_IN: "ta_IN",
             TA_LK: "ta_LK",
+            TE_IN: "te_IN",
+            MI_NZ: "mi_NZ",
             TH_TH: "th_TH",
             TI_ET: "ti_ET",
             TR_TR: "tr_TR",
@@ -1546,7 +1569,9 @@ export class User extends RestObject {
             UZ_LATN_UZ: "uz_LATN_UZ",
             VI_VN: "vi_VN",
             CY_GB: "cy_GB",
-            YO_BJ: "yo_BJ"
+            XH_ZA: "xh_ZA",
+            YO_BJ: "yo_BJ",
+            ZU_ZA: "zu_ZA"
         },
         emailEncodingKey: {
             UTF8: "UTF-8",
@@ -1611,45 +1636,45 @@ export type PushTopicFields = Partial<FieldProps<PushTopic>>;
  */
 export class PushTopic extends RestObject {
     @sField({ apiName: 'Id', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ID, salesforceLabel: 'Push Topic ID', externalId: false })
-    public readonly id: string;
+    public readonly id?: string | null;
     @sField({ apiName: 'Name', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Topic Name', externalId: false })
-    public name: string;
+    public name?: string | null;
     @sField({ apiName: 'Query', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'SOQL Query', externalId: false })
-    public query: string;
+    public query?: string | null;
     @sField({ apiName: 'ApiVersion', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DOUBLE, salesforceLabel: 'API Version', externalId: false })
-    public apiVersion: number;
+    public apiVersion?: number | null;
     @sField({ apiName: 'IsActive', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Is Active', externalId: false })
-    public isActive: boolean;
+    public isActive?: boolean | null;
     @sField({ apiName: 'NotifyForFields', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Notify For Fields', externalId: false })
-    public notifyForFields: PicklistConst<typeof PushTopic.PICKLIST.notifyForFields>;
+    public notifyForFields?: PicklistConst<typeof PushTopic.PICKLIST.notifyForFields>;
     @sField({ apiName: 'NotifyForOperations', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Notify For Operations', externalId: false })
-    public readonly notifyForOperations: PicklistConst<typeof PushTopic.PICKLIST.notifyForOperations>;
+    public readonly notifyForOperations?: PicklistConst<typeof PushTopic.PICKLIST.notifyForOperations>;
     @sField({ apiName: 'Description', createable: true, updateable: true, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Description', externalId: false })
-    public description: string;
+    public description?: string | null;
     @sField({ apiName: 'NotifyForOperationCreate', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Create', externalId: false })
-    public notifyForOperationCreate: boolean;
+    public notifyForOperationCreate?: boolean | null;
     @sField({ apiName: 'NotifyForOperationUpdate', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Update', externalId: false })
-    public notifyForOperationUpdate: boolean;
+    public notifyForOperationUpdate?: boolean | null;
     @sField({ apiName: 'NotifyForOperationDelete', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Delete', externalId: false })
-    public notifyForOperationDelete: boolean;
+    public notifyForOperationDelete?: boolean | null;
     @sField({ apiName: 'NotifyForOperationUndelete', createable: true, updateable: true, required: true, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Undelete', externalId: false })
-    public notifyForOperationUndelete: boolean;
+    public notifyForOperationUndelete?: boolean | null;
     @sField({ apiName: 'IsDeleted', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.BOOLEAN, salesforceLabel: 'Deleted', externalId: false })
-    public readonly isDeleted: boolean;
+    public readonly isDeleted?: boolean | null;
     @sField({ apiName: 'CreatedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Created Date', externalId: false })
-    public readonly createdDate: Date;
+    public readonly createdDate?: Date | null;
     @sField({ apiName: 'CreatedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public createdBy: User;
+    public createdBy?: User;
     @sField({ apiName: 'CreatedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Created By ID', externalId: false })
-    public readonly createdById: string;
+    public readonly createdById?: string | null;
     @sField({ apiName: 'LastModifiedDate', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'Last Modified Date', externalId: false })
-    public readonly lastModifiedDate: Date;
+    public readonly lastModifiedDate?: Date | null;
     @sField({ apiName: 'LastModifiedBy', createable: false, updateable: false, required: false, reference: () => { return User }, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public lastModifiedBy: User;
+    public lastModifiedBy?: User;
     @sField({ apiName: 'LastModifiedById', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.REFERENCE, salesforceLabel: 'Last Modified By ID', externalId: false })
-    public readonly lastModifiedById: string;
+    public readonly lastModifiedById?: string | null;
     @sField({ apiName: 'SystemModstamp', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.DATETIME, salesforceLabel: 'System Modstamp', externalId: false })
-    public readonly systemModstamp: Date;
+    public readonly systemModstamp?: Date | null;
 
     constructor(fields?: PushTopicFields, restInstance?: Rest) {
         super('PushTopic', restInstance);
@@ -1680,7 +1705,7 @@ export class PushTopic extends RestObject {
 
     public static API_NAME: 'PushTopic' = 'PushTopic';
     public readonly _TYPE_: 'PushTopic' = 'PushTopic';
-    public static __UUID: symbol = Symbol();
+    public static __UUID = Symbol();
     private static _fields: { [P in keyof FieldProps<PushTopic>]: SFieldProperties; };
 
     public static get FIELDS() {
@@ -1689,7 +1714,7 @@ export class PushTopic extends RestObject {
 
     public static async retrieve(qryParam: ((fields: FieldResolver<PushTopic>) => SOQLQueryParams) | string, opts?: QueryOpts): Promise<PushTopic[]> {
 
-        let qry = typeof qryParam === 'function' ? buildQuery(PushTopic, qryParam) : qryParam;
+        const qry = typeof qryParam === 'function' ? buildQuery(PushTopic, qryParam) : qryParam;
         return await RestObject.query<PushTopic>(PushTopic, qry, opts);
 
     }

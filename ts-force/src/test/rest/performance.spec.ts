@@ -1,8 +1,9 @@
 import 'mocha';
-import { OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig } from '../..';
+import { Rest, setDefaultConfig, SObject } from '../..';
 import { Account } from '../assets/sobs';
 import { expect } from 'chai';
 import { buildQuery } from '../../qry';
+import { createDefaultClient } from '../helper';
 
 let accData: SObject[];
 
@@ -19,9 +20,7 @@ const baseline = getBaseline();
 
 describe('Performance Compare', () => {
     before(async () => {
-        const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
-        let oAuth = new OAuth(passwordConfig);
-        setDefaultConfig(await oAuth.initialize());
+        await createDefaultClient();
         let rest = new Rest();
         accData = (await rest.query<SObject>(`SELECT ID, Name, CreatedDate,CreatedBy.Id, CreatedBy.Name,
         CreatedBy.Email, Owner.Id, Owner.Name, Owner.Email,

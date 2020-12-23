@@ -1,7 +1,7 @@
 import { BaseConfig } from '../../ts-force/build';
 
 // Config Types
-export interface AuthConfig extends BaseConfig {
+export interface AuthConfig extends Partial<BaseConfig> {
   /**
    * If using `sfdx-cli` auth, this is the only property needed to authenticate.
    * Otherwise, supply additional oAuth parameters

@@ -1,21 +1,21 @@
 // // tslint:disable:no-unused-expression
-import 'mocha';
-
 import { AxiosError } from 'axios';
 import { expect } from 'chai';
-
-import { OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig, getStandardError } from '../..';
+import 'mocha';
+import { getStandardError, Rest, SObject } from '../..';
 import { Account, Contact } from '../assets/sobs';
+import { createDefaultClient } from '../helper';
+
+
 
 describe('Error Handlers', () => {
     before(async () => {
-        const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
-        let oAuth = new OAuth(passwordConfig);
-        setDefaultConfig(await oAuth.initialize());
+        await createDefaultClient();
     });
 
     it('404', async () => {
         try {
+
             let data = (await new Rest().request.post<SObject>(
                 '/services/apexrest/asdf'
             )).data;

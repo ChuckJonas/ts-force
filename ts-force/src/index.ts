@@ -1,6 +1,5 @@
 
 export { setDefaultConfig, BaseConfig } from './auth/baseConfig';
-export * from './auth/oauth';
 export * from './auth/oAuth2';
 export * from './rest/sObject';
 export * from './rest/rest';

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { SObjectDescribe } from './sObjectDescribe';
-import { BaseConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
+import { BaseConfig, ConfigParams, createConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
 import { Limits, ApiLimit, QueryResponse, SearchResponse, InvokableResult } from './restTypes';
 import { parseLimitsFromResponse } from './utils';
 
@@ -23,16 +23,16 @@ export class Rest {
    *     If not passed in will return a "singleton" client from the default config
    * @memberof Rest
    */
-  constructor(config?: BaseConfig) {
-
-    this.config = config;
-    // setup/get "singleton" if using default config
-    if (!this.config) {
+  constructor(config?: ConfigParams) {
+    if (config) {
+      this.config = createConfig(config);
+    } else {
       if (Rest.defaultInstance &&
         Rest.defaultInstance.config.accessToken === DEFAULT_CONFIG.accessToken) {
         return Rest.defaultInstance;
       }
-      this.config = DEFAULT_CONFIG;
+      //should probably be refactored to just happen when the default config is set
+      this.config = { ...DEFAULT_CONFIG };
       Rest.defaultInstance = this;
     }
 

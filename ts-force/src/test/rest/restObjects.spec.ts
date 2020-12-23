@@ -1,17 +1,16 @@
 // // tslint:disable:no-unused-expression
-import 'mocha';
-
 import { expect } from 'chai';
-
-import { CompositeCollection, OAuth, Rest, setDefaultConfig, SObject, UsernamePasswordConfig, compositeRetrieve } from '../..';
-import { Account, Contact, User } from '../assets/sobs';
+import 'mocha';
+import { CompositeCollection, compositeRetrieve, Rest, SObject } from '../..';
 import { getCalendarDate } from '../../utils/calendarDate';
+import { Account, Contact, User } from '../assets/sobs';
+import { createDefaultClient } from '../helper';
+
+
 
 describe('Generated Classes', () => {
   before(async () => {
-    const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
-    let oAuth = new OAuth(passwordConfig);
-    setDefaultConfig(await oAuth.initialize());
+    await createDefaultClient();
   });
 
   it('Parent Relationship', async () => {

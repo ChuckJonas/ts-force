@@ -7,12 +7,16 @@ import Axios from 'axios';
  **/
 
 export interface AuthorizationParams {
+  /**
+   * The protocol + domain that the authorization request should be made against.  Defaults to https://login.salesforce.com
+   */
+  instanceUrl?: string;
 
   /**
    * The OAuth 2.0 grant type that the connected app requests.
    * The value for this flow must be code to indicate that the connected app is requesting an authorization code.
    * */
-  response_type?: 'code';
+  response_type?: 'code' | 'token' | 'token id_token';
 
   /**
    * The connected app’s consumer key,
@@ -46,7 +50,7 @@ export interface AuthorizationParams {
    * If more than one hint is available, show the account chooser.
    * You can pass login and consent values, separated by a space, to require the user to log in and reauthenticate. For example: `?prompt=login%20consent`
    */
-  prompt?: 'login' | 'consent' | 'select_account' | ['login consent'];
+  prompt?: 'login' | 'consent' | 'select_account' | 'login consent';
 
   /**
    * Any state that the external web service requests to be sent to the callback URL.
@@ -94,13 +98,15 @@ export interface AuthorizationParams {
 /**
  * Generates the URL to initiate the OAuth 2.0 web server flow,
 */
-export function getAuthorizationUrl(instanceUrl: string, opts: AuthorizationParams) {
+export function getAuthorizationUrl(opts: AuthorizationParams) {
 
-  //defaults
-  opts = { ...{ response_type: 'code' }, ...opts };
+  //set defaults
+  opts = { ...{instanceUrl:'https://login.salesforce.com',  response_type: 'code' }, ...opts };
 
-  const params = Object.keys(opts).map(key => {
-    let value = opts[key];
+  const {instanceUrl, ...uriParams} = opts;
+
+  const params = Object.keys(uriParams).map(key => {
+    let value = uriParams[key];
     if (Array.isArray(value)) {
       value = value.join(' ');
     }
@@ -111,18 +117,27 @@ export function getAuthorizationUrl(instanceUrl: string, opts: AuthorizationPara
   return `${instanceUrl}/services/oauth2/authorize?${params.join('&')}`;
 }
 
-export interface TokenResponse {
-  access_token: string;
-  signature: string;
-  scope: string;
-  id_token: string;
-  instance_url: string;
-  id: string;
-  token_type: string;
-  issued_at: string;
+interface BaseTokenRequest {
+  /**
+   * The protocol + domain that the authorization request should be made against.  Defaults to https://login.salesforce.com
+   */
+  instanceUrl?: string;
+
+  /**
+   * The connected app’s consumer key, which you can find on the connected app’s Manage Connected Apps page or from the connected app’s definition.
+   */
+  client_id: string;
+
+  /**
+   * The connected app’s consumer secret, which you can find on the connected app’s Manage Connected Apps page or from the connected app’s definition.
+   * This parameter is required unless the connected app doesn’t have Require Secret for Web Server Flow enabled.
+   * If a client_secret isn’t required, and the connected app sends it in the authorization request, Salesforce attempts to validate it anyway.
+   */
+  client_secret?: string;
+
 }
 
-export interface RequestTokenParam {
+export interface WebServerTokenParam extends BaseTokenRequest {
   /**
    * A temporary authorization code received from the authorization server.
    * The connected app uses this code in exchange for an access token.
@@ -130,21 +145,8 @@ export interface RequestTokenParam {
    */
   code: string;
 
-  /**
-   * The type of validation that the connected app can provide to prove it's a safe visitor.
-   * For the web server flow, the value must be authorization_code.
-   */
-  grant_type?: 'authorization_code'; //only `web server flow` supported type for now;
-  /**
-   * The connected app’s consumer key, which you can find on the connected app’s Manage Connected Apps page or from the connected app’s definition.
-   */
-  client_id: string;
-  /**
-   * The connected app’s consumer secret, which you can find on the connected app’s Manage Connected Apps page or from the connected app’s definition.
-   * This parameter is required unless the connected app doesn’t have Require Secret for Web Server Flow enabled.
-   * If a client_secret isn’t required, and the connected app sends it in the authorization request, Salesforce attempts to validate it anyway.
-   */
-  client_secret: string;
+  grant_type?: 'authorization_code';
+
   /**
    * The URL where users are redirected after a successful authentication. The redirect URI must match one of the values in the connected app’s Callback URL field.
    * Otherwise, the approval fails. You can find the redirect URI on the connected app’s Manage Connected Apps page or from the connected app’s definition.
@@ -154,12 +156,140 @@ export interface RequestTokenParam {
 }
 
 /**
- * Retrieves the access token for web-server flow
+ * Params of oAuth Username/Password flow
+ * https://help.salesforce.com/articleView?id=remoteaccess_oauth_username_password_flow.htm&type=5 */
+export interface UsernamePasswordTokenFlow extends BaseTokenRequest {
+
+  grant_type: 'password';
+
+  /** The username of the user that the connected app is imitating. */
+  username: string;
+
+  /** The password of the user that the connected app is imitating. */
+  password: string;
+
+  /**
+   * If not included in the request’s header, you can specify the expected return format.
+   * The format parameter takes precedence over the request’s header. The following formats are supported.
+   *
+   *   - urlencoded
+   *   - json (default)
+   *   - xml
+   */
+  format?: string;
+}
+
+/**
+ * Params of oAuth Username/Password flow
+ * https://help.salesforce.com/articleView?id=remoteaccess_oauth_username_password_flow.htm&type=5 */
+ export interface RefreshTokenFlow extends BaseTokenRequest {
+
+  grant_type: 'refresh_token';
+
+  /** The username of the user that the connected app is imitating. */
+  refresh_token: string;
+
+
+  /**
+   * If not included in the request’s header, you can specify the expected return format.
+   * The format parameter takes precedence over the request’s header. The following formats are supported.
+   *
+   *   - urlencoded
+   *   - json (default)
+   *   - xml
+   */
+  format?: string;
+
+  /**
+   * Instead of passing a client_secret, you can provide a client_assertion and client_assertion_type.
+   * If a client_secret parameter isn’t provided, Salesforce checks for the client_assertion and client_assertion_type.
+   * See Use client_assertion Instead of client_secret.
+   */
+  client_assertion?: string;
+
+  /**
+   * Provide this value when using the client_assertion parameter.
+   * The value of client_assertion_type must be urn:ietf:params:oauth:client-assertion-type:jwt-bearer.
+   */
+  client_assertion_type?: string;
+}
+
+export interface TokenResponse {
+  /**
+   * OAuth token that a connected app uses to request access to a protected resource on behalf of the client application.
+   * Additional permissions in the form of scopes can accompany the access token. */
+  access_token: string;
+
+  /**
+   * A URL indicating the instance of the user’s org. For example: https://yourInstance.salesforce.com/.
+   */
+  instance_url: string;
+
+  /**
+   * Base64-encoded HMAC-SHA256 signature signed with the client_secret.
+   * The signature can include the concatenated ID and issued_at value, which you can use to verify that the identity URL hasn’t changed since the server sent it.
+   */
+  signature: string;
+
+
+  /**
+   * Identity URL that can be used to identify the user and to query for more information about the user. See Identity URLs.
+   */
+  id: string;
+
+  /**
+   * A Bearer token type, which is used for all responses that include an access token.
+   */
+  token_type: string;
+
+  /**
+   * Time stamp of when the signature was created in milliseconds.
+  */
+  issued_at: string;
+
+  /**
+   * Token that a connected app uses to obtain new access tokens (sessions).
+   * This value is a secret. Take appropriate measures to protect it.
+   */
+  refresh_token?: string;
+
+  /**
+   * A space-separated list of scopes values.
+   */
+  scope?: string;
+
+  /**
+   * A signed data structure that contains authenticated user attributes, including a unique identifier for the user and a time stamp indicating when the token was issued. It also identifies the requesting client app. See OpenID Connect specifications.
+   *  This parameter is returned if the scope parameter includes openid.
+   */
+  id_token?: string;
+
+  /**
+   * The state requested by the client.
+   * This value is included only if the state parameter is included in the original query string.
+   */
+  state?: string;
+
+  /**
+   * If the user is a member of a Salesforce community, the community URL is provided.
+   */
+  sfdc_community_url?: string;
+
+  /**
+   * If the user is a member of a Salesforce community, the user’s community ID is provided.
+   */
+  sfdc_community_id?: string;
+
+}
+
+/**
+ * Retrieves the access token
 */
-export async function requestAccessToken(instanceUrl: string, params: RequestTokenParam): Promise<TokenResponse> {
+export async function requestAccessToken(params: WebServerTokenParam | UsernamePasswordTokenFlow | RefreshTokenFlow): Promise<TokenResponse> {
   //defaults
   params = { ...{ grant_type: 'authorization_code' }, ...params };
-  const reqParam = toFormData(params as any);
+  const {instanceUrl, ...bodyParams} = params;
+  const reqParam = toFormData(bodyParams as any);
 
   const resp = await Axios.request({
     url: `${instanceUrl}/services/oauth2/token`, method: 'POST', data: reqParam, headers: {
@@ -168,6 +298,8 @@ export async function requestAccessToken(instanceUrl: string, params: RequestTok
   })
   return resp.data;
 }
+
+export
 
 
 function toFormData(obj: { [key: string]: string }) {

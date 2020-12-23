@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 /// <reference types="node" />
-import { OAuth, UsernamePasswordConfig, setDefaultConfig } from '../../ts-force';
+import { requestAccessToken, setDefaultConfig } from '../../ts-force';
 import { SourceFile } from 'ts-morph';
 import { SObjectGenerator, TS_FORCE_IMPORTS } from './sObjectGenerator';
 import * as minimist from 'minimist';
@@ -101,7 +101,7 @@ async function generateLoadConfig (): Promise<Config> {
     }
   }
   if (!config.auth) {
-    config.auth = {};
+    config.auth = {version: 50};
   }
 
   // setup commandline args
@@ -171,19 +171,16 @@ async function generateLoadConfig (): Promise<Config> {
       config.auth.accessToken = connection.accessToken;
       config.auth.instanceUrl = connection.instanceUrl;
     } else if (config.auth.username !== undefined && config.auth.password !== undefined) {
-
-      // otherwise lets try username/password flow
-      let pwConfig = new UsernamePasswordConfig(
-        config.auth.clientId,
-        config.auth.clientSecret,
-        config.auth.oAuthHost,
-        config.auth.username,
-        config.auth.password
-      );
-
-      let oAuth = new OAuth(pwConfig);
-      await oAuth.initialize();
-      config.auth = oAuth;
+      let oAuthResp = await requestAccessToken({
+        grant_type: 'password',
+        instanceUrl: config.auth.oAuthHost,
+        client_id: config.auth.clientId,
+        client_secret: config.auth.clientSecret,
+        username: config.auth.username,
+        password: config.auth.password
+      });
+      config.auth.instanceUrl = oAuthResp.instance_url;
+      config.auth.accessToken = oAuthResp.access_token;
     } else {
       throw new Error('No valid authentication configuration found!');
     }

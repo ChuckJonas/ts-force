@@ -70,7 +70,7 @@ export abstract class RestObject extends SObject {
     opts = opts || {};
     const { restInstance, allRows, useComposite: highVolume } = opts;
     let client = restInstance || new Rest();
-    let records = [];
+    let records: SObject[] = [];
 
     if (highVolume) {
       records = await queryAllComposite(qry, { restInstance: client, allRows });

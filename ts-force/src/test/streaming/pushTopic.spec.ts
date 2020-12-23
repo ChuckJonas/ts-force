@@ -1,19 +1,18 @@
-import 'mocha';
-
 import { expect } from 'chai';
-
-import { Streaming, OAuth, setDefaultConfig, UsernamePasswordConfig, getStandardError } from '../..';
-import { Account, PushTopic } from '../assets/sobs';
+import 'mocha';
+import { Streaming } from '../..';
 import { DEFAULT_CONFIG } from '../../auth/baseConfig';
 import { buildQuery } from '../../qry';
+import { Account, PushTopic } from '../assets/sobs';
+import { createDefaultClient } from '../helper';
+
+
 
 const TEST_ACC_NAME = 'testing push topic';
 
 describe('Streaming API', () => {
   before(async () => {
-    const passwordConfig = new UsernamePasswordConfig(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD);
-    let oAuth = new OAuth(passwordConfig);
-    setDefaultConfig(await oAuth.initialize());
+    await createDefaultClient();
     require('cometd-nodejs-client').adapt();
   });
 

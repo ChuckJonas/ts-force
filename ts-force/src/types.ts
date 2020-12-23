@@ -24,3 +24,7 @@ export type FieldProps<T> = ExcludeNonFields<NonFunctionProperties<T>>;
 
 // for picklist generation
 export type PicklistConst<T extends any> = T[keyof T];
+
+export type Required<T> = {
+  [P in keyof T]-?: T[P];
+};
