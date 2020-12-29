@@ -6,6 +6,8 @@ description: >-
 
 # Getting Started
 
+
+
 ## Prerequisites
 
 Before starting this guide you will need the following:
@@ -189,9 +191,7 @@ $ npx ts-node src/index
 
 Check out the following resources:
 
-* Connecting with Salesforce
+* [Connecting with Salesforce](guides/connecting-with-salesforce/)
 * RestObject API
-* Advanced Queries Building
-
-
+* [SOQL Builder](guides/query-builder/)
 
