@@ -1,9 +1,9 @@
-# oAuth
+# OAuth
 
 Common oAuth flows are supported via two "utility" functions:
 
-* `getAuthorizationUrl`
-* `requestAccessToken`
+* **`getAuthorizationUrl()`**: Creates the oAuth URL for flows which redirect the end User \([Web-Server](web-server-flow.md) & [User-Agent](user-agent-flow.md) flows\)
+* **`requestAccessToken()`**: Makes a request to `/services/oauth2/token` to get an Access Token.  Used by most flows.
 
 See sub sections for examples of each supported flow.
 

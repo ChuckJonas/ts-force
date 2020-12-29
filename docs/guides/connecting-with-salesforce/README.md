@@ -2,6 +2,16 @@
 
 In order to make calls against the Salesforce Rest API you need to provide ts-force with an `accessToken` and an `instanceUrl` .  How you obtain the access token is left up to you.  `ts-force` does provide some functions for obtaining access tokens for common oAuth flows.
 
+## The Rest Class
+
+The `Rest` class is responsible for making requests against Salesforce.  The generated classes and Composite API clients use this class to make requests. 
+
+{% hint style="info" %}
+The Rest class is really just a wrapper for an [Axois](https://www.npmjs.com/package/axios) instance.   You can access the raw Axois instance to add Interceptors and Adapters via the `request` member.  
+  
+See [Re-Auth on Token Expiration ](re-auth-on-token-expiration.md)for an example.
+{% endhint %}
+
 ## Default vs Instance Connections
 
 ### Default Connection
@@ -64,26 +74,7 @@ const secondaryAcc = await Account.retrieve(f => ({
 ```
 {% endcode %}
 
-## I already have an access token
 
-If you already have an access token, you can simply create a new Rest Instance
-
-```typescript
-const
-```
-
-{% hint style="info" %}
- Super-powers are granted randomly so please submit an issue if you're not happy with yours.
-{% endhint %}
-
-Once you're strong enough, save the world:
-
-{% code title="hello.sh" %}
-```bash
-# Ain't no code for that yet, sorry
-echo 'You got to trust me on this, I saved the world'
-```
-{% endcode %}
 
 
 

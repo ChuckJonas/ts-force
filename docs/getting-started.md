@@ -53,9 +53,9 @@ $ npm install -D ts-force-gen
  These two packages should always be on the same version!
 {% endhint %}
 
-### Configure ts-force
+### Configure code generation
 
-Next we need to create the configuration file which will code generation what to do:
+Next we need to create the configuration file which will tell the code generator what to do:
 
 ```bash
 $ npx ts-force-gen --init

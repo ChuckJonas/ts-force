@@ -1,6 +1,6 @@
 # Code Generation
 
-While some aspects of `ts-force` can be used without it, the real power of this library comes from generated classes. The code generation command has been split out to the ts-force-gen package so that it can easily be excluded from production builds.
+While some aspects of `ts-force` can be used without it, the real power of this library comes from generated classes. The code generation command has been split out to the `ts-force-gen` package so that it can easily be excluded from production builds.
 
 Generation is controlled via a json config file.  A default file can be initialized by running `ts-force-gen --init`
 
@@ -47,7 +47,7 @@ Name__c -> name1
 
 Custom field mappings can be defined on an individual "SObject Config" to better control conflicts:
 
-```text
+```javascript
 {
   "apiName": "Account__c",
   "className": "CustomAccount",
