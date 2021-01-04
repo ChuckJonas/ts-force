@@ -20,7 +20,7 @@ export const queryAllComposite = async (query: string, opts: { restInstance?: Re
     // bit of a hack... should work but refactor ASAP
     reqUri = nextUrl;
   } else {
-    reqUri = `/services/data/v42.0/${opts.allRows ? 'queryAll' : 'query'}?q=${encodeURI(query)}`;
+    reqUri = `/services/data/v${restInstance.config.version}/${opts.allRows ? 'queryAll' : 'query'}?q=${encodeURI(query)}`;
   }
 
   comp.addRequest({

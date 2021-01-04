@@ -189,7 +189,6 @@ export interface UsernamePasswordTokenFlow extends BaseTokenRequest {
   /** The username of the user that the connected app is imitating. */
   refresh_token: string;
 
-
   /**
    * If not included in the request’s header, you can specify the expected return format.
    * The format parameter takes precedence over the request’s header. The following formats are supported.
@@ -212,6 +211,14 @@ export interface UsernamePasswordTokenFlow extends BaseTokenRequest {
    * The value of client_assertion_type must be urn:ietf:params:oauth:client-assertion-type:jwt-bearer.
    */
   client_assertion_type?: string;
+}
+
+export interface JWTTokenRequest {
+
+  grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer';
+
+  /** The assertion is the entire JWT value. */
+  assertion: string;
 }
 
 export interface TokenResponse {
@@ -285,7 +292,7 @@ export interface TokenResponse {
 /**
  * Retrieves the access token
 */
-export async function requestAccessToken(params: WebServerTokenParam | UsernamePasswordTokenFlow | RefreshTokenFlow): Promise<TokenResponse> {
+export async function requestAccessToken(params: WebServerTokenParam | UsernamePasswordTokenFlow | RefreshTokenFlow | JWTTokenRequest): Promise<TokenResponse> {
   //defaults
   params = { ...{ grant_type: 'authorization_code' }, ...params };
   const {instanceUrl, ...bodyParams} = params;
