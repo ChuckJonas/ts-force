@@ -1,4 +1,4 @@
-# Resolving Fields
+# FieldResolver
 
 The **`FieldResolver`** class allows you to generate field API names via the properties & relationships on the objects. 
 
@@ -19,7 +19,7 @@ f.select({fn: 'COUNT', field: 'id', alias: 'c'}); //-> "COUNT(Id) c"
 
 ### `parent()`
 
-Allows you to traverse to a parent relationship. Returns a new `FieldResolver` for the parent SObject type.  Keeps track of "where it's been" so resulting fields are fully qualified.  Can go multiple levels deep, but SOQL only supports 5 parent relationships.
+Allows you to traverse to a parent relationship. Returns a new `FieldResolver` for the parent SObject type.  Keeps track of "where it's been" so resulting fields are fully qualified.  Can go multiple levels deep, but SOQL only supports a depth of 5.
 
 ```typescript
 let f = new FieldResolver(Contact);
@@ -54,9 +54,11 @@ SELECT (
 ```
 
 {% hint style="info" %}
-* subquery is ONLY valid to be called on the top-level resolver
+* `subquery` is ONLY valid to be called from the top-level resolver
 * outputs of`subQuery` can ONLY be used in inside SELECT clauses
 {% endhint %}
 
+### Advanced Usage
 
+To see the real power of the `FieldResolver` checkout the sections on [SELECT Models](select-models.md) and [WHERE Filters](where-filters.md).
 
