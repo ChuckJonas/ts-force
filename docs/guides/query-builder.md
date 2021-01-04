@@ -1,4 +1,4 @@
-# Building Queries
+# Type Safe Query building
 
 This library allows for the generation of type-safe\* queries, by using generated classes to resolve fields.
 
@@ -208,4 +208,10 @@ WHERE Name = 'Acme'
 ORDER BY Rating DESC
 LIMIT 5 OFFSET 5
 ```
+
+## Legal
+
+License MIT
+
+This library has borrowed type definitions from [soql-parser-ts](https://github.com/paustint/soql-parser-js) by Austin Turner.
 

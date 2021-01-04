@@ -17,47 +17,6 @@ The **MISSION** of this project is to:
 
 2. Maintain acceptable performance & reliability
 
-This repository contains two packages:
+## Usage
 
-- [![alt text](https://img.shields.io/npm/v/ts-force.svg?label=ts-force)](https://www.npmjs.com/package/ts-force): The runtime library for working with the REST API
-- [![alt text](https://img.shields.io/npm/v/ts-force-gen.svg?label=ts-force-gen)](https://www.npmjs.com/package/ts-force-gen): A development CLI tool for generating SObject classes
-
-## Getting Started
-
-The fastest way to get up and going with this library is to follow the ["Getting Started" tutorial](https://github.com/ChuckJonas/ts-force/wiki).
-
-For additional information, see the individual packages readme:
-
-- [ts-force](./ts-force)
-- [ts-force-gen](./ts-force-gen)
-
-### Upgrading to 3.x
-
-3.x introduces several breaking changes.  Please [read the upgrade guide](./ts-force/docs/Upgrade_To_3_x.md).
-
-Replace: 
-
-```ts
-  const passwordConfig = new UsernamePasswordConfig(
-    process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.HOST, process.env.USERNAME, process.env.PASSWORD
-  );
-  let oAuth = new OAuth(passwordConfig);
-  await oAuth.initialize();
-  setDefaultConfig(await oAuth.initialize());
-```
-
-With:
-
-```ts
- const resp = await requestAccessToken({
-    grant_type: 'password'
-    instanceUrl: process.env.HOST,
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
-  });
-
-  setDefaultConfig(resp);
-
-```
+[See Documentation](https://app.gitbook.com/@cjonas/s/ts-force)
