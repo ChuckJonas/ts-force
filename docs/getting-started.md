@@ -6,6 +6,8 @@ description: >-
 
 # Getting Started
 
+
+
 ## Prerequisites
 
 Before starting this guide you will need the following:
@@ -42,13 +44,13 @@ The generated classes use "experimentalDecorators".
 
 ## Install ts-force
 
-```text
+```
 $ npm install ts-force
 $ npm install -D ts-force-gen
 ```
 
 {% hint style="info" %}
-These two packages should always be on the same version!
+ These two packages should always be on the same version!
 {% endhint %}
 
 ### Configure code generation
@@ -59,7 +61,7 @@ Next we need to create the configuration file which will tell the code generator
 $ npx ts-force-gen --init
 ```
 
-You should now see a `ts-force-config.json` in the folder where you ran the command. It's contents should look something like this:
+You should now see a `ts-force-config.json` in the folder where you ran the command.  It's contents should look something like this:
 
 {% code title="ts-force-config.json" %}
 ```javascript
@@ -74,13 +76,14 @@ You should now see a `ts-force-config.json` in the folder where you ran the comm
   },
   "outPath": "./src/generated/"
 }
+
 ```
 {% endcode %}
 
 For now, just update the `auth.username` property to a connected `sfdx-cli` username.
 
 {% hint style="info" %}
-Alternate authentication methods are supported. To see a full list of options, see  
+Alternate authentication methods are supported. To see a full list of options, see   
 "ts-force-config" api section
 {% endhint %}
 
@@ -94,20 +97,22 @@ After this completes, you should see that generated classes have been added to `
 
 ## Using ts-force
 
-We will again use the `sfdx-cli` obtain a Salesforce access token. To do so from node, we'll need an additional dependency:
+We will again use the `sfdx-cli` obtain a Salesforce access token.   To do so from node, we'll need an additional dependency:
 
 ```typescript
 $ npm install @salesforce/core
 ```
 
 {% hint style="info" %}
-In a production environment, you would likely obtain the access token via oAuth or other means. See the "Connecting with Salesforce" section for more details.
+In a production environment, you would likely obtain the access token via oAuth or other means.  See the "Connecting with Salesforce" section for more details.
 {% endhint %}
 
+  
 Create a new file `src/index.ts` and add the following code
 
 {% code title="src/index.ts" %}
 ```typescript
+
 import { AuthInfo, Connection, Org } from '@salesforce/core';
 import { Account, Contact } from './generated';
 import { CompositeCollection, getStandardError, Rest } from 'ts-force';
@@ -162,6 +167,7 @@ async function auth(username: string) {
   await org.refreshAuth();
   return org.getConnection();
 }
+
 ```
 {% endcode %}
 

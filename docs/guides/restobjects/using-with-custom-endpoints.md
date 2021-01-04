@@ -8,7 +8,7 @@ There are instances where the standard rest API may not meet all your needs. Thi
 
 We can still call these custom endpoints using `ts-force` and often even use our generated classes with the request and response.
 
-## @RestResource
+### @RestResource
 
 {% tabs %}
 {% tab title="RestServiceTesting.cls" %}
@@ -57,7 +57,9 @@ Things to Note:
 * `Account.fromSFObject(data)` to parse the response from salesforce back to our `Account` object
 {% endhint %}
 
-## Invokable
+
+
+### Invokable
 
 A special method `invokeAction` is provided to make it easier to call invokable methods
 
@@ -108,4 +110,6 @@ console.log(returnedAccounts[0].id);
 ```
 {% endtab %}
 {% endtabs %}
+
+
 

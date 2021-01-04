@@ -2,7 +2,7 @@
 
 `ts-force` support streaming and platform events, via the `Streaming` class.
 
-## Push Topics \(Steaming API\)
+### Push Topics \(Steaming API\)
 
 The `Streaming` class has two "subscribe" methods for listening to push topics:
 
@@ -45,13 +45,13 @@ await topic.insert();
 ```
 {% endhint %}
 
-## Platform Events
+### Platform Events
 
 Platform events work similar to `PushTopics` but instead you listen using `subscribeToEvent<T>`.
 
 Automatic mapping to a Platform event generated object is not yet supported \(coming soon\), but in the meantime you can define the resulting type via the `<T>` parameterized interface.
 
-## Disconnect / Unsubscribing
+### Disconnect / Unsubscribing
 
 It is important to call `disconnect()` or `unsubscribe` with you are done:
 
@@ -61,7 +61,7 @@ await stream.unsubscribe('MyEvent__e', 'event'); //unsubscribes from `/event/MyE
 await stream.disconnect();                    //unsubscribes from all open subscriptions and closes client connection
 ```
 
-## Using with Node
+### Using with Node
 
 We are using the to manage subscriptions. In order for this library to run on node, you must polyfill it.
 

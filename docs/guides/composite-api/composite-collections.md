@@ -31,6 +31,6 @@ See [Salesforce's Documentation](https://developer.salesforce.com/docs/atlas.en-
 {% endhint %}
 
 {% hint style="warning" %}
-The BULK API should be used for very large volumes. It is not supported via ts-force at this time.
+The BULK API should be used for very large volumes.  It is not supported via ts-force at this time.  
 {% endhint %}
 

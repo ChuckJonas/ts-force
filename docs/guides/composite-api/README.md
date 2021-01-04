@@ -1,6 +1,6 @@
 # Composite API
 
-The [Composite API](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite.htm) allows you to compose multiple api request, into a single http request.
+The [Composite API](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite.htm) allows you to compose multiple api request, into a single http request.  
 
 `ts-force` currently supports the following composite resources:
 

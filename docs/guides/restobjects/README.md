@@ -2,8 +2,8 @@
 
 The term "RestObject" used to refer to the classes generated for your Salesforce SObjects.
 
-Most of the functionality of this library built around the RestObject.
-
+Most of the functionality of this library built around the RestObject.    
+  
 "**RestObjects" provide the following capabilities:**
 
 * mapping between the javascript naming conventions and the Salesforce API names

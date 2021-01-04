@@ -2,6 +2,8 @@
 
 While some aspects of `ts-force` can be used without it, the real power of this library comes from generated classes. The code generation command has been split out to the `ts-force-gen` package so that it can easily be excluded from production builds.
 
+## Configuration
+
 Generation is controlled via a json config file. A default file can be initialized by running `ts-force-gen --init`
 
 ```javascript
@@ -18,7 +20,7 @@ Generation is controlled via a json config file. A default file can be initializ
 }
 ```
 
-## Authorization
+### Authorization
 
 Several methods are provided to handle authorization. The recommended approach is to use the `sfdx-cli` connected orgs \(as shown above\).
 
@@ -26,11 +28,11 @@ Several methods are provided to handle authorization. The recommended approach i
 You should always generated classes using a profile that represents the END USER of the application. Using Permissions Sets makes it easier to manage.
 {% endhint %}
 
-## SObject Config
+### SObject Config
 
 The `sObjects` array can accept either a `string` of the API name or an object with additional configuration.
 
-### Naming Conflicts
+#### Naming Conflicts
 
 If two fields or SObjects sanitize to the same name, the latter one processed with be appended with a number:
 
@@ -59,11 +61,34 @@ Custom field mappings can be defined on an individual "SObject Config" to better
 }
 ```
 
-## Handling Namespaces
+#### Handling Namespaces
 
 TODO
 
-## Generating Picklist
+#### Generating Picklist
 
 TODO
+
+## Generation
+
+To generate code, run the following command:
+
+```javascript
+$ npx ts-force-gen
+```
+
+You can optionally specify the path to the configuration file with the `-j` param.
+
+{% hint style="info" %}
+**TIP: Add the generate command to your NPM scripts and pass the code through your linter after:**
+
+```text
+"scripts": {
+   "generate-ts-force": "ts-force-gen && eslint --fix src/generated/**/*.ts",
+}
+```
+{% endhint %}
+
+  
+
 
