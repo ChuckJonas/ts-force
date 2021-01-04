@@ -2,7 +2,7 @@
 
 While some aspects of `ts-force` can be used without it, the real power of this library comes from generated classes. The code generation command has been split out to the `ts-force-gen` package so that it can easily be excluded from production builds.
 
-Generation is controlled via a json config file.  A default file can be initialized by running `ts-force-gen --init`
+Generation is controlled via a json config file. A default file can be initialized by running `ts-force-gen --init`
 
 ```javascript
 {
@@ -16,15 +16,14 @@ Generation is controlled via a json config file.  A default file can be initiali
   },
   "outPath": "./src/generated/"
 }
-
 ```
 
 ## Authorization
 
-Several methods are provided to handle authorization.  The recommended approach is to use the `sfdx-cli` connected orgs \(as shown above\).
+Several methods are provided to handle authorization. The recommended approach is to use the `sfdx-cli` connected orgs \(as shown above\).
 
 {% hint style="info" %}
-You should always generated classes using a profile that represents the END USER of the application.  Using Permissions Sets makes it easier to manage.
+You should always generated classes using a profile that represents the END USER of the application. Using Permissions Sets makes it easier to manage.
 {% endhint %}
 
 ## SObject Config
@@ -67,6 +66,4 @@ TODO
 ## Generating Picklist
 
 TODO
-
-
 

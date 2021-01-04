@@ -1,6 +1,6 @@
 # WHERE Filters
 
-There are often times where you need to run multiple queries with the same WHERE conditions.  In those cases, you can create a "filter" function which accepts a `FieldResolver<T>` and returns a `ConditionalClause`
+There are often times where you need to run multiple queries with the same WHERE conditions. In those cases, you can create a "filter" function which accepts a `FieldResolver<T>` and returns a `ConditionalClause`
 
 {% tabs %}
 {% tab title="Example" %}
@@ -42,7 +42,6 @@ let contactQueryNested = buildQuery(Contact, f => (
       limit: 1
     }
 ));
-
 ```
 {% endtab %}
 
@@ -94,6 +93,4 @@ LIMIT
 ```
 {% endtab %}
 {% endtabs %}
-
-
 

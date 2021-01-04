@@ -1,7 +1,5 @@
 # User-Agent Flow
 
-
-
 ```typescript
 import { getAuthorizationUrl } from 'ts-force';
 
