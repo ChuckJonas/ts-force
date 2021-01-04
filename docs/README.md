@@ -2,6 +2,8 @@
 
 
 
+![ts-force](https://raw.githubusercontent.com/ChuckJonas/ts-force/master/logo.svg?sanitize=true)
+
 `ts-force` is an "opinionated" client for the Salesforce REST API, which uses code generation to bring type safety to `SObjects`. It runs in both the browser and nodejs.
 
 The **MISSION** of this project is to:
