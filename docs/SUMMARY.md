@@ -26,6 +26,7 @@
     * [Composite Batch](guides/composite-api/composite-batch.md)
     * [Composite Collections](guides/composite-api/composite-collections.md)
   * [Streaming API](guides/streaming-api.md)
+  * [Handling Exceptions](guides/handling-exceptions.md)
 * [Changelog](changelog.md)
 * [Upgrading Major Versions](upgrading/README.md)
   * [Version 3 Upgrade Guide](upgrading/upgrade_to_3_x.md)
