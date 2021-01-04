@@ -8,7 +8,7 @@ The **MISSION** of this project is to:
 
 1. Create the BEST possible developer experience for working with the salesforce REST API by:
    * Providing types for `SObjects` that are resilient to schema changes
-   * Mapping SF API names to js friendly syntax
+   * Mapping SF API names to standard js conventions
    * Make constructing SOQL queries as easy and fool-proof as possible. [See Demo](https://stackblitz.com/edit/ts-force-query-playground)
    * Provide "Quality of Life" features by abstracting away some of the more tedious parts of working with the REST API \(EG: `queryMore`, translating `multi-select picklist` to arrays, standardize error handling, etc\)
 2. Maintain acceptable performance & reliability
