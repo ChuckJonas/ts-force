@@ -26,9 +26,11 @@ for(let i = 0; i < results.length; i++){
 }
 ```
 
-
-
 {% hint style="info" %}
-The BULK API should be used for very large volumes.  It is not supported via ts-force at this time.
+See [Salesforce's Documentation](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections.htm) for more information.
+{% endhint %}
+
+{% hint style="warning" %}
+The BULK API should be used for very large volumes.  It is not supported via ts-force at this time.  
 {% endhint %}
 
