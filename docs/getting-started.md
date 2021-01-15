@@ -186,6 +186,7 @@ $ npx ts-node src/index
 Check out the following resources:
 
 * [Connecting with Salesforce](guides/connecting-with-salesforce/)
-* RestObject API
+* [RestObject API](guides/restobjects/)
 * [SOQL Builder](guides/query-builder/)
+* [Composite API](guides/composite-api/)
 
