@@ -139,7 +139,10 @@ export abstract class RestObject extends SObject {
   * @returns {Promise<void>}
   * @memberof RestObject
   */
-  public async insert(refresh?: boolean): Promise<this> {
+  public async insert(opts?: {refresh?: boolean}): Promise<this> {
+    opts = opts || {};
+    const { refresh } = opts;
+
     let insertCompositeRef = 'newObject';
 
     let composite = new Composite(this._client).addRequest({
