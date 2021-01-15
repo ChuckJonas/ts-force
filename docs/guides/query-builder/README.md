@@ -1,7 +1,7 @@
 # SOQL Builder
 
-`ts-force`  provides a built-in "query builder" that allows generation of SOQL queries via structured data.  
-  
+`ts-force` provides a built-in "query builder" that allows generation of SOQL queries via structured data.
+
 There are several advantages of using the SOQL builder over hardcode or templated strings:
 
 * type-safe\*
@@ -15,7 +15,7 @@ Checkout the [Query Playground](https://stackblitz.com/edit/ts-force-query-playg
 Builder is not fully "type-safe"... It's still possible to generate invalid queries!
 {% endhint %}
 
-### Example
+## Example
 
 ```typescript
 let qry = buildQuery(Account, fields => ({

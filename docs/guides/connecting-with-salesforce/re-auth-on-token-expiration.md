@@ -2,8 +2,8 @@
 
 If you are using `ts-force` on a server or long-running process, you might want to setup automatic reauth when your current token expires.
 
-While this is not support "natively", the `AxiosInstance` is exposed  via  `Rest.request` for use cases like this.  
-  
+While this is not support "natively", the `AxiosInstance` is exposed via `Rest.request` for use cases like this.
+
 Below is an example using [axios-auth-refresh](https://www.npmjs.com/package/axios-auth-refresh) to automatically create a new token via Username/Password flow, but the same concept applies for other methods.
 
 ```typescript
@@ -33,6 +33,4 @@ const refreshAuthLogic = async (failedRequest: any) => {
 
 createAuthRefreshInterceptor(restInstance.request, refreshAuthLogic);
 ```
-
-
 

@@ -16,6 +16,20 @@ API NAME: `Zendesk__Domain_Mapping__c` 2.x: `zendeskCreateInZendesk` 3.x: `creat
 
 _NOTE: Namespaces can be kept by setting `keepNamespaces` in `ts-force-config.json`_
 
+## `insert(refresh)` refactored to "opts" object
+
+```typescript
+const acc = new Account();
+
+// < 3.1
+
+acc.insert(true);
+
+// >= 3.1
+
+acc.insert({refresh: true});
+```
+
 ## `prepareFor()`
 
 The `prepareFor()` function has been replaced with `toJson()`. This is more flexible and supports more scenarios. The most likely place that this may have been used is when sending SObject to a custom rest endpoint or `@remoteAction` using `prepareFor('apex');`.
