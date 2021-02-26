@@ -1,6 +1,6 @@
 # Connecting with Salesforce
 
-In order to make calls against the Salesforce Rest API you need to provide ts-force with an `accessToken` and an `instanceUrl` . How you obtain the access token is left up to you. `ts-force` does provide some functions for obtaining access tokens for common oAuth flows.
+In order to make calls against the Salesforce Rest API you need to provide ts-force with an `accessToken` and an `instanceUrl`. How you obtain the access token is left up to you. `ts-force` does provide some functions for obtaining access tokens for common oAuth flows.
 
 ## The Rest Class
 
@@ -9,7 +9,7 @@ The `Rest` class is responsible for making requests against Salesforce. The gene
 {% hint style="info" %}
 The Rest class is really just a wrapper for an [Axois](https://www.npmjs.com/package/axios) instance. You can access the raw Axois instance to add Interceptors and Adapters via the `request` member.
 
-See [Re-Auth on Token Expiration ](re-auth-on-token-expiration.md)for an example.
+See [Re-Auth on Token Expiration ](re-auth-on-token-expiration.md) for an example.
 {% endhint %}
 
 ## Default vs Instance Connections
@@ -44,7 +44,7 @@ const myAccount = new Account();
 
 ### Multiple \(Managed\) Connections
 
-If you need more control or or using multiple salesforce orgs then you'll need to explicitly setup `Rest` clients.
+If you need more control or are using multiple Salesforce orgs then you'll need to explicitly setup `Rest` clients.
 
 {% code title="doSalesforceStuff.ts" %}
 ```typescript
