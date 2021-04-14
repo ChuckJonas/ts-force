@@ -68,11 +68,11 @@ export abstract class RestObject extends SObject {
   // returns ALL records of a query
   protected static async query<T extends RestObject>(type: { new(): T }, qry: string, opts?: QueryOpts): Promise<T[]> {
     opts = opts || {};
-    const { restInstance, allRows, useComposite: highVolume } = opts;
+    const { restInstance, allRows, useComposite } = opts;
     let client = restInstance || new Rest();
     let records: SObject[] = [];
 
-    if (highVolume) {
+    if (useComposite) {
       records = await queryAllComposite(qry, { restInstance: client, allRows });
     } else {
       let response = await client.query<T>(qry, allRows);
@@ -86,7 +86,6 @@ export abstract class RestObject extends SObject {
     let sobs: Array<T> = records.map(rec => {
       let sob = new type();
       sob._client = client;
-      // recursively build up concrete restobjects
       sob.mapFromQuery(rec);
       return sob;
     });

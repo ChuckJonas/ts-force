@@ -398,7 +398,9 @@ export class SObjectGenerator {
           };
 
           props.push({
-            name: this.sanitizeProperty(relatedSobConfig, field.relationshipName, false),
+            // For use case 'Account.owner->User', The property name 'owner' should be resolved
+            // based on Account's sobConfig.
+            name: this.sanitizeProperty(sobConfig, field.relationshipName, false),
             type: referenceClass,
             scope: Scope.Public,
             kind: StructureKind.Property,
