@@ -18,9 +18,10 @@
       "es6"
     ],
     "types": [
-      "node"
+      "node",
+      "mocha"
     ],
-    "baseUrl": ".", // required for "paths"
+    "baseUrl": ".",
   },
   "include": [
     "src/**/*.ts",

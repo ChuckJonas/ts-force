@@ -85,6 +85,7 @@ export interface RecordTypeInfo {
     defaultRecordTypeMapping: boolean;
     master: boolean;
     name: string;
+    developerName: string;
     recordTypeId: string;
     urls: Urls;
 }
