@@ -177,8 +177,6 @@ Condition values are automatically converted based on their type:
 
 ```typescript
 { field: f.select('createdDate'), op: '<', val: new Date() }
-//-> CreatedDate < 2020-12-23T02:44:49z 
+//-> CreatedDate < 2020-12-23T02:44:49z
 ```
-
-
 

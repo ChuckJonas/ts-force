@@ -1,4 +1,18 @@
+---
+description: ts-force does it's best to follow semver
+---
+
 # Changelog
+
+## 3.0.1
+
+**Fixed**
+
+* `retrieve` use composite mode bug fix
+
+**Changed**
+
+* `insert(refresh?)` refactored to use "opts" object parameter.
 
 ## 3.0.0
 
@@ -23,7 +37,7 @@
 * `ts-force-gen` now defaults the config path to `ts-force-config.json` if not set
 * replaced `OAuth` classes simpler & more flexible functions
 
-  **Fixed**
+**Fixed**
 
 * relationships parsing when data comes from `@RemoteAction`
 * removed limit on axios request size

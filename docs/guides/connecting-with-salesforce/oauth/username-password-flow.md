@@ -15,7 +15,3 @@ const resp = await requestAccessToken({
  const restInsatance = new Rest(resp);
 ```
 
-
-
-
-
