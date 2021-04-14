@@ -1,7 +1,7 @@
 # SELECT Models
 
-The real value of the `FieldResolver` is its' ability to create "views" or "models" which can be used in any query to ensure that you always pull consistent data for an object.  
-  
+The real value of the `FieldResolver` is its' ability to create "views" or "models" which can be used in any query to ensure that you always pull consistent data for an object.
+
 To do so, simply create a function that accepts a `FieldResolver<T>` and returns a `string[]`
 
 {% tabs %}
@@ -92,9 +92,9 @@ LIMIT
 {% endtab %}
 {% endtabs %}
 
-### Recursive Models
+## Recursive Models
 
-In some cases you might need a model that SELECTS a parent of the same type.  This can be done by adding an "termination condition" that checks the `traversed` array in the model function:
+In some cases you might need a model that SELECTS a parent of the same type. This can be done by adding an "termination condition" that checks the `traversed` array in the model function:
 
 {% tabs %}
 {% tab title="Example" %}

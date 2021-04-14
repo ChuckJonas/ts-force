@@ -19,4 +19,4 @@ The **MISSION** of this project is to:
 
 ## Usage
 
-[See Documentation](https://app.gitbook.com/@cjonas/s/ts-force)
+[See Documentation](https://ts-force.gitbook.io/ts-force/)

@@ -31,10 +31,6 @@ setDefaultConfig({
 {% endtabs %}
 
 {% hint style="warning" %}
- In order to make certain API request, you may need to add a `CORS Allowlist` entry for the VisualForce domain
+In order to make certain API request, you may need to add a `CORS Allowlist` entry for the VisualForce domain.
 {% endhint %}
-
-
-
-
 
