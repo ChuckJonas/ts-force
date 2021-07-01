@@ -109,3 +109,60 @@ console.log(returnedAccounts[0].id);
 {% endtab %}
 {% endtabs %}
 
+## @RemoteAction
+
+If you are running inside a VisualForce page, you may want to use @RemoteActions to call dedicated controller code.
+
+{% tabs %}
+{% tab title="MyController.cls" %}
+```java
+public class MyController{
+  @RemoteAction
+  public static String foo(Account acc) {
+    return "hello world";
+  }
+}
+```
+{% endtab %}
+
+{% tab title="client.ts" %}
+```typescript
+import { promisifyRemoteAction } from 'remote-action-promise';
+ 
+//this gets injected on the global scope so we need to declare it if using typescript
+declare var MyController: {
+  foo: any;
+};
+ 
+type FooParams = [acc: {}];
+ 
+const fooRemoteAction = promisifyRemoteAction<FooParams, string>(MyController.foo);
+ 
+(async() => {
+ let acc = new Account({
+    id: '123',
+    contacts: [new Contact({
+        firstName: 'john',
+        lastName: 'doe'
+    })],
+    owner: new User({
+        'email': 'example@gmail.com'
+    })
+  });
+
+  const sfSob = acc.toJson(
+    { dmlMode: 'all', sendChildObj: true, sendParentObj: true }
+  );
+  try{
+    const stringResult = await fooRemoteAction(sfSob);
+  }catch(e){
+    console.log('error', e);
+  }
+ 
+})()
+```
+{% endtab %}
+{% endtabs %}
+
+See [remote-action-promise](https://www.npmjs.com/package/remote-action-promise) for more details on calling `@RemoteActions` from VisualForce apps.
+
