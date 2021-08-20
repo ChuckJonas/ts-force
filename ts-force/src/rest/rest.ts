@@ -44,7 +44,8 @@ export class Rest {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      maxContentLength: Infinity
+      // Use -1 to avoid slow down bug with 'Buffer.concat' calls in Axios https://github.com/axios/axios/issues/2829
+      maxContentLength: -1
     });
 
     this.request.interceptors.response.use((response: AxiosResponse) => {
