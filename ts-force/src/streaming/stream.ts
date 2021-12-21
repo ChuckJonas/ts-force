@@ -33,7 +33,7 @@ export class Streaming {
      * @memberof Streaming
      */
     public connect = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.listener.handshake((resp) => {
                 if (resp.successful) {
                     resolve();

@@ -11,7 +11,7 @@ describe('parseLimitsFromResponse', () => {
             headers: {
                 'sforce-limit-info': 'api-usage=100/200' 
             }
-        } as AxiosResponse;
+        } as unknown as AxiosResponse;
         const result = parseLimitsFromResponse(fakeResponse);
         expect(result.limit).to.equal(200);
         expect(result.used).to.equal(100);
@@ -30,7 +30,7 @@ describe('parseLimitsFromResponse', () => {
             headers: {
                 'sforce-limit-info': 'so-invalid' 
             }
-        } as AxiosResponse;
+        } as unknown as AxiosResponse;
         const result = parseLimitsFromResponse(fakeResponse);
         expect(result).to.eql(null);
     });
