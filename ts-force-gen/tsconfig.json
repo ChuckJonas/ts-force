@@ -15,7 +15,7 @@
     "sourceMap": true,
     "pretty": true,
     "lib": [
-      "es6"
+      "es6", "DOM"
     ],
     "types": [
       "node",
