@@ -11,5 +11,6 @@ describe('Test Generator', () => {
     expect(cleanAPIName('NS__Test_Object__r', true)).to.equal('NSTestObject');
     expect(cleanAPIName('NS__Test_object__r', true)).to.equal('NSTestObject');
     expect(cleanAPIName('NS__Test_object__r', true)).to.equal('NSTestObject');
+    expect(cleanAPIName('My_Test_Object__pc', false)).to.equal('MyTestObjectPC');
   })
 })
