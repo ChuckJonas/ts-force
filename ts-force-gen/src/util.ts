@@ -1,14 +1,19 @@
 import { Project, SourceFile } from 'ts-morph';
 import * as fs from 'fs';
 
-const API_NAME_REGEX = /(?:^((?:\w(?!__))+\w)__|^)((?:\w(?!__))+\w)(?:__(.+)$|$)/;
+const SUFFIXES_REPLACEMENTS = {'__c': '', '__r': '', '__pc': 'PC', '__pr': 'PR'};
+const API_NAME_REGEX = /(?:^((?:\w(?!__))+\w)__|^)(.*)$/;
 
 export const cleanAPIName = (sfName: string, keepNamespaces: boolean) => {
-  let match = API_NAME_REGEX.exec(sfName);
+  let name = sfName;
+  Object.keys(SUFFIXES_REPLACEMENTS).forEach((key) => {
+      name = name.replace(new RegExp(key + '$'), SUFFIXES_REPLACEMENTS[key]);
+  });
+  let match = API_NAME_REGEX.exec(name);
   if (!match) {
     throw new Error('NO MATCH FOUND FOR ' + sfName);
   }
-  let name = (keepNamespaces && match[1] ? match[1] : '') + match[2];
+  name = (keepNamespaces && match[1] ? match[1] : '') + match[2];
   const parts = name.split('_');
   return parts.map((p, i) => {
     if(i > 0 && p.length) {
