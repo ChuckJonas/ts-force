@@ -54,7 +54,7 @@
     "typescript-json-schema": "^0.43.0"
   },
   "dependencies": {
-    "@salesforce/core": "^2.12.3",
+    "@salesforce/core": "^3.32.12",
     "cli-spinner": "0.2.10",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.20",
