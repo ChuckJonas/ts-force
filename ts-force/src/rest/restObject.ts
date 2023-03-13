@@ -146,7 +146,7 @@ export abstract class RestObject extends SObject {
       return this.insertComposite()
     } else {
       let response = (await this._client.request.post(
-        `${this.attributes.url}/${this._client.version}/sobjects/${this.attributes.type}/`, 
+        `${this.attributes.url}/`, 
         this.toJson({ dmlMode: 'insert' }))).data
       this.id = response.id
     }
@@ -190,7 +190,7 @@ export abstract class RestObject extends SObject {
       return this.updateComposite(opts.sendAllFields)
     } else {
       let response = (await this._client.request.patch(
-        `${this.attributes.url}/${this._client.version}/sobjects/${this.attributes.type}/${this.id}`,
+        `${this.attributes.url}/${this.id}`,
         this.toJson({ dmlMode: opts.sendAllFields ? 'update' : 'update_modified_only'}))).data
       this._modified.clear();
     }
