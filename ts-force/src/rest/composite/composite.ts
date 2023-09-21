@@ -7,6 +7,7 @@ import { BaseConfig } from '../../auth/baseConfig';
 export interface CompositeRequest extends BatchRequest {
   referenceId: string;
   body?: any;
+  httpHeaders?: Record<string, string>
 }
 
 export interface CompositePayload {
