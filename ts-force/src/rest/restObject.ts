@@ -142,6 +142,18 @@ export abstract class RestObject extends SObject {
     opts = opts || {};
     const { refresh } = opts;
 
+    if (refresh === true) {
+      return this.insertComposite()
+    } else {
+      let response = (await this._client.request.post(
+        `${this.attributes.url}/`, 
+        this.toJson({ dmlMode: 'insert' }))).data
+      this.id = response.id
+    }
+    return this
+  }
+
+  protected async insertComposite(): Promise<this> {
     let insertCompositeRef = 'newObject';
 
     let composite = new Composite(this._client).addRequest({
@@ -151,13 +163,11 @@ export abstract class RestObject extends SObject {
       body: this.toJson({ dmlMode: 'insert' })
     }, this.handleCompositeUpdateResult);
 
-    if (refresh === true) {
-      composite.addRequest({
-        method: 'GET',
-        url: `${this.attributes.url}/@{${insertCompositeRef}.id}`,
-        referenceId: 'getObject'
-      }, this.handleCompositeGetResult);
-    }
+    composite.addRequest({
+      method: 'GET',
+      url: `${this.attributes.url}/@{${insertCompositeRef}.id}`,
+      referenceId: 'getObject'
+    }, this.handleCompositeGetResult);
 
     const compositeResult = await composite.send();
     this.handleCompositeErrors(compositeResult);
@@ -176,18 +186,25 @@ export abstract class RestObject extends SObject {
     if (this.id == null) {
       throw new Error('Must have Id to update!');
     }
-
-    let batchRequest = new CompositeBatch(this._client).addUpdate(this, { sendAllFields: opts.sendAllFields });
-
     if (opts.refresh === true) {
-      batchRequest.addGet(this, this.handleCompositeBatchGetResult);
+      return this.updateComposite(opts.sendAllFields)
+    } else {
+      let response = (await this._client.request.patch(
+        `${this.attributes.url}/${this.id}`,
+        this.toJson({ dmlMode: opts.sendAllFields ? 'update' : 'update_modified_only'}))).data
+      this._modified.clear();
     }
+    return this;
+  }
+
+  protected async updateComposite(sendAllFields = false): Promise<this> {
+    let batchRequest = new CompositeBatch(this._client).addUpdate(this, { sendAllFields });
+    batchRequest.addGet(this, this.handleCompositeBatchGetResult);
     const batchResponse = await batchRequest.send();
     this.handleCompositeBatchErrors(batchResponse);
     this._modified.clear();
     return this;
   }
-
   /**
   * Deletes the Object from Salesforce
   *
