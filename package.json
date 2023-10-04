@@ -9,11 +9,11 @@
     "checkCommitted": "git diff-index --quiet HEAD -- || { echo 'ERROR: You have uncommitted changes!  Please commit before publishing...'; exit 1; } ",
     "tag": "git add '*package*.json' && git commit -m \"published v$npm_package_version\" && git tag $npm_package_version",
     "prepublishOnly": "echo 'Code should be published from individual directories' && exit 1",
-    "publishRuntime": "cd ts-force && npm version $npm_package_version && npm publish",
-    "publishGen": "cd ts-force-gen && npm version $npm_package_version && npm publish",
+    "publishRuntime": "cd ts-force && npm publish",
+    "publishGen": "cd ts-force-gen && npm publish",
     "build": "cd ts-force && npm run build && cd ../ts-force-gen && npm run build",
     "tagNext": "npm dist-tag add ts-force@$npm_package_version && npm dist-tag add ts-force-gen@$npm_package_version",
-    "publishBoth": "npm run checkCommitted && npm run publishRuntime && npm run publishGen && npm run tag"
+    "publishBoth": "npm run publishRuntime && npm run publishGen && npm run tag"
   },
   "repository": {
     "type": "git",
