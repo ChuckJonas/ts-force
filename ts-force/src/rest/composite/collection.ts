@@ -1,7 +1,5 @@
-import { RestObject } from '../restObject';
-import { Rest } from '../rest';
-import { AxiosResponse } from 'axios';
-import { BaseConfig } from '../../auth/baseConfig';
+import { Rest } from "../rest";
+import { RestObject } from "../restObject";
 
 export interface InsertRequest {
   allOrNone: boolean;
@@ -47,16 +45,21 @@ export class CompositeCollection {
    * @param  {boolean} setId? if set to true, the passed SObject Id's will be updated when request if completed
    * @returns Promise<SaveResult[]> in order of pass SObjects
    */
-  public insert = async (sobs: RestObject[], allOrNothing?: boolean, setId?: boolean): Promise<SaveResult[]> => {
+  public insert = async (
+    sobs: RestObject[],
+    allOrNothing?: boolean,
+    setId?: boolean
+  ): Promise<SaveResult[]> => {
     const dmlSobs = sobs.map((sob) => {
-      const dmlSob = sob.toJson({ dmlMode: 'insert' });
+      const dmlSob = sob.toJson({ dmlMode: "insert" });
       return dmlSob;
     });
     let payload: InsertRequest = {
       records: dmlSobs,
-      allOrNone: allOrNothing !== false
+      allOrNone: allOrNothing !== false,
     };
-    let saveResults = (await this.client.request.post(this.endpoint, payload)).data;
+    let saveResults = (await this.client.request.post(this.endpoint, payload))
+      .data;
 
     if (setId !== false) {
       for (let i = 0; i < saveResults.length; i++) {
@@ -65,7 +68,7 @@ export class CompositeCollection {
     }
     this.resetModified(sobs, saveResults);
     return saveResults;
-  }
+  };
 
   /**
    * Updates up to 200 SObjects.
@@ -73,24 +76,31 @@ export class CompositeCollection {
    * @param  {boolean} allOrNothing? if set true, salesforce will rollback on failures
    * @returns Promise<SaveResult[]> in order of pass SObjects
    */
-  public update = async (sobs: RestObject[], opts?: { allOrNothing?: boolean, sendAllFields?: boolean }): Promise<SaveResult[]> => {
+  public update = async (
+    sobs: RestObject[],
+    opts?: { allOrNothing?: boolean; sendAllFields?: boolean }
+  ): Promise<SaveResult[]> => {
     opts = opts || {};
     const dmlSobs = sobs.map((sob) => {
-      const dmlSob = sob.toJson({ dmlMode: opts.sendAllFields ? 'update' : 'update_modified_only' });
-      dmlSob['Id'] = sob.id;
+      const dmlSob = sob.toJson({
+        dmlMode: opts.sendAllFields ? "update" : "update_modified_only",
+      });
+      dmlSob["Id"] = sob.id;
       return dmlSob;
     });
     let payload: InsertRequest = {
       records: dmlSobs,
-      allOrNone: opts.allOrNothing !== false
+      allOrNone: opts.allOrNothing !== false,
     };
-    let results: SaveResult[] = (await this.client.request.patch(this.endpoint, payload)).data;
+    let results: SaveResult[] = (
+      await this.client.request.patch(this.endpoint, payload)
+    ).data;
 
     // clear out modified
     this.resetModified(sobs, results);
 
     return results;
-  }
+  };
 
   /**
    * Deletes up to 200 SObjects.
@@ -98,10 +108,19 @@ export class CompositeCollection {
    * @param  {boolean} allOrNothing? if set true, salesforce will rollback on failures
    * @returns Promise<BaseResult[]> in order of pass SObjects
    */
-  public delete = async (sobs: RestObject[], allOrNothing?: boolean): Promise<BaseResult[]> => {
+  public delete = async (
+    sobs: RestObject[],
+    allOrNothing?: boolean
+  ): Promise<BaseResult[]> => {
     allOrNothing = allOrNothing !== false;
-    return (await this.client.request.delete(`${this.endpoint}?ids=${sobs.map(s => s.id).join(',')}&allOrNone=${allOrNothing !== false}`)).data;
-  }
+    return (
+      await this.client.request.delete(
+        `${this.endpoint}?ids=${sobs.map((s) => s.id).join(",")}&allOrNone=${
+          allOrNothing !== false
+        }`
+      )
+    ).data;
+  };
 
   private resetModified = (sobs: RestObject[], results: SaveResult[]) => {
     // clear out modified
@@ -110,5 +129,5 @@ export class CompositeCollection {
         sobs[i]._modified.clear();
       }
     }
-  }
+  };
 }

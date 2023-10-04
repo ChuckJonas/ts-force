@@ -79,7 +79,7 @@ describe('Error Handlers', () => {
             let contact = await new Contact({}).insert();
         } catch (e) {
             let stdErr = getStandardError(e);
-            expect(stdErr.type).to.equal('composite');
+            expect(stdErr.type).to.equal('axios');
             expect(stdErr.errorDetails.length).to.equal(1);
             expect(stdErr.errorDetails[0].errorCode).to.equal('REQUIRED_FIELD_MISSING');
             expect(stdErr.errorDetails[0].message).to.contain('Required fields are missing: [LastName]');
@@ -107,7 +107,7 @@ describe('Error Handlers', () => {
             throw new Error('update should have failed!');
         } catch (e) {
             let stdErr = getStandardError(e);
-            expect(stdErr.type).to.equal('composite');
+            expect(stdErr.type).to.equal('axios');
             expect(stdErr.errorDetails.length).to.equal(1);
             expect(stdErr.errorDetails[0].errorCode).to.equal('MALFORMED_ID');
             expect(stdErr.errorDetails[0].message).to.contain('Owner ID: id value of incorrect type');

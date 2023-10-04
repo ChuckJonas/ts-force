@@ -149,6 +149,7 @@ export abstract class RestObject extends SObject {
         `${this.attributes.url}/`, 
         this.toJson({ dmlMode: 'insert' }))).data
       this.id = response.id
+      this._modified.clear();
     }
     return this
   }
@@ -189,9 +190,9 @@ export abstract class RestObject extends SObject {
     if (opts.refresh === true) {
       return this.updateComposite(opts.sendAllFields)
     } else {
-      let response = (await this._client.request.patch(
+      await this._client.request.patch(
         `${this.attributes.url}/${this.id}`,
-        this.toJson({ dmlMode: opts.sendAllFields ? 'update' : 'update_modified_only'}))).data
+        this.toJson({ dmlMode: opts.sendAllFields ? 'update' : 'update_modified_only'}))
       this._modified.clear();
     }
     return this;

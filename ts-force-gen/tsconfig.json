@@ -14,21 +14,11 @@
     "downlevelIteration": true,
     "sourceMap": true,
     "pretty": true,
-    "lib": [
-      "es6", "DOM"
-    ],
-    "types": [
-      "node",
-      "mocha"
-    ],
-    "baseUrl": ".",
+    "skipLibCheck": true,
+    "lib": ["es6", "DOM"],
+    "types": ["node", "mocha"],
+    "baseUrl": "."
   },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts",
-    "test/**/*.spec.ts"
-  ],
-  "exclude": [
-    "node_modules/**"
-  ]
+  "include": ["src/**/*.ts", "test/**/*.ts", "test/**/*.spec.ts"],
+  "exclude": ["node_modules/**"]
 }

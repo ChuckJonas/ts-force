@@ -1,13 +1,10 @@
-import { RestObject } from '../restObject';
-import { Rest } from '../rest';
-import { AxiosResponse } from 'axios';
-import { BatchRequest } from './batch';
-import { BaseConfig } from '../../auth/baseConfig';
+import { Rest } from "../rest";
+import { BatchRequest } from "./batch";
 
 export interface CompositeRequest extends BatchRequest {
   referenceId: string;
   body?: any;
-  httpHeaders?: Record<string, string>
+  httpHeaders?: Record<string, string>;
 }
 
 export interface CompositePayload {
@@ -42,7 +39,10 @@ export class Composite {
    * @param  {(n:CompositeResponse)=>void} callback? Optional callback that gets passed the response
    * @returns `this` instance for chaining
    */
-  public addRequest(request: CompositeRequest, callback?: (n: CompositeResponse) => void): Composite {
+  public addRequest(
+    request: CompositeRequest,
+    callback?: (n: CompositeResponse) => void
+  ): Composite {
     this.compositeRequest.push(request);
     this.callbacks.push(callback);
     return this;
@@ -54,11 +54,15 @@ export class Composite {
    */
   public async send(): Promise<CompositeResult> {
     let payload: CompositePayload = {
-      compositeRequest: this.compositeRequest
+      compositeRequest: this.compositeRequest,
     };
-    let result = (await this.client.request.post(`/services/data/${this.client.version}/composite`, payload)).data;
+    let result = (
+      await this.client.request.post(
+        `/services/data/${this.client.version}/composite`,
+        payload
+      )
+    ).data;
     for (let i = 0; i < this.callbacks.length; i++) {
-
       let callback = this.callbacks[i];
       if (callback !== undefined) {
         callback(result.compositeResponse[i]);
