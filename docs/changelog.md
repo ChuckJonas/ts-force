@@ -4,6 +4,13 @@ description: ts-force does it's best to follow semver
 
 # Changelog
 
+## 3.2.0
+
+**Changed**
+* `insert` / `update` now only use composite mode during refresh (#135 via @colinfindlay-nz)
+*  added headers to composite request (#139 via @jall)
+* npm audit and typescript upgrade
+
 ## 3.0.1
 
 **Fixed**

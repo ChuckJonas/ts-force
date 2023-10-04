@@ -20,7 +20,7 @@ describe('Error Handlers', () => {
                 '/services/apexrest/asdf'
             )).data;
             throw new Error('Exception Expected');
-        } catch (e) {
+        } catch (e: any) {
             let stdErr = getStandardError(e);
             expect(stdErr.type).to.equal('axios');
             let axiosE = stdErr.e as AxiosError;
@@ -39,7 +39,7 @@ describe('Error Handlers', () => {
                 { acc: { asdf: 'not valid' } }
             )).data;
             throw new Error('Exception Expected');
-        } catch (e) {
+        } catch (e: any) {
             let stdErr = getStandardError(e);
             expect(stdErr.type).to.equal('axios');
             expect(stdErr.errorDetails.length).to.equal(1);
@@ -52,7 +52,7 @@ describe('Error Handlers', () => {
         try {
             await Account.retrieve('SELECT asdf FROM ACCOUNT');
             throw new Error('Exception Expected');
-        } catch (e) {
+        } catch (e: any) {
             let stdErr = getStandardError(e);
             expect(stdErr.type).to.equal('axios');
             expect(stdErr.errorDetails.length).to.equal(1);
@@ -65,7 +65,7 @@ describe('Error Handlers', () => {
         try {
             await Account.retrieve('asdafagw');
             throw new Error('Exception Expected');
-        } catch (e) {
+        } catch (e: any) {
             let stdErr = getStandardError(e);
             expect(stdErr.type).to.equal('axios');
             expect(stdErr.errorDetails.length).to.equal(1);
@@ -77,7 +77,7 @@ describe('Error Handlers', () => {
     it('insert required field missing', async () => {
         try {
             let contact = await new Contact({}).insert();
-        } catch (e) {
+        } catch (e: any) {
             let stdErr = getStandardError(e);
             expect(stdErr.type).to.equal('axios');
             expect(stdErr.errorDetails.length).to.equal(1);
@@ -90,7 +90,7 @@ describe('Error Handlers', () => {
         try {
             await new Account({name: 'tsterr'}).update();
             throw new Error('update should have failed!');
-        } catch (e) {
+        } catch (e: any) {
             let stdErr = getStandardError(e);
             expect(stdErr.type).to.equal('any');
             expect(stdErr.errorDetails.length).to.equal(1);
@@ -105,7 +105,7 @@ describe('Error Handlers', () => {
             acc.ownerId = '12341';
             await acc.update();
             throw new Error('update should have failed!');
-        } catch (e) {
+        } catch (e: any) {
             let stdErr = getStandardError(e);
             expect(stdErr.type).to.equal('axios');
             expect(stdErr.errorDetails.length).to.equal(1);

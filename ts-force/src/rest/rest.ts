@@ -1,8 +1,19 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { SObjectDescribe } from './sObjectDescribe';
-import { BaseConfig, ConfigParams, createConfig, DEFAULT_CONFIG } from '../auth/baseConfig';
-import { Limits, ApiLimit, QueryResponse, SearchResponse, InvokableResult } from './restTypes';
-import { parseLimitsFromResponse } from './utils';
+import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { SObjectDescribe } from "./sObjectDescribe";
+import {
+  BaseConfig,
+  ConfigParams,
+  createConfig,
+  DEFAULT_CONFIG,
+} from "../auth/baseConfig";
+import {
+  Limits,
+  ApiLimit,
+  QueryResponse,
+  SearchResponse,
+  InvokableResult,
+} from "./restTypes";
+import { parseLimitsFromResponse } from "./utils";
 
 export class Rest {
   private static defaultInstance: Rest;
@@ -14,7 +25,7 @@ export class Rest {
 
   public apiLimit: ApiLimit = {
     used: null,
-    limit: null
+    limit: null,
   };
 
   /**
@@ -27,8 +38,10 @@ export class Rest {
     if (config) {
       this.config = createConfig(config);
     } else {
-      if (Rest.defaultInstance &&
-        Rest.defaultInstance.config.accessToken === DEFAULT_CONFIG.accessToken) {
+      if (
+        Rest.defaultInstance &&
+        Rest.defaultInstance.config.accessToken === DEFAULT_CONFIG.accessToken
+      ) {
         return Rest.defaultInstance;
       }
       //should probably be refactored to just happen when the default config is set
@@ -36,15 +49,18 @@ export class Rest {
       Rest.defaultInstance = this;
     }
 
-    this.version = `v${(this.config.version ? this.config.version : DEFAULT_CONFIG.version).toFixed(1)}`;
+    this.version = `v${(this.config.version
+      ? this.config.version
+      : DEFAULT_CONFIG.version
+    ).toFixed(1)}`;
     this.request = axios.create({
       baseURL: `${this.config.instanceUrl}`,
       headers: {
-        'Authorization': 'Bearer ' + this.config.accessToken,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Authorization: "Bearer " + this.config.accessToken,
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      maxContentLength: Infinity
+      maxContentLength: Infinity,
     });
 
     this.request.interceptors.response.use((response: AxiosResponse) => {
@@ -61,7 +77,11 @@ export class Rest {
    * @returns Promise<SObjectDescribe>
    */
   public async getSObjectDescribe(apiName: string): Promise<SObjectDescribe> {
-    return (await this.request.get(`/services/data/${this.version}/sobjects/${apiName}/describe/`)).data;
+    return (
+      await this.request.get(
+        `/services/data/${this.version}/sobjects/${apiName}/describe/`
+      )
+    ).data;
   }
 
   /**
@@ -70,9 +90,18 @@ export class Rest {
    * @param  {string} allRows Optional boolean to indicate use of `queryall` endpoint
    * @returns Promise<QueryResponse<T>>
    */
-  public async query<T>(query: string, allRows?: boolean): Promise<QueryResponse<T>> {
+  public async query<T>(
+    query: string,
+    allRows?: boolean
+  ): Promise<QueryResponse<T>> {
     let qryString = encodeURIComponent(query);
-    return (await this.request.get<QueryResponse<T>>(`/services/data/${this.version}/${allRows ? 'queryAll' : 'query'}?q=${qryString}`)).data;
+    return (
+      await this.request.get<QueryResponse<T>>(
+        `/services/data/${this.version}/${
+          allRows ? "queryAll" : "query"
+        }?q=${qryString}`
+      )
+    ).data;
   }
 
   public async queryMore<T>(resp: QueryResponse<T>): Promise<QueryResponse<T>> {
@@ -89,7 +118,11 @@ export class Rest {
    */
   public async search<T>(query: string): Promise<SearchResponse<T>> {
     let qryString = encodeURIComponent(query);
-    return (await this.request.get<SearchResponse<T>>(`/services/data/${this.version}/search?q=${qryString}`)).data;
+    return (
+      await this.request.get<SearchResponse<T>>(
+        `/services/data/${this.version}/search?q=${qryString}`
+      )
+    ).data;
   }
 
   /**
@@ -99,7 +132,9 @@ export class Rest {
    * @memberof Rest
    */
   public async limits(): Promise<Limits> {
-    return (await this.request.get<Limits>(`/services/data/${this.version}/limits`)).data;
+    return (
+      await this.request.get<Limits>(`/services/data/${this.version}/limits`)
+    ).data;
   }
 
   /**
@@ -110,13 +145,15 @@ export class Rest {
    * @returns {Promise<InvokableResult<O>>}
    * @memberof Rest
    */
-  public async invokeAction<O>(action: string, inputs: any[]): Promise<InvokableResult<O>> {
-    return (
-      await this.request.post<InvokableResult<O>>(
-        `/services/data/${this.version}/actions/custom/apex/${action}`,
-        { inputs }
-      )
-    ).data;
-  }
+  public async invokeAction<O>(
+    action: string,
+    inputs: any[]
+  ): Promise<InvokableResult<O>> {
+    const result = await this.request.post<InvokableResult<O>>(
+      `/services/data/${this.version}/actions/custom/apex/${action}`,
+      { inputs }
+    );
 
+    return result.data;
+  }
 }
