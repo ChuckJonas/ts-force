@@ -5,7 +5,7 @@ export interface BaseConfig {
 }
 
 export const DEFAULT_CONFIG: BaseConfig = {
-  version: 50,
+  version: 58,
   accessToken: "",
   instanceUrl: "",
 };

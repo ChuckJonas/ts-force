@@ -104,6 +104,20 @@ export class Rest {
     ).data;
   }
 
+  public async toolingQuery<T>(query: string): Promise<QueryResponse<T>> {
+    let qryString = encodeURIComponent(query);
+    return (
+      await this.request.get<QueryResponse<T>>(
+        `/services/data/${this.version}/tooling/query?q=${qryString}`
+      )
+    ).data;
+  }
+
+  /**
+   * Get the next page of a query
+   * @param resp the response from the previous query
+   * @returns the next page of results
+   */
   public async queryMore<T>(resp: QueryResponse<T>): Promise<QueryResponse<T>> {
     return (await this.request.get<QueryResponse<T>>(resp.nextRecordsUrl)).data;
   }
