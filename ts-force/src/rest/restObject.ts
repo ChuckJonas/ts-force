@@ -1,4 +1,12 @@
-import { BatchResponse, Composite, CompositeBatch, CompositeBatchResult, CompositeResponse, CompositeResult, queryAllComposite } from './composite';
+import {
+  BatchResponse,
+  Composite,
+  CompositeBatch,
+  CompositeBatchResult,
+  CompositeResponse,
+  CompositeResult,
+  queryAllComposite,
+} from './composite';
 import { Rest } from './rest';
 import { getSFieldProps, SalesforceFieldType, SFieldProperties } from './sObjectDecorators';
 import { SObject } from './sObject';
@@ -14,23 +22,29 @@ export interface DMLResponse {
 }
 
 export interface QueryOpts {
+  /* Optional rest instance to use */
   restInstance?: Rest;
+  /* Use 'queryAll' endpoint (retrieves deleted records) */
   allRows?: boolean;
+  /* Use Composite API to minimize number of API calls */
   useComposite?: boolean;
+  /* Follow all query locators. Defaults to 'parent-only'. 
+    NOTE: this only will query 1 level deep (not sure SF returns deeper than that anyway?)
+  */
+  allRecords?: false | true | 'parent-only';
 }
 
 const NAME_MAP_CACHE = new Map<symbol, Map<string, string>>();
 
 /**
-* Abstract Base class which provides DML to Generated SObjects
-* TODO: Need some way to support multiple configurations
-* @export
-* @abstract
-* @class RestObject
-* @extends {SObject}
-*/
+ * Abstract Base class which provides DML to Generated SObjects
+ * TODO: Need some way to support multiple configurations
+ * @export
+ * @abstract
+ * @class RestObject
+ * @extends {SObject}
+ */
 export abstract class RestObject extends SObject {
-
   private _client: Rest;
 
   public _modified = new Set<string>();
@@ -62,13 +76,14 @@ export abstract class RestObject extends SObject {
         }
       }
       return true;
-    }
+    },
   };
 
   // returns ALL records of a query
-  protected static async query<T extends RestObject>(type: { new(): T }, qry: string, opts?: QueryOpts): Promise<T[]> {
+  protected static async query<T extends RestObject>(type: { new (): T }, qry: string, opts?: QueryOpts): Promise<T[]> {
     opts = opts || {};
-    const { restInstance, allRows, useComposite } = opts;
+
+    const { restInstance, allRows, useComposite, allRecords = 'parent-only' } = opts;
     let client = restInstance || new Rest();
     let records: SObject[] = [];
 
@@ -77,13 +92,37 @@ export abstract class RestObject extends SObject {
     } else {
       let response = await client.query<T>(qry, allRows);
       records = response.records;
-      while (!response.done && response.nextRecordsUrl) {
-        response = await client.queryMore<T>(response);
-        records = records.concat(response.records);
+      if (allRecords === true || allRecords === 'parent-only') {
+        while (!response.done && response.nextRecordsUrl) {
+          response = await client.queryMore<T>(response);
+          records = records.concat(response.records);
+        }
       }
     }
 
-    let sobs: Array<T> = records.map(rec => {
+    if (allRecords === true) {
+      // SF inner queries have query locators that might not return all the data
+      // There should be maybe be an option to enable/disable this as it could run A LOT of queries
+      for (const rec of records) {
+        // check if any of the properties have query locators
+        for (const prop in rec) {
+          if (rec.hasOwnProperty(prop)) {
+            const data = rec[prop];
+            if (data && typeof data === 'object' && 'records' in data && 'done' in data && 'nextRecordsUrl' in data) {
+              let innerResponse = data;
+              let innerRecords = data.records;
+              while (!innerResponse.done && innerResponse.nextRecordsUrl) {
+                innerResponse = await client.queryMore<any>(innerResponse);
+                innerRecords = innerRecords.concat(innerResponse.records);
+              }
+              rec[prop].records = innerRecords;
+            }
+          }
+        }
+      }
+    }
+
+    let sobs: Array<T> = records.map((rec) => {
       let sob = new type();
       sob._client = client;
       sob.mapFromQuery(rec);
@@ -93,7 +132,7 @@ export abstract class RestObject extends SObject {
     return sobs;
   }
 
-  protected static getPropertiesMeta<S, T extends RestObject>(type: { new(): T }): { [P in keyof FieldProps<S>]: SFieldProperties; } {
+  protected static getPropertiesMeta<S, T extends RestObject>(type: { new (): T }): { [P in keyof FieldProps<S>]: SFieldProperties } {
     let properties: any = {};
     let sob = new type();
     for (let i in sob) {
@@ -110,15 +149,15 @@ export abstract class RestObject extends SObject {
 
   handleCompositeUpdateResult = (result: CompositeResponse) => {
     this.id = result.body.id;
-  }
+  };
 
   handleCompositeGetResult = (result: CompositeResponse) => {
     this.mapFromQuery(result.body);
-  }
+  };
 
   handleCompositeBatchGetResult = (result: CompositeBatchResult<SObject, any>) => {
     this.mapFromQuery(result.result);
-  }
+  };
 
   public async refresh(): Promise<this> {
     if (this.id == null) {
@@ -132,43 +171,47 @@ export abstract class RestObject extends SObject {
   }
 
   /**
-  * inserts the sobject to Salesfroce
-  *
-  * @param {boolean} [refresh] Set to true to apply GET after update
-  * @returns {Promise<void>}
-  * @memberof RestObject
-  */
-  public async insert(opts?: {refresh?: boolean}): Promise<this> {
+   * inserts the sobject to Salesfroce
+   *
+   * @param {boolean} [refresh] Set to true to apply GET after update
+   * @returns {Promise<void>}
+   * @memberof RestObject
+   */
+  public async insert(opts?: { refresh?: boolean }): Promise<this> {
     opts = opts || {};
     const { refresh } = opts;
 
     if (refresh === true) {
-      return this.insertComposite()
+      return this.insertComposite();
     } else {
-      let response = (await this._client.request.post(
-        `${this.attributes.url}/`, 
-        this.toJson({ dmlMode: 'insert' }))).data
-      this.id = response.id
+      let response = (await this._client.request.post(`${this.attributes.url}/`, this.toJson({ dmlMode: 'insert' }))).data;
+      this.id = response.id;
       this._modified.clear();
     }
-    return this
+    return this;
   }
 
   protected async insertComposite(): Promise<this> {
     let insertCompositeRef = 'newObject';
 
-    let composite = new Composite(this._client).addRequest({
-      method: 'POST',
-      url: this.attributes.url,
-      referenceId: insertCompositeRef,
-      body: this.toJson({ dmlMode: 'insert' })
-    }, this.handleCompositeUpdateResult);
+    let composite = new Composite(this._client).addRequest(
+      {
+        method: 'POST',
+        url: this.attributes.url,
+        referenceId: insertCompositeRef,
+        body: this.toJson({ dmlMode: 'insert' }),
+      },
+      this.handleCompositeUpdateResult
+    );
 
-    composite.addRequest({
-      method: 'GET',
-      url: `${this.attributes.url}/@{${insertCompositeRef}.id}`,
-      referenceId: 'getObject'
-    }, this.handleCompositeGetResult);
+    composite.addRequest(
+      {
+        method: 'GET',
+        url: `${this.attributes.url}/@{${insertCompositeRef}.id}`,
+        referenceId: 'getObject',
+      },
+      this.handleCompositeGetResult
+    );
 
     const compositeResult = await composite.send();
     this.handleCompositeErrors(compositeResult);
@@ -177,22 +220,23 @@ export abstract class RestObject extends SObject {
   }
 
   /**
-  * Updates the sObject on Salesforce
-  * @param {boolean} [refresh] Set to true to apply GET after update
-  * @returns {Promise<void>}
-  * @memberof RestObject
-  */
-  public async update(opts?: { refresh?: boolean, sendAllFields?: boolean }): Promise<this> {
+   * Updates the sObject on Salesforce
+   * @param {boolean} [refresh] Set to true to apply GET after update
+   * @returns {Promise<void>}
+   * @memberof RestObject
+   */
+  public async update(opts?: { refresh?: boolean; sendAllFields?: boolean }): Promise<this> {
     opts = opts || {};
     if (this.id == null) {
       throw new Error('Must have Id to update!');
     }
     if (opts.refresh === true) {
-      return this.updateComposite(opts.sendAllFields)
+      return this.updateComposite(opts.sendAllFields);
     } else {
       await this._client.request.patch(
         `${this.attributes.url}/${this.id}`,
-        this.toJson({ dmlMode: opts.sendAllFields ? 'update' : 'update_modified_only'}))
+        this.toJson({ dmlMode: opts.sendAllFields ? 'update' : 'update_modified_only' })
+      );
       this._modified.clear();
     }
     return this;
@@ -207,11 +251,11 @@ export abstract class RestObject extends SObject {
     return this;
   }
   /**
-  * Deletes the Object from Salesforce
-  *
-  * @returns {Promise<DMLResponse>}
-  * @memberof RestObject
-  */
+   * Deletes the Object from Salesforce
+   *
+   * @returns {Promise<DMLResponse>}
+   * @memberof RestObject
+   */
   public async delete(): Promise<DMLResponse> {
     if (this.id == null) {
       throw new Error('Must have Id to Delete!');
@@ -221,10 +265,10 @@ export abstract class RestObject extends SObject {
   }
 
   public toJson(opts: {
-    dmlMode: 'all' | 'insert' | 'update' | 'update_modified_only'
-    hideAttributes?: boolean,
-    sendParentObj?: boolean,
-    sendChildObj?: boolean,
+    dmlMode: 'all' | 'insert' | 'update' | 'update_modified_only';
+    hideAttributes?: boolean;
+    sendParentObj?: boolean;
+    sendChildObj?: boolean;
   }): any {
     const { hideAttributes, sendParentObj, sendChildObj, dmlMode } = opts;
 
@@ -245,12 +289,12 @@ export abstract class RestObject extends SObject {
         continue;
       }
 
-      const fType = !sFieldProps.reference ? 'FIELD' : (sFieldProps.childRelationship === true ? 'CHILD' : 'PARENT');
+      const fType = !sFieldProps.reference ? 'FIELD' : sFieldProps.childRelationship === true ? 'CHILD' : 'PARENT';
       switch (fType) {
         case 'CHILD':
           if (sendChildObj) {
             data[sFieldProps.apiName] = {
-              records: (this[i] as any as RestObject[]).map(obj => obj.toJson(opts))
+              records: (this[i] as any as RestObject[]).map((obj) => obj.toJson(opts)),
             };
           }
           break;
@@ -267,10 +311,10 @@ export abstract class RestObject extends SObject {
           break;
         case 'FIELD':
           const canSend =
-            dmlMode === 'all'
-            || (dmlMode === 'insert' && sFieldProps.createable)
-            || (dmlMode === 'update' && sFieldProps.updateable)
-            || (dmlMode === 'update_modified_only' && sFieldProps.updateable && this._modified.has(sFieldProps.apiName));
+            dmlMode === 'all' ||
+            (dmlMode === 'insert' && sFieldProps.createable) ||
+            (dmlMode === 'update' && sFieldProps.updateable) ||
+            (dmlMode === 'update_modified_only' && sFieldProps.updateable && this._modified.has(sFieldProps.apiName));
 
           if (canSend) {
             data[sFieldProps.apiName] = this[i] ? this.toSFValueFormat(sFieldProps, this[i]) : this[i];
@@ -293,12 +337,12 @@ export abstract class RestObject extends SObject {
   }
 
   /**
-  * Advanced method used to set a modified API key of a field to send on update
-  * @param keys: keys of the object to set the associated field for
-  * @memberof RestObject
-  */
+   * Advanced method used to set a modified API key of a field to send on update
+   * @param keys: keys of the object to set the associated field for
+   * @memberof RestObject
+   */
   public setModified = (keys: Array<keyof this>) => {
-    keys.forEach(key => {
+    keys.forEach((key) => {
       if (typeof key === 'string') {
         let decorator = getSFieldProps(this, key);
         if (decorator) {
@@ -306,7 +350,7 @@ export abstract class RestObject extends SObject {
         }
       }
     });
-  }
+  };
 
   protected prepareAsRelationRecord() {
     let data: { [key: string]: any } = {};
@@ -326,18 +370,17 @@ export abstract class RestObject extends SObject {
 
   // copies data from a json object to restobject
   protected mapFromQuery(data: SObject): this {
-
     // create a map of lowercase API names -> sob property names
     let apiNameMap = this.getNameMapping();
 
     // loop through returned data
     for (let i in data) {
       if (data.hasOwnProperty(i)) {
-
         // translate prop name & get decorator
         let sobPropName = apiNameMap.get(i.toLowerCase());
         let sFieldProps = getSFieldProps(this, sobPropName);
-        if (!sFieldProps) { // no mapping found
+        if (!sFieldProps) {
+          // no mapping found
           continue;
         }
         if (data[i] === null) {
@@ -346,9 +389,7 @@ export abstract class RestObject extends SObject {
           } else {
             this[sobPropName] = null;
           }
-
         } else if (!sFieldProps.reference) {
-
           let val = data[i];
           if (sFieldProps.salesforceType === SalesforceFieldType.DATETIME) {
             val = new Date(val);
@@ -358,23 +399,21 @@ export abstract class RestObject extends SObject {
             val = val.split(';');
           }
           this[sobPropName] = val;
-
         } else {
           // reference type
-          let type: { new(): RestObject; } = sFieldProps.reference();
+          let type: { new (): RestObject } = sFieldProps.reference();
 
           if (sFieldProps.childRelationship === true) {
             // child type, map each record
             this[sobPropName] = [];
             if (data[i]) {
               const records = Array.isArray(data[i]) ? data[i] : data[i].records;
-              records.forEach(record => {
+              records.forEach((record) => {
                 let typeInstance = new type();
                 typeInstance._client = this._client;
                 this[sobPropName].push(typeInstance.mapFromQuery(record));
               });
             }
-
           } else {
             let typeInstance = new type();
             typeInstance._client = this._client;
@@ -390,7 +429,6 @@ export abstract class RestObject extends SObject {
 
   // returns a mapping of API Name (lower case) -> Property Name
   private getNameMapping(): Map<string, string> {
-
     if (this.__UUID && NAME_MAP_CACHE.has(this.__UUID)) {
       return NAME_MAP_CACHE.get(this.__UUID);
     }
@@ -416,12 +454,12 @@ export abstract class RestObject extends SObject {
 
   private handleCompositeErrors(compositeResult: CompositeResult) {
     let errors: CompositeBatchResult<any, StandardRestError[]>[] = [];
-    compositeResult.compositeResponse.forEach(batchResult => {
+    compositeResult.compositeResponse.forEach((batchResult) => {
       if (batchResult.httpStatusCode >= 300) {
         let { httpStatusCode: statusCode, body: result } = batchResult;
         errors.push({
           statusCode,
-          result
+          result,
         });
       }
     });
@@ -436,7 +474,7 @@ export abstract class RestObject extends SObject {
   private handleCompositeBatchErrors(batchResponse: BatchResponse) {
     if (batchResponse.hasErrors) {
       let errors: CompositeBatchResult<any, StandardRestError[]>[] = [];
-      batchResponse.results.forEach(batchResult => {
+      batchResponse.results.forEach((batchResult) => {
         if (batchResult.statusCode >= 300) {
           errors.push(batchResult);
         }
