@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@types/cometd": "^4.0.4",
-    "axios": "^0.24.0",
+    "axios": "^1.6.0",
     "cometd": "4.0.3",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
