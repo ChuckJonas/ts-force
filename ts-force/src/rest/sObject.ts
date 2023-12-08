@@ -16,10 +16,10 @@ export abstract class SObject {
   public __UUID?: symbol;
 
   constructor(type: string, client?: Rest) {
-    const version = client?.version ?? DEFAULT_CONFIG.version.toFixed(1);
+    const version = client?.version ?? `v${DEFAULT_CONFIG.version.toFixed(1)}`
 
     this.attributes = new SObjectAttributes();
     this.attributes.type = type;
-    this.attributes.url = `/services/data/v${version}/sobjects/${this.attributes.type}`;
+    this.attributes.url = `/services/data/${version}/sobjects/${this.attributes.type}`;
   }
 }
