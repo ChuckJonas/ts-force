@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG } from '../auth/baseConfig';
+import { Rest } from './rest';
 import { SalesforceFieldType, sField } from './sObjectDecorators';
 
 export class SObjectAttributes {
@@ -14,11 +15,11 @@ export abstract class SObject {
   public attributes: SObjectAttributes;
   public __UUID?: symbol;
 
-  constructor(type: string) {
+  constructor(type: string, client?: Rest) {
+    const version = client?.version ?? `v${DEFAULT_CONFIG.version.toFixed(1)}`
+
     this.attributes = new SObjectAttributes();
     this.attributes.type = type;
-    if (DEFAULT_CONFIG.version) {
-      this.attributes.url = `/services/data/v${DEFAULT_CONFIG.version.toFixed(1)}/sobjects/${this.attributes.type}`;
-    }
+    this.attributes.url = `/services/data/${version}/sobjects/${this.attributes.type}`;
   }
 }
