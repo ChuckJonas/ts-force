@@ -1,6 +1,6 @@
 {
   "name": "ts-force",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "a typescript client for connecting with salesforce APIs",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -41,7 +41,7 @@
     "chai": "^4.2.0",
     "cometd-nodejs-client": "1.0.2",
     "dotenv": "^4.0.0",
-    "mocha": "^8.2.1",
+    "mocha": "^10.2.0",
     "nock": "^9.3.3",
     "node-env-run": "^4.0.2",
     "ts-node": "^7.0.1",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@types/cometd": "^4.0.4",
-    "axios": "^0.24.0",
+    "axios": "^1.6.2",
     "cometd": "4.0.3",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.6.0"
