@@ -50,7 +50,7 @@ export abstract class RestObject extends SObject {
   public _modified = new Set<string>();
 
   constructor(type: string, client?: Rest) {
-    super(type);
+    super(type, client);
     this._client = client || new Rest();
   }
 
