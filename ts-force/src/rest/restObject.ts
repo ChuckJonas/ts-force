@@ -57,7 +57,7 @@ export abstract class RestObject extends SObject {
   protected initObject(fields?: Partial<FieldProps<RestObject>>) {
     if (fields) {
       if (fields instanceof RestObject) {
-        this._modified = fields._modified;
+        this._modified = fields._modified ?? new Set<string>();
       } else {
         this.setModified(Object.keys(fields) as any);
       }
