@@ -1,6 +1,6 @@
 {
   "name": "ts-force-gen",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "Code generation for ts-force",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -29,7 +29,7 @@
     "build": "tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json -w",
     "generate-json-schema": "npx typescript-json-schema --required ./tsconfig.json Config > ./ts-force-config.schema.json",
-    "prepublishOnly": "npm run clean-build && npm run generate-json-schema"
+    "prepublishOnly": "npm run clean-build"
   },
   "engines": {
     "node": ">=4.5"
@@ -50,7 +50,7 @@
     "ts-node": "^7.0.1",
     "tslint": "^5.4.3",
     "tslint-config-standard": "^6.0.1",
-    "typescript": "^4.0.3",
+    "typescript": "^5.3.3",
     "typescript-json-schema": "^0.43.0"
   },
   "dependencies": {

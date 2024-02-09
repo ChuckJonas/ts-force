@@ -6,8 +6,6 @@ import { buildQuery } from '../../qry';
 import { Account, PushTopic } from '../assets/sobs';
 import { createDefaultClient } from '../helper';
 
-
-
 const TEST_ACC_NAME = 'testing push topic';
 
 describe('Streaming API', () => {
@@ -42,17 +40,15 @@ describe('Streaming API', () => {
         expect(stream.isConnected()).to.equal(true);
 
         // sObject mapping
-        await stream.subscribeToTopic<{ Id: string, Name: string }>(
-          topic.name,
-          e => {
-            expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
-            stream.unsubscribe(topic.name, 'topic')
-              .then(() => topic.delete())
-              .then(() => stream.disconnect())
-              .then(() => resolve())
-              .catch(e => reject(e));
-          }
-        );
+        await stream.subscribeToTopic<{ Id: string; Name: string }>(topic.name, (e) => {
+          expect(e.data.sobject.Name).to.equal(TEST_ACC_NAME);
+          stream
+            .unsubscribe(topic.name, 'topic')
+            .then(() => topic.delete())
+            .then(() => stream.disconnect())
+            .then(() => resolve())
+            .catch((e) => reject(e));
+        });
 
         let acc = new Account({ name: TEST_ACC_NAME });
         await acc.insert();
@@ -75,18 +71,15 @@ describe('Streaming API', () => {
         expect(stream.isConnected()).to.equal(true);
 
         // sObject mapping
-        await stream.subscribeToTopicMapped(
-          Account,
-          topic.name,
-          e => {
-            expect(e.data.sObject.name).to.equal(TEST_ACC_NAME);
-            stream.unsubscribe(topic.name, 'topic')
-              .then(() => topic.delete())
-              .then(() => stream.disconnect())
-              .then(() => resolve())
-              .catch(e => reject(e));
-          }
-        );
+        await stream.subscribeToTopicMapped(Account, topic.name, (e) => {
+          expect(e.data.sObject.name).to.equal(TEST_ACC_NAME);
+          stream
+            .unsubscribe(topic.name, 'topic')
+            .then(() => topic.delete())
+            .then(() => stream.disconnect())
+            .then(() => resolve())
+            .catch((e) => reject(e));
+        });
 
         let acc = new Account({ name: TEST_ACC_NAME });
         await acc.insert();
@@ -106,14 +99,10 @@ async function getOrCreateTestTopic(topicName: string) {
       notifyForOperationCreate: true,
       description: 'for unit test',
       apiVersion: DEFAULT_CONFIG.version,
-      query: buildQuery(Account, f => (
-        {
-          select: [
-            ...f.select('id', 'name', 'active')
-          ]
-          // where: [{ field: f.select('name'), val: TEST_ACC_NAME }]
-        }
-      ))
+      query: buildQuery(Account, (f) => ({
+        select: [...f.select('id', 'name', 'active')],
+        // where: [{ field: f.select('name'), val: TEST_ACC_NAME }]
+      })),
     });
     await topic.insert();
   }
