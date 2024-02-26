@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 /// <reference types="node" />
-import { requestAccessToken, setDefaultConfig } from '../../ts-force';
+import { requestAccessToken, setDefaultConfig } from 'ts-force';
 import { SourceFile } from 'ts-morph';
 import { SObjectGenerator, TS_FORCE_IMPORTS } from './sObjectGenerator';
 import * as minimist from 'minimist';

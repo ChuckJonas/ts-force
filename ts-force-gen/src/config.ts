@@ -1,4 +1,4 @@
-import { BaseConfig } from '../../ts-force/build';
+import { BaseConfig } from 'ts-force/build';
 
 // Config Types
 export interface AuthConfig extends Partial<BaseConfig> {

@@ -1,5 +1,5 @@
 import { camelCase } from 'lodash';
-import { ChildRelationship, Field, Rest, SalesforceFieldType, SFieldProperties, SObjectDescribe } from '../../ts-force';
+import { ChildRelationship, Field, Rest, SalesforceFieldType, SFieldProperties, SObjectDescribe } from 'ts-force';
 import { ClassDeclaration, DecoratorStructure, JSDocStructure, PropertyDeclarationStructure, Scope, SourceFile, ImportDeclarationStructure, StructureKind, WriterFunctions } from 'ts-morph';
 import { SObjectConfig } from './config';
 import { cleanAPIName, replaceSource } from './util';
