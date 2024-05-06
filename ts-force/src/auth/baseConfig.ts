@@ -1,7 +1,10 @@
+import { AxiosInstance } from "axios";
+
 export interface BaseConfig {
   accessToken: string;
   instanceUrl: string;
   version: number;
+  axiosInstance?: AxiosInstance;
 }
 
 export const DEFAULT_CONFIG: BaseConfig = {
@@ -16,7 +19,7 @@ export type ConfigParams = Partial<BaseConfig> & {
 };
 
 /**
- * @param  {BaseConfig} config
+ * @param  {ConfigParams} params
  */
 export const setDefaultConfig = (params: ConfigParams) => {
   createConfig(params, DEFAULT_CONFIG);
@@ -35,5 +38,8 @@ export const createConfig = (params: ConfigParams, config?: BaseConfig) => {
     params.accessToken !== undefined
       ? params.accessToken
       : params.access_token || "";
+
+  if(params.axiosInstance) c.axiosInstance = params.axiosInstance;
+
   return c;
 };

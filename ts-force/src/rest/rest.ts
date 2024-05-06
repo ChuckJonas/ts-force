@@ -21,6 +21,7 @@ export class Rest {
   public config: BaseConfig;
 
   public request: AxiosInstance;
+
   public version: string;
 
   public apiLimit: ApiLimit = {
@@ -35,10 +36,10 @@ export class Rest {
    * @memberof Rest
    */
   constructor(config?: ConfigParams) {
-    if (config) {
+    if(config) {
       this.config = createConfig(config);
     } else {
-      if (
+      if(
         Rest.defaultInstance &&
         Rest.defaultInstance.config.accessToken === DEFAULT_CONFIG.accessToken
       ) {
@@ -49,23 +50,21 @@ export class Rest {
       Rest.defaultInstance = this;
     }
 
-    this.version = `v${(this.config.version
-      ? this.config.version
-      : DEFAULT_CONFIG.version
+    this.version = `v${( this.config.version
+        ? this.config.version
+        : DEFAULT_CONFIG.version
     ).toFixed(1)}`;
-    this.request = axios.create({
-      baseURL: `${this.config.instanceUrl}`,
-      headers: {
-        Authorization: "Bearer " + this.config.accessToken,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      maxContentLength: Infinity,
-    });
+
+    this.request = this.config.axiosInstance || axios.create();
+    this.request.defaults.baseURL = `${this.config.instanceUrl}`;
+    this.request.defaults.headers["Authorization"] = `Bearer ${this.config.accessToken}`;
+    this.request.defaults.headers["Content-Type"] = "application/json";
+    this.request.defaults.headers["Accept"] = "application/json";
+    this.request.defaults.maxContentLength = Infinity;
 
     this.request.interceptors.response.use((response: AxiosResponse) => {
       const limits = parseLimitsFromResponse(response);
-      if (limits) {
+      if(limits) {
         this.apiLimit = limits;
       }
       return response;
@@ -79,7 +78,7 @@ export class Rest {
   public async getSObjectDescribe(apiName: string): Promise<SObjectDescribe> {
     return (
       await this.request.get(
-        `/services/data/${this.version}/sobjects/${apiName}/describe/`
+        `/services/data/${this.version}/sobjects/${apiName}/describe/`,
       )
     ).data;
   }
@@ -92,14 +91,14 @@ export class Rest {
    */
   public async query<T>(
     query: string,
-    allRows?: boolean
+    allRows?: boolean,
   ): Promise<QueryResponse<T>> {
     let qryString = encodeURIComponent(query);
     return (
       await this.request.get<QueryResponse<T>>(
         `/services/data/${this.version}/${
           allRows ? "queryAll" : "query"
-        }?q=${qryString}`
+        }?q=${qryString}`,
       )
     ).data;
   }
@@ -108,7 +107,7 @@ export class Rest {
     let qryString = encodeURIComponent(query);
     return (
       await this.request.get<QueryResponse<T>>(
-        `/services/data/${this.version}/tooling/query?q=${qryString}`
+        `/services/data/${this.version}/tooling/query?q=${qryString}`,
       )
     ).data;
   }
@@ -119,7 +118,7 @@ export class Rest {
    * @returns the next page of results
    */
   public async queryMore<T>(resp: QueryResponse<T>): Promise<QueryResponse<T>> {
-    return (await this.request.get<QueryResponse<T>>(resp.nextRecordsUrl)).data;
+    return ( await this.request.get<QueryResponse<T>>(resp.nextRecordsUrl) ).data;
   }
 
   /**
@@ -134,7 +133,7 @@ export class Rest {
     let qryString = encodeURIComponent(query);
     return (
       await this.request.get<SearchResponse<T>>(
-        `/services/data/${this.version}/search?q=${qryString}`
+        `/services/data/${this.version}/search?q=${qryString}`,
       )
     ).data;
   }
@@ -161,11 +160,11 @@ export class Rest {
    */
   public async invokeAction<O>(
     action: string,
-    inputs: any[]
+    inputs: any[],
   ): Promise<InvokableResult<O>> {
     const result = await this.request.post<InvokableResult<O>>(
       `/services/data/${this.version}/actions/custom/apex/${action}`,
-      { inputs }
+      { inputs },
     );
 
     return result.data;
