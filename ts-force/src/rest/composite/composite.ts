@@ -7,7 +7,12 @@ export interface CompositeRequest extends BatchRequest {
   httpHeaders?: Record<string, string>;
 }
 
-export interface CompositePayload {
+export interface CompositePayloadOptions {
+  allOrNone?: boolean;
+  collateSubrequests?: boolean;
+}
+
+export interface CompositePayload extends CompositePayloadOptions{
   compositeRequest: CompositeRequest[];
 }
 
@@ -27,7 +32,7 @@ export class Composite {
   private client: Rest;
 
   /**
-   * @param  {Rest} client? Optional.  If not set, will use Rest.DEFAULT_CONFIG
+   * @param  {Rest=Rest.DEFAULT_CONFIG} client - Optional.  If not set, will use Rest.DEFAULT_CONFIG
    */
   constructor(client?: Rest) {
     this.client = client || new Rest();
@@ -36,7 +41,7 @@ export class Composite {
   }
   /**
    * @param  {CompositeRequest} request A request to add.
-   * @param  {(n:CompositeResponse)=>void} callback? Optional callback that gets passed the response
+   * @param  {(n:CompositeResponse)=>void} [callback] Optional callback that gets passed the response
    * @returns `this` instance for chaining
    */
   public addRequest(
@@ -52,9 +57,10 @@ export class Composite {
    * Sends the composite requests
    * @returns Promise<CompositeResult>
    */
-  public async send(): Promise<CompositeResult> {
+  public async send(options: CompositePayloadOptions = {}): Promise<CompositeResult> {
     let payload: CompositePayload = {
       compositeRequest: this.compositeRequest,
+      ...options
     };
     let result = (
       await this.client.request.post(
