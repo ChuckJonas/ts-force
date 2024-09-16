@@ -222,6 +222,14 @@ export interface JWTTokenRequest {
   assertion: string;
 }
 
+export interface ClientCredentialsRequest extends BaseTokenRequest {
+  instanceUrl: string;
+
+  grant_type: 'client_credentials';
+
+  client_secret: string;
+}
+
 export interface TokenResponse {
   /**
    * OAuth token that a connected app uses to request access to a protected resource on behalf of the client application.
@@ -293,7 +301,7 @@ export interface TokenResponse {
 /**
  * Retrieves the access token
 */
-export async function requestAccessToken(params: WebServerTokenParam | UsernamePasswordTokenFlow | RefreshTokenFlow | JWTTokenRequest): Promise<TokenResponse> {
+export async function requestAccessToken(params: WebServerTokenParam | UsernamePasswordTokenFlow | RefreshTokenFlow | JWTTokenRequest | ClientCredentialsRequest): Promise<TokenResponse> {
   //defaults
   params = { ...{ grant_type: 'authorization_code' }, ...params };
   const {instanceUrl, ...bodyParams} = params;
