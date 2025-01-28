@@ -6,8 +6,6 @@ import { getCalendarDate } from '../../utils/calendarDate';
 import { Account, Contact, User } from '../assets/sobs';
 import { createDefaultClient } from '../helper';
 
-
-
 describe('Generated Classes', () => {
   before(async () => {
     await createDefaultClient();
@@ -16,7 +14,7 @@ describe('Generated Classes', () => {
   it('Parent Relationship', async () => {
     let acc = new Account({
       name: 'test account',
-      website: 'example.com'
+      website: 'example.com',
     });
 
     await acc.insert();
@@ -25,22 +23,25 @@ describe('Generated Classes', () => {
     let contact = new Contact({
       accountId: acc.id,
       firstName: `test`,
-      lastName: `contact`
+      lastName: `contact`,
     });
     await contact.insert();
 
-    let contact2 = (await Contact.retrieve(`SELECT ${Contact.FIELDS.name}, ${Contact.FIELDS.account}.${Account.FIELDS.website} FROM ${Contact.API_NAME} WHERE Id = '${contact.id}'`))[0];
+    let contact2 = (
+      await Contact.retrieve(
+        `SELECT ${Contact.FIELDS.name}, ${Contact.FIELDS.account}.${Account.FIELDS.website} FROM ${Contact.API_NAME} WHERE Id = '${contact.id}'`
+      )
+    )[0];
 
     expect(contact2.account).not.to.be.empty;
     expect(contact2.account.website).to.equal(acc.website);
 
-    let acc2 = (await Account.retrieve(f => ({
-      select: [
-        ...f.select('name', 'accountNumber'),
-        ...f.parent('parent').select('id', 'accountNumber')
-      ],
-      where: [{ field: 'id', val: acc.id }]
-    })))[0];
+    let acc2 = (
+      await Account.retrieve((f) => ({
+        select: [...f.select('name', 'accountNumber'), ...f.parent('parent').select('id', 'accountNumber')],
+        where: [{ field: 'id', val: acc.id }],
+      }))
+    )[0];
     // if the lookup rel is blank, it should be null
     expect(acc2.parent).to.be.null;
     expect(acc2.name).to.not.be.null;
@@ -56,19 +57,18 @@ describe('Generated Classes', () => {
   it('Child Relationship', async () => {
     let acc = new Account({
       name: 'test account',
-      website: 'example.com'
+      website: 'example.com',
     });
 
     await acc.insert();
     expect(acc.id).to.not.be.null;
 
-    let acc2 = (await Account.retrieve(f => ({
-      select: [
-        ...f.select('name', 'accountNumber'),
-        f.subQuery('contacts', cf => ({ select: cf.select('id', 'firstName') }))
-      ],
-      where: [{ field: 'id', val: acc.id }]
-    })))[0];
+    let acc2 = (
+      await Account.retrieve((f) => ({
+        select: [...f.select('name', 'accountNumber'), f.subQuery('contacts', (cf) => ({ select: cf.select('id', 'firstName') }))],
+        where: [{ field: 'id', val: acc.id }],
+      }))
+    )[0];
 
     expect(acc2.contacts).to.not.be.null;
     expect(acc2.contacts.length).to.eq(0);
@@ -76,17 +76,16 @@ describe('Generated Classes', () => {
     let contact = new Contact({
       accountId: acc.id,
       firstName: `test`,
-      lastName: `contact`
+      lastName: `contact`,
     });
     await contact.insert();
 
-    acc2 = (await Account.retrieve(f => ({
-      select: [
-        ...f.select('name', 'accountNumber'),
-        f.subQuery('contacts', cf => ({ select: cf.select('id', 'firstName') }))
-      ],
-      where: [{ field: 'id', val: acc.id }]
-    })))[0];
+    acc2 = (
+      await Account.retrieve((f) => ({
+        select: [...f.select('name', 'accountNumber'), f.subQuery('contacts', (cf) => ({ select: cf.select('id', 'firstName') }))],
+        where: [{ field: 'id', val: acc.id }],
+      }))
+    )[0];
     // if the lookup rel is blank, it should be null
     expect(acc2.contacts.length).to.eq(1);
     expect(acc2.contacts[0].firstName).to.eq(contact.firstName);
@@ -95,7 +94,7 @@ describe('Generated Classes', () => {
 
   it('DML End-to-End', async () => {
     let acc = new Account({
-      name: 'test account'
+      name: 'test account',
     });
     await acc.insert();
     expect(acc.id).to.not.be.null;
@@ -114,9 +113,8 @@ describe('Generated Classes', () => {
   });
 
   it('Stale Memory', async () => {
-
     let acc = new Account({
-      name: 'stale name'
+      name: 'stale name',
     });
     await acc.insert();
     expect(acc.id).to.not.be.null;
@@ -141,7 +139,7 @@ describe('Generated Classes', () => {
     // test update
     let acc4 = new Account({
       name: 'new name 2',
-      id: acc.id
+      id: acc.id,
     });
 
     await acc4.update();
@@ -159,9 +157,8 @@ describe('Generated Classes', () => {
   });
 
   it('prepareFor Update all', async () => {
-
     let acc = new Account({
-      name: 'account'
+      name: 'account',
     });
     await acc.insert();
 
@@ -176,12 +173,11 @@ describe('Generated Classes', () => {
   });
 
   it('multi-picklists', async () => {
-
     const { multiPick } = Account.PICKLIST;
 
     let acc = new Account({
       name: 'account',
-      multiPick: [multiPick.ONE, 'two']
+      multiPick: [multiPick.ONE, 'two'],
     });
     await acc.insert();
 
@@ -199,10 +195,9 @@ describe('Generated Classes', () => {
   });
 
   it('refresh', async () => {
-
     let acc = new Account({
       name: 'test account',
-      website: 'www.facepamplet.com'
+      website: 'www.facepamplet.com',
     });
     await acc.insert();
     let acc2 = (await Account.retrieve(`SELECT Id, Name FROM Account WHERE Id = '${acc.id}'`))[0];
@@ -219,14 +214,14 @@ describe('Generated Classes', () => {
     let acc = new Account({ name: 'testing' });
     await acc.insert();
 
-    let acc2 = (await Account.retrieve(fields => {
-      return {
-        select: fields.select('lastModifiedDate', 'createdById'),
-        where: [
-          { field: fields.select('id'), op: '=', val: acc.id }
-        ]
-      };
-    }))[0];
+    let acc2 = (
+      await Account.retrieve((fields) => {
+        return {
+          select: fields.select('lastModifiedDate', 'createdById'),
+          where: [{ field: fields.select('id'), op: '=', val: acc.id }],
+        };
+      })
+    )[0];
 
     expect(acc2.lastModifiedDate).not.null;
     expect(acc2.createdById).not.null;
@@ -234,59 +229,73 @@ describe('Generated Classes', () => {
 
   it('Collections End-to-End', async () => {
     let acc = new Account({
-      name: 'test account'
+      name: 'test account',
     });
     await acc.insert();
 
     let contacts = [];
     const contactSize = 50;
     for (let i = 0; i < contactSize; i++) {
-      contacts.push(new Contact({
-        accountId: acc.id,
-        firstName: `test`,
-        lastName: `contact ${i}`
-      }));
+      contacts.push(
+        new Contact({
+          accountId: acc.id,
+          firstName: `test`,
+          lastName: `contact ${i}`,
+        })
+      );
     }
 
     let bulk = new CompositeCollection();
     let insertResults = await bulk.insert(contacts);
     expect(contacts[0]._modified.size).to.equal(0);
 
-    insertResults.forEach(r => {
+    insertResults.forEach((r) => {
       if (!r.success) {
-        throw r.errors.map(e => e.message).join(', ');
+        throw r.errors.map((e) => e.message).join(', ');
       }
     });
 
-    acc = (await Account.retrieve(`SELECT Id, (SELECT ${Contact.FIELDS.name.apiName} FROM ${Account.FIELDS.contacts.apiName}) FROM Account WHERE Id = '${acc.id}'`))[0];
+    acc = (
+      await Account.retrieve(
+        `SELECT Id, (SELECT ${Contact.FIELDS.name.apiName} FROM ${Account.FIELDS.contacts.apiName}) FROM Account WHERE Id = '${acc.id}'`
+      )
+    )[0];
 
     expect(acc.contacts.length).to.equal(contactSize);
 
-    contacts.forEach(c => {
+    contacts.forEach((c) => {
       c.email = 'test@example.com';
     });
 
     let updateResults = await bulk.update(contacts);
     expect(contacts[0]._modified.size).to.equal(0);
-    updateResults.forEach(r => {
+    updateResults.forEach((r) => {
       if (!r.success) {
-        throw r.errors.map(e => e.message).join(', ');
+        throw r.errors.map((e) => e.message).join(', ');
       }
     });
 
-    acc = (await Account.retrieve(`SELECT Id, (SELECT ${Contact.FIELDS.name.apiName}, ${Contact.FIELDS.email} FROM ${Account.FIELDS.contacts.apiName}) FROM Account WHERE Id = '${acc.id}'`))[0];
-    acc.contacts.forEach(c => {
+    acc = (
+      await Account.retrieve(
+        `SELECT Id, (SELECT ${Contact.FIELDS.name.apiName}, ${Contact.FIELDS.email} FROM ${Account.FIELDS.contacts.apiName}) FROM Account WHERE Id = '${acc.id}'`
+      )
+    )[0];
+    acc.contacts.forEach((c) => {
       expect(c.email).to.equal('test@example.com');
     });
 
     let delResults = await bulk.delete(contacts);
-    delResults.forEach(r => {
+    delResults.forEach((r) => {
       if (!r.success) {
-        throw r.errors.map(e => e.message).join(', ');
+        throw r.errors.map((e) => e.message).join(', ');
       }
     });
 
-    acc = (await Account.retrieve(`SELECT Id, (SELECT ${Contact.FIELDS.name.apiName} FROM ${Account.FIELDS.contacts.apiName}) FROM Account WHERE Id = '${acc.id}'`))[0];
+    acc = (
+      await Account.retrieve(
+        `SELECT Id, (SELECT ${Contact.FIELDS.name.apiName} FROM ${Account.FIELDS.contacts.apiName}) FROM Account WHERE Id = '${acc.id}'`
+      )
+    )[0];
 
     expect(acc.contacts.length).to.equal(0);
 
@@ -296,14 +305,10 @@ describe('Generated Classes', () => {
   it('should set relation by external id', async () => {
     const extId = '123abcd';
     // setup account
-    let accs = await Account.retrieve(f => {
+    let accs = await Account.retrieve((f) => {
       return {
-        select: [
-          ...f.select('id', 'testExternalId')
-        ],
-        where: [
-          { field: f.select('testExternalId'), op: '=', val: extId }
-        ]
+        select: [...f.select('id', 'testExternalId')],
+        where: [{ field: f.select('testExternalId'), op: '=', val: extId }],
       };
     });
 
@@ -313,7 +318,7 @@ describe('Generated Classes', () => {
     } else {
       acc = new Account({
         name: 'test external id account',
-        testExternalId: extId
+        testExternalId: extId,
       });
       await acc.insert();
     }
@@ -321,83 +326,74 @@ describe('Generated Classes', () => {
     let contact = new Contact({
       firstName: 'john',
       lastName: 'doe',
-      account: new Account({ testExternalId: extId })
+      account: new Account({ testExternalId: extId }),
     });
 
     await contact.insert();
 
-    let retCont = await Contact.retrieve(f => {
+    let retCont = await Contact.retrieve((f) => {
       return {
-        select: [
-          f.select('accountId')
-        ],
-        where: [
-          { field: f.select('id'), op: '=', val: contact.id }
-        ]
+        select: [f.select('accountId')],
+        where: [{ field: f.select('id'), op: '=', val: contact.id }],
       };
     });
 
     expect(retCont[0].accountId).to.equal(acc.id);
-
   });
 
   it('prepareFor Apex', async () => {
-
     let c = new Contact({
       id: '123',
       accountId: 'abc',
       firstName: `john`,
       lastName: `doe`,
       account: new Account({
-        name: 'acme'
-      })
+        name: 'acme',
+      }),
     });
 
-    expect(c.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true })).to.deep.equal(
-      {
-        Id: '123',
-        AccountId: 'abc',
-        FirstName: 'john',
-        LastName: 'doe',
-        Account: {
-          Name: 'acme'
-        }
-      }
-    );
+    expect(c.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true })).to.deep.equal({
+      Id: '123',
+      AccountId: 'abc',
+      FirstName: 'john',
+      LastName: 'doe',
+      Account: {
+        Name: 'acme',
+      },
+    });
 
     let acc = new Account({
       id: '123',
-      contacts: [new Contact({
-        firstName: 'john',
-        lastName: 'doe'
-      })]
+      contacts: [
+        new Contact({
+          firstName: 'john',
+          lastName: 'doe',
+        }),
+      ],
     });
 
-    expect(acc.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true })).to.deep.equal(
-      {
-        Id: '123',
-        Contacts: { records: [{ FirstName: 'john', LastName: 'doe' }] }
-      }
-    );
+    expect(acc.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true })).to.deep.equal({
+      Id: '123',
+      Contacts: { records: [{ FirstName: 'john', LastName: 'doe' }] },
+    });
   });
 
   it('prepareFor Apex End To End', async () => {
     let acc = new Account({
       id: '123',
-      contacts: [new Contact({
-        firstName: 'john',
-        lastName: 'doe'
-      })],
+      contacts: [
+        new Contact({
+          firstName: 'john',
+          lastName: 'doe',
+        }),
+      ],
       owner: new User({
-        'email': 'example@gmai.com'
-      })
+        email: 'example@gmai.com',
+      }),
     });
 
     const sfSob = acc.toJson({ dmlMode: 'all', sendChildObj: true, sendParentObj: true, hideAttributes: true });
-    let data = (await new Rest().request.post<SObject>(
-      '/services/apexrest/myservice',
-      { acc: sfSob }
-    )).data;
+    let data = (await new Rest().request.post<SObject>('/services/apexrest/myservice', { acc: sfSob })).data;
     const retAcc = Account.fromSFObject(data);
     expect(acc.id).to.deep.equal(retAcc.id);
     expect(acc.contacts[0].firstName).to.deep.equal(retAcc.contacts[0].firstName);
@@ -407,8 +403,8 @@ describe('Generated Classes', () => {
 
   it('composite retrieve', async () => {
     let results = await compositeRetrieve(Contact, Account, User)(
-      f => ({ select: f.select('cleanStatus', 'email', 'accountId') }),
-      f => ({ select: f.select('numberOfEmployees', 'accountNumber', 'active') }),
+      (f) => ({ select: f.select('cleanStatus', 'email', 'accountId') }),
+      (f) => ({ select: f.select('numberOfEmployees', 'accountNumber', 'active') }),
       'select x from blah'
     );
     let contactResults = results[0];
@@ -440,19 +436,30 @@ describe('Generated Classes', () => {
     let c = new Contact({
       firstName: 'test',
       lastName: 'contact',
-      birthdate: getCalendarDate()
+      birthdate: getCalendarDate(),
     });
     await c.insert();
     expect(c.id).to.not.be.null;
 
-    let c2 = (await Contact.retrieve(f => ({
-      select: [f.select('birthdate')],
-      where: [{ field: 'id', val: c.id }]
-    })))[0];
+    let c2 = (
+      await Contact.retrieve((f) => ({
+        select: [f.select('birthdate')],
+        where: [{ field: 'id', val: c.id }],
+      }))
+    )[0];
 
     expect(c2.birthdate).to.deep.equal(c.birthdate);
 
     await c.delete();
   });
 
+  it('Does not expose client in serialization', async () => {
+    let c = new Contact({
+      firstName: 'test',
+      lastName: 'contact',
+      birthdate: getCalendarDate(),
+    });
+    const roundTrip = JSON.parse(JSON.stringify(c));
+    expect(roundTrip).to.not.haveOwnProperty('_client');
+  });
 });
