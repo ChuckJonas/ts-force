@@ -20,6 +20,7 @@
     "strictNullChecks": false,
     "strict": true,
     "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   }
 }

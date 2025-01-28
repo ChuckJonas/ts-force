@@ -51,7 +51,12 @@ export abstract class RestObject extends SObject {
 
   constructor(type: string, client?: Rest) {
     super(type, client);
-    this._client = client || new Rest();
+    Object.defineProperty(this, '_client', {
+      value: client || new Rest(),
+      writable: true,
+      configurable: true,
+      enumerable: false,
+    });
   }
 
   protected initObject(fields?: Partial<FieldProps<RestObject>>) {
